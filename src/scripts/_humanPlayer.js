@@ -1,8 +1,8 @@
 import Player from "./Player"
 
 export default class HumanPlayer extends Player {
-    constructor() {
-        super(fences, fences)
+    constructor(color) {
+        // super(fences, fences)
         super(color, color)
 
     }

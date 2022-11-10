@@ -1,6 +1,6 @@
 
 export default class Piece {
-    constructor(color) {
+    constructor(color, pos) {
         this.color = color
         this.pos = pos
     }

@@ -1,0 +1,15 @@
+
+#gameBoard {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* #gameBoard > ul {
+    
+} */
+
+#gameBoard > ul > li {
+    width: 100px;
+    height: 100px;
+    background-color: grey;
+}
