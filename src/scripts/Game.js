@@ -2,7 +2,7 @@ import Board from "./Board"
 import ComputerPlayer from "./_computerPlayer"
 import HumanPlayer from "./_humanPlayer"
 
-class Game {
+export default class Game {
     constructor(playerColor="Red", computerColor="Blue") {
         this.board = new Board()
         const humanPlayer = new HumanPlayer(playerColor)

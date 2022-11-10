@@ -13,7 +13,7 @@ export default class Board {
 
             for (let j = 0; j < 17; j++) {
 
-                let pos = [i, j]
+                let pos = [j, i]
                 let type = ""
                 let iEven = (i + 2) % 2 === 0 
                 let jEven = (j + 2) % 2 === 0
@@ -35,7 +35,7 @@ export default class Board {
 
     fillGrid(humanPlayer, computerPlayer) {
         const playerToken = new Piece(humanPlayer.color)
-        const computerToken = new Piece(computerPlayer.color, false)
+        const computerToken = new Piece(computerPlayer.color)
 
         const computerStart = this.grid[0][8]
         computerStart.holds.push(computerToken)
@@ -66,11 +66,15 @@ export default class Board {
             console.log(renderRow.join(""))
         })
     }
+
+    getSquare(pos) {
+        let posX = pos[0]
+        let posY = pos[1]
+        return this.grid[posX][posY]
+    }
+
+    moveToken(newPos) {
+        this.grid.getSquare().holds()
+    }
 }
 
-// const b = new Board()
-// b.render()
-// console.log(b.board)
-// console.log(b.board[1])
-// console.log(b.board[1][0])
-// console.log(b.board[1][0].pos)
