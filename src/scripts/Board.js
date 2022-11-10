@@ -45,25 +45,31 @@ export default class Board {
     }
 
     render() {
+        const gameBoard = document.getElementById("gameBoard")
+        
         this.grid.forEach( row => {
-            let renderRow = []
+            let renderRow = document.createElement("ul")
 
             row.forEach( square => {
                 
                 if (square.type === "token") {
                     if (square.holds.length) {
-                        renderRow.push(`[${square.token()}]`)
+                        let tokenStart = document.createElement("li")
+                        tokenStart.innerText = square.token()
+                        renderRow.appendChild(tokenStart)
                     } else {
-                        renderRow.push("[ ]")
+                        let emptySquare = document.createElement("li")
+                        renderRow.appendChild(emptySquare)
                     }
                 } else if (square.type === "fence") {
-                    renderRow.push("   ")
+                    let fencePath = document.createElement("li")
+                    renderRow.appendChild(fencePath)
                 } else {
-                    renderRow.push(" o ")
+                    let fenceNode = document.create
+                    renderRow.appendChild(fenceNode)
                 }
             })
-
-            console.log(renderRow.join(""))
+            gameBoard.appendChild(renderRow)
         })
     }
 
