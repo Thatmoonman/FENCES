@@ -1,6 +1,6 @@
-const Piece = require("./Piece")
+import Piece from "./Piece"
 
-class Square {
+export default class Square {
     constructor(pos, type) {
         this.pos = pos
         this.type = type
@@ -11,5 +11,3 @@ class Square {
         return this.holds[0].toString()
     }
 }
-
-module.exports = Square

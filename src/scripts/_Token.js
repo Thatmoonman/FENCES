@@ -1,8 +1,11 @@
-const Piece = require("./Piece")
+import Piece from "./Piece"
 
 export default class Token extends Piece {
-    constructor(player=true) {
+    constructor() {
         super(color, color)
-        this.player = player
+    }
+
+    myToken(player) {
+        return this.color === player.color
     }
 }

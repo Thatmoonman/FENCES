@@ -1,4 +1,5 @@
-class Piece {
+
+export default class Piece {
     constructor(color) {
         this.color = color
     }
@@ -7,5 +8,3 @@ class Piece {
         return this.color[0].toUpperCase()
     }
 }
-
-module.exports = Piece

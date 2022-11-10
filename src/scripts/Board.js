@@ -1,7 +1,7 @@
-const Square = require("./Square")
-const Piece = require("./Piece")
+import Square from "./Square"
+import Piece from "./Piece"
 
-class Board {
+export default class Board {
     constructor() {
         this.grid = []
         this.buildBoard()
@@ -33,9 +33,9 @@ class Board {
         }
     }
 
-    fillGrid(playerColor, computerColor) {
-        const playerToken = new Piece(playerColor)
-        const computerToken = new Piece(computerColor, false)
+    fillGrid(humanPlayer, computerPlayer) {
+        const playerToken = new Piece(humanPlayer.color)
+        const computerToken = new Piece(computerPlayer.color, false)
 
         const computerStart = this.grid[0][8]
         computerStart.holds.push(computerToken)
@@ -74,6 +74,3 @@ class Board {
 // console.log(b.board[1])
 // console.log(b.board[1][0])
 // console.log(b.board[1][0].pos)
-
-
-module.exports = Board
