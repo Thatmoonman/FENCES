@@ -15,6 +15,6 @@ export default class Game {
     }
 }
 
-let g = new Game()
-g.board.render()
+// let g = new Game()
+// g.board.render()
 // console.log(g.board.board[0][8].token())

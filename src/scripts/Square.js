@@ -10,4 +10,6 @@ export default class Square {
     token() {
         return this.holds[0].toString()
     }
+
+    
 }
