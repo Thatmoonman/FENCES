@@ -7,9 +7,8 @@ import renderThree from "./scripts/threejs/threeJS";
 
 
     const game = new Game()
-    game.board.render()
-
-    game.gameTurn()
+    
+    // game.board.render()
 
 
 // })

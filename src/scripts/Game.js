@@ -12,7 +12,7 @@ export default class Game {
         this.newGame(this.humanPlayer, this.computerPlayer) 
     }
 
-    newGame(humanPlayer, computerPlayer) {
+    newGame(humanPlayer, computerPlayer) {    
         // adds starting positions to board
         this.board.fillGrid(humanPlayer, computerPlayer) 
         
@@ -21,15 +21,26 @@ export default class Game {
             humanPlayer.addFence()
             computerPlayer.addFence()
         }
+
+        return this.gameTurn()
     }
 
     gameTurn() { //NOT GAME READY
         this._resetHTML() //FOR DEV ONLY
         this.board.render()
 
-        this.selectToken()
+        /* if current player, either grab token or fence by clicking, 
+        clicking again should cancel grab, if token selected click valid square
+        to place token, if fence selected place on node and choose direction,
+        once either is done current player gets switched and next turn starts.
+        If move, reduce opponents movesUntilNewFence counter and respond accoordingly.
+        */
 
-        // this.switchCurrentPlayer()
+        // if (this.currentPlayer === this.humanPlayer) {
+         this.selectToken()
+        // }
+        
+        // return this.gameTurn()
     }
 
     //for DEV ONLY
@@ -50,15 +61,16 @@ export default class Game {
     // }
 
     selectToken() {
-        const squares = Array.from(document.getElementsByClassName("square")).map(el => el)
+        const tokenSquares = Array.from(document.getElementsByClassName("playerSquare"))
+            .map(el => el)
         
-        squares.forEach( square => { square.addEventListener("click", event => {
+        tokenSquares.forEach( square => { square.addEventListener("click", event => {
             const pos = event.target.getAttribute("data-pos").split(",")
         
             const token = this.board.getSquare(pos).getToken()
     
             if (token && token.myToken(this.currentPlayer)) {
-                return this.moveToken(pos)
+                return this.placeToken(pos)
             } else {
                 return this.gameTurn()
             }
@@ -70,7 +82,7 @@ export default class Game {
 
 
     //NEED: valid moves logic, countdown movesUntilNextFence for opponent
-    moveToken(startPos) {
+    placeToken(startPos) {
         const moveSquares =  Array.from(document.getElementsByClassName("square")).map(el => el)
         
         //filter out invalid moves
@@ -94,6 +106,14 @@ export default class Game {
                 return this.gameTurn()
             }
         }))
+    }
+
+    selectFence() {
+        
+    }
+
+    placeFence() {
+
     }
 
 

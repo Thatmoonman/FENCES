@@ -54,7 +54,7 @@ export default class Board {
                 
                 if (square.type === "token") {
                     if (square.holds.length) {
-                        let tokenStart = this.buildSpace("li", "square", square.pos)
+                        let tokenStart = this.buildSpace("li", "playerSquare", square.pos)
                         tokenStart.innerText = square.token()
                         renderRow.appendChild(tokenStart)
                     } else {
@@ -87,6 +87,14 @@ export default class Board {
         let posY = pos[0]
         let posX = pos[1]
         return this.grid[posX][posY]
+    }
+
+    validMove(token, startPos, endPos) {
+        //if token move, gets current pos and checks if end pos is next to current or jumping opponent
+        // #token.validMove
+
+        //if fence move, dupes grid, places fence, and checkes that grid is still solveable for both players.
+        // #gridDup(grid), #solveforPlayer(player)
     }
 
 }

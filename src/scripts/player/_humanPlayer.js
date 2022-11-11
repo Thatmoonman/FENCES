@@ -1,10 +1,13 @@
 import Player from "./Player"
 
 export default class HumanPlayer extends Player {
-    constructor(color) {
-        // super(fences, fences)
-        super(color, color)
-
+    constructor(color, fences, movesUntilNewFence, token) {
+        super(
+            color, color, 
+            fences, fences, 
+            movesUntilNewFence, movesUntilNewFence, 
+            token, token
+        )
     }
 
 }
