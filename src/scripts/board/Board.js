@@ -1,5 +1,5 @@
 import Square from "./Square"
-import Piece from "./Piece"
+import Piece from "../piece/Piece"
 
 export default class Board {
     constructor() {

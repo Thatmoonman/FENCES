@@ -1,4 +1,4 @@
-import Piece from "./Piece"
+import Piece from "../piece/Piece"
 
 export default class Square {
     constructor(pos, type) {
@@ -19,12 +19,13 @@ export default class Square {
         return this.holds.pop()
     }
 
-    token() {
-        return this.holds[0].toString()
-    }
-
+    
     isValidMove(pos) {
         return true
     }
-
+    
+    //for dev rendering
+    token() {
+        return this.holds[0].toString()
+    }
 }

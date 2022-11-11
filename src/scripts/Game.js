@@ -1,6 +1,6 @@
-import Board from "./Board"
-import ComputerPlayer from "./_computerPlayer"
-import HumanPlayer from "./_humanPlayer"
+import Board from "./board/Board"
+import ComputerPlayer from "./player/_computerPlayer"
+import HumanPlayer from "./player/_humanPlayer"
 
 export default class Game {
     constructor(playerColor="Blue", computerColor="Red") {
@@ -24,7 +24,7 @@ export default class Game {
     }
 
     gameTurn() {
-        this._resetHTML()
+        this._resetHTML() //FOR DEV ONLY
         this.board.render()
 
         this.selectToken()
@@ -32,6 +32,7 @@ export default class Game {
         this.switchCurrentPlayer
     }
 
+    //for DEV ONLY
     _resetHTML() {
         const board = document.getElementById("gameBoard")
         while(board.firstChild) {
@@ -77,7 +78,7 @@ export default class Game {
                 this.currentPlayer.token.setPos(movePos)
                 moveSquare.addToken(this.currentPlayer.token)
                 this.board.getSquare(startPos).removeToken()
-                
+
                 if (event.target) {
                     return this.gameTurn()
                 }

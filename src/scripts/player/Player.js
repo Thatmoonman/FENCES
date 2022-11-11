@@ -1,5 +1,5 @@
-import Fence from "./_Fence"
-import Token from "./_Token"
+import Fence from "../piece/_Fence"
+import Token from "../piece/_Token"
 
 export default class Player {
     constructor(color) {
