@@ -1,7 +1,8 @@
 import Game from "./scripts/Game";
 import renderThree from "./scripts/threeJS";
 
-document.addEventListener("DOMContentLoaded", () => {
+//DEV: COMMENT BACK IN IF "DEFER" BREAKS
+// document.addEventListener("DOMContentLoaded", () => {
     renderThree()
 
 
@@ -11,4 +12,4 @@ document.addEventListener("DOMContentLoaded", () => {
     game.gameTurn()
 
 
-})
+// })

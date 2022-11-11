@@ -1,0 +1,43 @@
+
+
+#gameBoard > ul {
+    display: flex;
+   flex-wrap: wrap;
+   list-style: none; 
+   margin: 0;
+   padding: 0;   
+
+   > li {
+      width: 40px;
+      height: 40px;
+      margin: 0;
+      border: 1px solid black;
+      background-color: grey;
+      
+      &.square {
+            color: white;
+      }
+      
+      &.verticalFence {
+            width: 10px;
+            background-color: lightgray;
+      }
+
+      &.horizontalFence {
+         height: 10px;
+         background-color: lightgray;
+      }
+
+      &.node {
+         width: 10px;
+         height: 10px;
+         background-color: red;
+      }
+   
+      &.node {
+         width: 10px;
+         height: 10px;
+         background-color: red;
+      }
+   }
+}

@@ -4,32 +4,32 @@ import HumanPlayer from "./player/_humanPlayer"
 
 export default class Game {
     constructor(playerColor="Blue", computerColor="Red") {
-        this.board = new Board() //set up new Board
-        
+        this.board = new Board()        
         this.humanPlayer = new HumanPlayer(playerColor)
         this.computerPlayer = new ComputerPlayer(computerColor)
-        
         this.currentPlayer = this.humanPlayer
         
         this.newGame(this.humanPlayer, this.computerPlayer) 
     }
 
     newGame(humanPlayer, computerPlayer) {
-        this.board.fillGrid(humanPlayer, computerPlayer) // adds starting positions to board
+        // adds starting positions to board
+        this.board.fillGrid(humanPlayer, computerPlayer) 
         
-        for (let i = 0; i < 5; i++) {
+        //Seed players' starting fences
+        for (let i = 0; i < 5; i++) { 
             humanPlayer.addFence()
             computerPlayer.addFence()
         }
     }
 
-    gameTurn() {
+    gameTurn() { //NOT GAME READY
         this._resetHTML() //FOR DEV ONLY
         this.board.render()
 
         this.selectToken()
 
-        this.switchCurrentPlayer
+        // this.switchCurrentPlayer()
     }
 
     //for DEV ONLY
@@ -44,9 +44,10 @@ export default class Game {
         return this.currentPlayer = (this.currentPlayer === this.humanPlayer ? this.computerPlayer : this.humanPlayer)
     }
 
-    playerTurn() {
-        return this.currentPlayer.selectToken()
-    }
+    //Refactor...not sure why I made this
+    // playerTurn() {
+    //     return this.currentPlayer.selectToken()
+    // }
 
     selectToken() {
         const squares = Array.from(document.getElementsByClassName("square")).map(el => el)
@@ -64,29 +65,37 @@ export default class Game {
 
         })})
         
-        //add fences
+        //WIP! add select fence
     }
 
+
+    //NEED: valid moves logic, countdown movesUntilNextFence for opponent
     moveToken(startPos) {
         const moveSquares =  Array.from(document.getElementsByClassName("square")).map(el => el)
         
-        if (true) { //logic for valid move
-            moveSquares.forEach( square => {square.addEventListener("click", event => {
-                const movePos = event.target.getAttribute("data-pos").split(",")
-                const moveSquare = this.board.getSquare(movePos)
-                
-                this.currentPlayer.token.setPos(movePos)
-                moveSquare.addToken(this.currentPlayer.token)
-                this.board.getSquare(startPos).removeToken()
+        //filter out invalid moves
+        moveSquares.filter( squareEle => {
+            const movePos = squareEle.getAttribute("data-pos").split(",")
+            const moveSquare = this.board.getSquare(movePos)
+            
+            if (moveSquare.isValidMove(movePos)) return squareEle
 
-                if (event.target) {
-                    return this.gameTurn()
-                }
-            })
-        })}
-         
+        //attach "click" event handlers to valid moves
+        }).forEach(square => square.addEventListener("click", event => {
+            const clickedPos = square.getAttribute("data-pos").split(",")
+            const clickedSquare = this.board.getSquare(clickedPos)
 
+            this.currentPlayer.token.setPos(clickedPos)
+            clickedSquare.addToken(this.currentPlayer.token)
+            this.board.getSquare(startPos).removeToken()
+            
+            //WIP! end of tune logic goes here
+            if (event.target) {
+                return this.gameTurn()
+            }
+        }))
     }
+
 
 }
 

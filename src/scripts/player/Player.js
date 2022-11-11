@@ -6,14 +6,17 @@ export default class Player {
         this.color = color
         this.fences = []
         this.token = new Token(color)
-        this.totalFences = 0
-        this.movesUntilNextFence = 0
+        this.movesUntilNewFence = 0
     }
 
     addFence() {
         let fence = new Fence(this.color)
         this.fences.push(fence)
-        this.totalFences++
-        this.movesUntilNextFence = this.totalFences + 1
+        this.movesUntilNewFence = this.totalFences() + 1 
     }
+
+    totalFences() {
+        this.fences.length
+    }
+
 }

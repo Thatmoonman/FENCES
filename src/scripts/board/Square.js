@@ -20,7 +20,7 @@ export default class Square {
     }
 
     
-    isValidMove(pos) {
+    isValidMove(token) {
         return true
     }
     
