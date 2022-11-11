@@ -26,8 +26,14 @@ export default class Game {
     }
 
     gameTurn() { //NOT GAME READY
-        this._resetHTML() //FOR DEV ONLY
-        this.board.render()
+        const gameOver = this.isGameOver()
+        
+        if (!gameOver) {
+            this._resetHTML() //FOR DEV ONLY
+            this.board.render()
+            this.selectToken()
+        }
+
 
         /* if current player, either grab token or fence by clicking, 
         clicking again should cancel grab, if token selected click valid square
@@ -37,10 +43,10 @@ export default class Game {
         */
 
         // if (this.currentPlayer === this.humanPlayer) {
-         this.selectToken()
         // }
+  
+            // return this.gameTurn()
         
-        // return this.gameTurn()
     }
 
     //for DEV ONLY
@@ -68,7 +74,7 @@ export default class Game {
             const pos = event.target.getAttribute("data-pos").split(",")
         
             const token = this.board.getSquare(pos).getToken()
-    
+            
             if (token && token.myToken(this.currentPlayer)) {
                 return this.placeToken(pos)
             } else {
@@ -84,13 +90,19 @@ export default class Game {
     //NEED: valid moves logic, countdown movesUntilNextFence for opponent
     placeToken(startPos) {
         const moveSquares =  Array.from(document.getElementsByClassName("square")).map(el => el)
+        const validMoves = this.board.validMoveToken(startPos)
         
+
+        //refactor to find valid moves and then attach event listeners only to those(maybe clicking elsewhere garners "invalid move")
+        console.log(validMoves)
+
+
         //filter out invalid moves
         moveSquares.filter( squareEle => {
             const movePos = squareEle.getAttribute("data-pos").split(",")
             const moveSquare = this.board.getSquare(movePos)
             
-            if (moveSquare.isValidMove(movePos)) return squareEle
+            if (validMoves.includes(movePos)) return squareEle
 
         //attach "click" event handlers to valid moves
         }).forEach(square => square.addEventListener("click", event => {
@@ -114,6 +126,20 @@ export default class Game {
 
     placeFence() {
 
+    }
+
+    isGameOver() {
+        if (parseInt(this.humanPlayer.token.getPos[1]) === 0) {
+            return this.gameOver(this.humanPlayer)
+        } else if (this.computerPlayer.token.getPos[1] === 16) {
+            return this.gameOver(this.computerPlayer)
+        } else {
+            return false
+        }
+    }
+
+    gameOver(player) {
+        alert(`${player.color} WON!`)
     }
 
 

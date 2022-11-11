@@ -5,6 +5,10 @@ export default class Square {
         this.holds = []
     }
 
+    filled() {
+        return !!this.holds.length
+    }
+
     getToken() {
         return this.holds[0]    
     }

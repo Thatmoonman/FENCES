@@ -10,6 +10,10 @@ export default class Token extends Piece {
         return this.color === player.color
     }
 
+    getPos(){
+        return this.pos.pos
+    }
+
     setPos(pos) {
         this.pos = pos
     }
