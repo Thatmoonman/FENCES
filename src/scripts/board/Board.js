@@ -89,13 +89,75 @@ export default class Board {
         return this.grid[posX][posY]
     }
 
-    validMove(token, startPos, endPos) {
+    validMoveToken(startPos) {
+
+        const fencePlacements = [[1,0], [-1, 0], [0, 1], [0, -1]]
+        const validMovements = [[2, 0], [-2, 0], [0, 2], [0, -2]]
+        const fenceJumpPlacements = [[3, 0], [-3, 0], [0, 3], [0, -3]]
+        const validJumpMovements = [[4, 0], [-4, 0], [0, 4], [0, -4]]
+
+        for (let i = 0; i < 4; i++) {
+            let fencePos = [
+                startPos[0] + fencePlacements[i][0],
+                startPos[1] + fencePlacements[i][1]
+            ]
+            let fenceJumpPos = [
+                startPos[0] + fenceJumpPlacements[i][0],
+                startPos[1] + fenceJumpPlacements[i][1]
+            ]
+            let movePos = [
+                startPos[0] + validMovements[i][0],
+                startPos[1] + validMovements[i][1]
+            ]
+            let jumpPos = [
+                startPos[0] + validJumpMovements[i][0],
+                startPos[1] + validJumpMovements[i][1]
+            ]
+            if (this.getSquare(fencePos).filled) {
+                continue;
+            } else 
+
+        }
+
+
+
+
+
+
+
+        let validMoves = validMovements.map( pos => {
+            return [pos[0] + parseInt(startPos[0]), pos[1] + parseInt(startPos[1])]
+        })
+
+        const checkForFences = fencesPlacements.map( pos => {
+            return [pos[0] + parseInt(startPos[0]), pos[1] + parseInt(startPos[1])]
+        })
+        const fences = checkForFences.map(pos => {
+            if (this.getSquare(pos).filled()) return pos
+        })
+        
+        //regular fence check
+        //jump logic with fence check
+        //perhaps this should all be one direction at a time and push
+        return validMoves.filter( pos => {
+            if (!this.getSquare(pos).filled())  {
+                return pos
+            } else if (!this.getSquare().filled()) {
+                return [pos[0] + 2, pos[1] + 2]
+            }
+        }).filter( pos => {
+            if (pos[0] >= 0 && pos[0] < 17 && pos[1] > 0 && pos[1] < 17) return pos
+        })
+    }
+        
         //if token move, gets current pos and checks if end pos is next to current or jumping opponent
         // #token.validMove
+    
 
+    validMoveFence() {}
         //if fence move, dupes grid, places fence, and checkes that grid is still solveable for both players.
         // #gridDup(grid), #solveforPlayer(player)
-    }
+    
 
 }
 
