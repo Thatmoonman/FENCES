@@ -7,9 +7,24 @@ export default class Square {
         this.holds = []
     }
 
+    getToken() {
+        return this.holds[0]    
+    }
+
+    addToken(token) {
+        return this.holds.push(token)
+    }
+
+    removeToken() {
+        return this.holds.pop()
+    }
+
     token() {
         return this.holds[0].toString()
     }
 
-    
+    isValidMove(pos) {
+        return true
+    }
+
 }

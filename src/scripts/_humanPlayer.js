@@ -6,4 +6,5 @@ export default class HumanPlayer extends Player {
         super(color, color)
 
     }
+
 }

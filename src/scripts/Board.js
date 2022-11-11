@@ -34,14 +34,15 @@ export default class Board {
     }
 
     fillGrid(humanPlayer, computerPlayer) {
-        const playerStart = this.grid[16][8]
-        const playerToken = new Piece(humanPlayer.color, [16, 8])
-        playerStart.holds.push(playerToken)
+        const playerStart = this.getSquare([8, 16])
+        humanPlayer.token.pos = playerStart
+        const playerToken = humanPlayer.token
+        playerStart.addToken(playerToken)
 
-        const computerStart = this.grid[0][8]
-        const computerToken = new Piece(computerPlayer.color, [0, 8])
-        computerStart.holds.push(computerToken)
-        
+        const computerStart = this.getSquare([8, 0])
+        computerPlayer.token.pos = computerStart
+        const computerToken = computerPlayer.token
+        computerStart.addToken(computerToken)
     }
 
     render() {
@@ -57,23 +58,28 @@ export default class Board {
                         let tokenStart = document.createElement("li")
                         tokenStart.innerText = square.token()
                         tokenStart.setAttribute("class", "square")
+                        tokenStart.setAttribute("data-pos", square.pos)
                         renderRow.appendChild(tokenStart)
                     } else {
                         let emptySquare = document.createElement("li")
                         emptySquare.setAttribute("class", "square")
+                        emptySquare.setAttribute("data-pos", square.pos)
                         renderRow.appendChild(emptySquare)
                     }
                 } else if (square.type === "fence" && i % 2 === 0) {
                     let fencePath = document.createElement("li")
                     fencePath.setAttribute("class", "verticalFence")
+                    fencePath.setAttribute("data-pos", square.pos)
                     renderRow.appendChild(fencePath)
                 } else if (square.type === "fence") {
                     let fencePath = document.createElement("li")
                     fencePath.setAttribute("class", "horizontalFence")
+                    fencePath.setAttribute("data-pos", square.pos)
                     renderRow.appendChild(fencePath)
                 } else {
                     let fenceNode = document.createElement("li")
                     fenceNode.setAttribute("class", "node")
+                    fenceNode.setAttribute("data-pos", square.pos)
                     renderRow.appendChild(fenceNode)
                 }
             })
@@ -82,13 +88,10 @@ export default class Board {
     }
 
     getSquare(pos) {
-        let posX = pos[0]
-        let posY = pos[1]
+        let posY = pos[0]
+        let posX = pos[1]
         return this.grid[posX][posY]
     }
 
-    moveToken(newPos) {
-        this.grid.getSquare().holds()
-    }
 }
 

@@ -1,18 +1,22 @@
 import Piece from "./Piece";
 
-export default class Fence extends Piece() {
-    constructor(dir="left") {
+export default class Fence extends Piece {
+    constructor(color, dir="left") {
         super(color, color)
         this.dir = dir
-        super(startPos, pos)
-        this.endPos = getEndPos(pos, dir)
+        this.startPos = null
+        this.endPos = null
     }
 
     changeDir(dir) {
         this.dir = dir
     }
 
-    getEndPos(pos, dir) {
+    setStartPos(pos) {
+        this.startPos = pos
+    }
+
+    getEndPos(startPos, dir) {
         dirCipher = {
             "up": [0, 2],
             "down": [0, -2],
@@ -20,11 +24,11 @@ export default class Fence extends Piece() {
             "right": [2, 0]
         }
 
-        let posX = pos[0]
-        let posY = pos[1]
+        let posX = startPos[0]
+        let posY = startPos[1]
         let dirX = dirCipher[dir][0]
         let dirY = dirCipher[dir][1]
 
-        return [posX + dirX, dirY, dirX]
+        return [posX + dirX, posY + dirY]
     }
 }
