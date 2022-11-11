@@ -1,5 +1,5 @@
 import Game from "./scripts/Game";
-import renderThree from "./scripts/threeJS";
+import renderThree from "./scripts/threejs/threeJS";
 
 //DEV: COMMENT BACK IN IF "DEFER" BREAKS
 // document.addEventListener("DOMContentLoaded", () => {

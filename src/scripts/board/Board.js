@@ -1,5 +1,4 @@
 import Square from "./Square"
-import Piece from "../piece/Piece"
 
 export default class Board {
     constructor() {
@@ -55,36 +54,33 @@ export default class Board {
                 
                 if (square.type === "token") {
                     if (square.holds.length) {
-                        let tokenStart = document.createElement("li")
+                        let tokenStart = this.buildSpace("li", "square", square.pos)
                         tokenStart.innerText = square.token()
-                        tokenStart.setAttribute("class", "square")
-                        tokenStart.setAttribute("data-pos", square.pos)
                         renderRow.appendChild(tokenStart)
                     } else {
-                        let emptySquare = document.createElement("li")
-                        emptySquare.setAttribute("class", "square")
-                        emptySquare.setAttribute("data-pos", square.pos)
+                        let emptySquare = this.buildSpace("li", "square", square.pos)
                         renderRow.appendChild(emptySquare)
                     }
                 } else if (square.type === "fence" && i % 2 === 0) {
-                    let fencePath = document.createElement("li")
-                    fencePath.setAttribute("class", "verticalFence")
-                    fencePath.setAttribute("data-pos", square.pos)
-                    renderRow.appendChild(fencePath)
+                    let fenceSpace = this.buildSpace("li", "verticalFence", square.pos)
+                    renderRow.appendChild(fenceSpace)                    
                 } else if (square.type === "fence") {
-                    let fencePath = document.createElement("li")
-                    fencePath.setAttribute("class", "horizontalFence")
-                    fencePath.setAttribute("data-pos", square.pos)
-                    renderRow.appendChild(fencePath)
+                    let fenceSpace = this.buildSpace("li", "horizontalFence", square.pos)
+                    renderRow.appendChild(fenceSpace)                    
                 } else {
-                    let fenceNode = document.createElement("li")
-                    fenceNode.setAttribute("class", "node")
-                    fenceNode.setAttribute("data-pos", square.pos)
-                    renderRow.appendChild(fenceNode)
+                    let nodeSpace = this.buildSpace("li", "node", square.pos)
+                    renderRow.appendChild(nodeSpace)                   
                 }
             })
             gameBoard.appendChild(renderRow)
         })
+    }
+
+    buildSpace(ele, classAttr, pos) {
+        let newEle = document.createElement(`${ele}`)
+        newEle.setAttribute("class", classAttr)
+        newEle.setAttribute("data-pos", pos)
+        return newEle
     }
 
     getSquare(pos) {

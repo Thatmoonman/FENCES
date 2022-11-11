@@ -1,5 +1,3 @@
-import Piece from "../piece/Piece"
-
 export default class Square {
     constructor(pos, type) {
         this.pos = pos

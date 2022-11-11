@@ -31,8 +31,3 @@
   height: 10px;
   background-color: red;
 }
-#gameBoard > ul > li.node {
-  width: 10px;
-  height: 10px;
-  background-color: red;
-}
