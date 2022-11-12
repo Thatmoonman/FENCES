@@ -31,7 +31,7 @@ export default class Game {
         if (!gameOver) {
             this._resetHTML() //FOR DEV ONLY
             this.board.render()
-            this.selectToken()
+            return this.selectToken()
         }
 
 
@@ -91,33 +91,39 @@ export default class Game {
     placeToken(startPos) {
         const moveSquares =  Array.from(document.getElementsByClassName("square")).map(el => el)
         const validMoves = this.board.validMoveToken(startPos)
+        const validMoveSquares = []
         
+        for (let i = 0; i < moveSquares.length; i++) {
+            let square = moveSquares[i]
 
-        //refactor to find valid moves and then attach event listeners only to those(maybe clicking elsewhere garners "invalid move")
-        console.log(validMoves)
-
-
-        //filter out invalid moves
-        moveSquares.filter( squareEle => {
-            const movePos = squareEle.getAttribute("data-pos").split(",")
-            const moveSquare = this.board.getSquare(movePos)
-            
-            if (validMoves.includes(movePos)) return squareEle
-
-        //attach "click" event handlers to valid moves
-        }).forEach(square => square.addEventListener("click", event => {
+            for (let j = 0; j < validMoves.length; j++) {
+                let validMove = validMoves[j]
+                let squarePos = square.getAttribute("data-pos").split(",").map(pos => parseInt(pos))
+    
+                if (validMove[0] === squarePos[0] && validMove[1] === squarePos[1]) {
+                    validMoveSquares.push(square)
+                }
+            }
+        }
+        
+        validMoveSquares.forEach(square => square.addEventListener("click", event => {
             const clickedPos = square.getAttribute("data-pos").split(",")
             const clickedSquare = this.board.getSquare(clickedPos)
 
-            this.currentPlayer.token.setPos(clickedPos)
-            clickedSquare.addToken(this.currentPlayer.token)
-            this.board.getSquare(startPos).removeToken()
+            this.setToken(clickedSquare)
             
             //WIP! end of tune logic goes here
             if (event.target) {
                 return this.gameTurn()
             }
         }))
+    }
+
+    setToken(square) {
+        this.board.getSquare(this.currentPlayer.token.getPos()).removeToken() //remove token from start square
+        this.currentPlayer.token.setPos(square) //update token location
+        square.addToken(this.currentPlayer.token) //put new token in new square
+        return square
     }
 
     selectFence() {

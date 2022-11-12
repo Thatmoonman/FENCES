@@ -20,11 +20,6 @@ export default class Square {
     removeToken() {
         return this.holds.pop()
     }
-
-    
-    isValidMove(token) {
-        return true
-    }
     
     //for dev rendering
     token() {

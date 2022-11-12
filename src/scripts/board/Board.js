@@ -1,3 +1,4 @@
+import Fence from "../piece/_Fence"
 import Square from "./Square"
 
 export default class Board {
@@ -84,19 +85,24 @@ export default class Board {
     }
 
     getSquare(pos) {
-        let posY = pos[0]
-        let posX = pos[1]
+        let posY = parseInt(pos[0])
+        let posX = parseInt(pos[1])
+        
         return this.grid[posX][posY]
     }
 
-    validMoveToken(startPos) {
-
+    validMoveToken(pos) {
+        const startPos = [parseInt(pos[0]), parseInt(pos[1])]
+        
         const fencePlacements = [[1,0], [-1, 0], [0, 1], [0, -1]]
         const validMovements = [[2, 0], [-2, 0], [0, 2], [0, -2]]
         const fenceJumpPlacements = [[3, 0], [-3, 0], [0, 3], [0, -3]]
         const validJumpMovements = [[4, 0], [-4, 0], [0, 4], [0, -4]]
 
+        const validMoves = []
+        
         for (let i = 0; i < 4; i++) {
+
             let fencePos = [
                 startPos[0] + fencePlacements[i][0],
                 startPos[1] + fencePlacements[i][1]
@@ -113,46 +119,30 @@ export default class Board {
                 startPos[0] + validJumpMovements[i][0],
                 startPos[1] + validJumpMovements[i][1]
             ]
-            if (this.getSquare(fencePos).filled) {
+
+            let inbounds = true
+            let jumpInbounds = true
+            
+            for (let j = 0; j < 2; j++) {
+                if (movePos[j] < 0 || movePos[j] > 16) {
+                    inbounds = false
+                    jumpInbounds = false
+                } else if (jumpPos[j] < 0 || jumpPos[j] > 16) {
+                    jumpInbounds = false;
+                }
+            }
+
+            if (inbounds && this.getSquare(fencePos).filled()) {
                 continue;
-            } else 
+            } else if (inbounds && !this.getSquare(movePos).filled()) {
+                validMoves.push(movePos)
+            } else if (jumpInbounds && !this.getSquare(fenceJumpPos).filled()) {
+                validMoves.push(jumpPos)
+            }
 
         }
-
-
-
-
-
-
-
-        let validMoves = validMovements.map( pos => {
-            return [pos[0] + parseInt(startPos[0]), pos[1] + parseInt(startPos[1])]
-        })
-
-        const checkForFences = fencesPlacements.map( pos => {
-            return [pos[0] + parseInt(startPos[0]), pos[1] + parseInt(startPos[1])]
-        })
-        const fences = checkForFences.map(pos => {
-            if (this.getSquare(pos).filled()) return pos
-        })
-        
-        //regular fence check
-        //jump logic with fence check
-        //perhaps this should all be one direction at a time and push
-        return validMoves.filter( pos => {
-            if (!this.getSquare(pos).filled())  {
-                return pos
-            } else if (!this.getSquare().filled()) {
-                return [pos[0] + 2, pos[1] + 2]
-            }
-        }).filter( pos => {
-            if (pos[0] >= 0 && pos[0] < 17 && pos[1] > 0 && pos[1] < 17) return pos
-        })
+        return validMoves
     }
-        
-        //if token move, gets current pos and checks if end pos is next to current or jumping opponent
-        // #token.validMove
-    
 
     validMoveFence() {}
         //if fence move, dupes grid, places fence, and checkes that grid is still solveable for both players.
