@@ -5,6 +5,7 @@ export default class Player {
     constructor(color) {
         this.color = color
         this.fences = []
+        this.totalFences = 0
         this.token = new Token(color, null, this)
         this.movesUntilNewFence = 0
     }
@@ -12,12 +13,8 @@ export default class Player {
     addFence() {
         let fence = new Fence(this.color)
         this.fences.push(fence)
-        this.movesUntilNewFence = this.totalFences() + 1 
+        this.totalFences += 1
         return true
-    }
-
-    totalFences() {
-        return this.fences.length
     }
 
     playTurn() {

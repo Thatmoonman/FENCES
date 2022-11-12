@@ -1,9 +1,11 @@
 import Fence from "../piece/_Fence"
+import HumanPlayer from "../player/_humanPlayer"
 import Square from "./Square"
 
 export default class Board {
-    constructor() {
+    constructor(humanPlayer, computerPlayer) {
         this.grid = []
+        this.players = [humanPlayer, computerPlayer]
         this.buildBoard()
     }
 
@@ -75,6 +77,27 @@ export default class Board {
             })
             gameBoard.appendChild(renderRow)
         })
+    
+
+        this.players.forEach( player => {
+            let fenceBox
+
+            if (player instanceof HumanPlayer) {
+                fenceBox = document.getElementById("humanPlayerFences")
+            } else {
+                fenceBox = document.getElementById("computerPlayerFences")
+            }
+            
+            let fences = player.fences.length
+            
+            for (let i = 0; i < fences; i++) {
+                let fence = document.createElement("li")
+                fence.style.backgroundColor = player.color
+                fenceBox.appendChild(fence)
+            }
+        })
+
+
     }
 
     buildSpace(ele, classAttr, pos) {

@@ -2,10 +2,11 @@ import Player from "./Player";
 
 
 export default class ComputerPlayer extends Player {
-    constructor(color, fences, movesUntilNewFence, token) {
+    constructor(color, fences, totalFences, movesUntilNewFence, token) {
         super(
             color, color, 
-            fences, fences, 
+            fences, fences,
+            totalFences, totalFences,
             movesUntilNewFence, movesUntilNewFence, 
             token, token)
     }

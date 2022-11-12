@@ -4,21 +4,21 @@ import HumanPlayer from "./player/_humanPlayer"
 
 export default class Game {
     constructor(playerColor="Blue", computerColor="Red") {
-        this.board = new Board()        
         this.humanPlayer = new HumanPlayer(playerColor)
         this.computerPlayer = new ComputerPlayer(computerColor)
         this.currentPlayer = this.humanPlayer
+        this.board = new Board(this.humanPlayer, this.computerPlayer)        
         
         this.newGame() 
     }
 
-    reset() {
-        this.board = new Board()
+    reset() {   //*RESETS GAME BOARD*
+        this.board = new Board(this.humanPlayer, this.computerPlayer)
         this.currentPlayer = this.humanPlayer
         return this.newGame()
     }
 
-    newGame() {    
+    newGame() { //*STARTS A NEW GAME*
         // adds starting positions to board
         this.board.fillGrid(this.humanPlayer, this.computerPlayer) 
 
@@ -55,16 +55,7 @@ export default class Game {
 
             }
         }
-
-            
-            // let turnOver = false
-
-            // while(!turnOver) {
-                
-                // turnOver = this.playTurn()
-                
-            // }
-        }
+    }
 
 
         /* if current player, either grab token or fence by clicking, 
@@ -73,10 +64,6 @@ export default class Game {
         once either is done current player gets switched and next turn starts.
         If move, reduce opponents movesUntilNewFence counter and respond accoordingly.
         */
-
-        
-    
-
 
     //for DEV ONLY
     _resetHTML() {
@@ -91,11 +78,8 @@ export default class Game {
         return this.currentPlayer = (this.currentPlayer === this.humanPlayer ? this.computerPlayer : this.humanPlayer)
     }
 
-    //Refactor...not sure why I made this
-    // playerTurn() {
-    //     return this.currentPlayer.selectToken()
-    // }
 
+    //REFACTOR ONTO HUMANPLAYER?
     selectToken() {
         const tokenSquares = Array.from(document.getElementsByClassName("playerSquare"))
             .map(el => el)
@@ -119,7 +103,7 @@ export default class Game {
     }
 
 
-    //NEED: valid moves logic, countdown movesUntilNextFence for opponent
+    //REFACTOR ONTO HUMANPLAYER?
     placeToken() {
         const startPos = this.currentPlayer.token.getPos()
         const moveSquares =  Array.from(document.getElementsByClassName("square")).map(el => el)
@@ -147,14 +131,19 @@ export default class Game {
 
             this.setToken(clickedSquare)
             
-            //WIP! end of turn logic goes here
+            //WIP! end of move turn logic goes here
             if (event.target) {
+                this.humanPlayer.movesUntilNewFence--
+                if (this.humanPlayer.movesUntilNewFence === 0) {
+                    this.computerPlayer.addFence()
+                    this.humanPlayer.movesUntilNewFence = this.computerPlayer.totalFences 
+                }
                 this.switchCurrentPlayer()
                 return this.gameLoop()
             }
         }))
     }
-
+    //REFACTOR ONTO PLAYER?
     setToken(square) {
         this.board.getSquare(this.currentPlayer.token.getPos()).removeToken() //remove token from start square
         this.currentPlayer.token.setPos(square) //update token location
@@ -188,17 +177,25 @@ export default class Game {
         return this.reset()
     }
 
+    //string to int helper function for position
     _getPosArray() {
         return this.getAttribute("data-pos").split(",").map(el => parseInt(el))
     }
 
 
+    //computer moves its token
+    //REFACTOR ONTO COMPUTERPLAYER?
     computerMove(pos=[0,2]) {
         const currentPos = this.currentPlayer.token.getPos()
         const movePos = [currentPos[0] + pos[0], currentPos[1] + pos[1]]
         const moveSquare = this.board.getSquare(movePos)
         this.setToken(moveSquare)
 
+        this.computerPlayer.movesUntilNewFence--
+        if (this.computerPlayer.movesUntilNewFence === 0) {
+            this.humanPlayer.addFence()
+            this.computerPlayer.movesUntilNewFence = this.humanPlayer.totalFences
+        }
         this.switchCurrentPlayer()
         return this.gameLoop()
     }

@@ -1,6 +1,11 @@
 /*!*************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/sass-loader/dist/cjs.js!./src/index.scss ***!
   \*************************************************************************************************************************************/
+.gameContainer {
+  display: flex;
+  justify-content: space-around;
+}
+
 #gameBoard > ul {
   display: flex;
   flex-wrap: wrap;
@@ -30,4 +35,22 @@
   width: 10px;
   height: 10px;
   background-color: red;
+}
+
+#humanPlayerFences, #computerPlayerFences {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  list-style: none;
+  width: 100px;
+  height: 300px;
+  padding: 20px;
+  border: 2px solid black;
+}
+#humanPlayerFences > li, #computerPlayerFences > li {
+  display: block;
+  width: 50px;
+  height: 20px;
+  border: 1px solid black;
+  margin: 10px;
 }
