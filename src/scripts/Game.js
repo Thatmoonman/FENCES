@@ -1,4 +1,5 @@
 import Board from "./board/Board"
+import MazeSolver from "./mazesolver/mazesolver"
 import ComputerPlayer from "./player/_computerPlayer"
 import HumanPlayer from "./player/_humanPlayer"
 
@@ -23,12 +24,16 @@ export default class Game {
     newGame() { //*STARTS A NEW GAME*
         // adds starting positions to board
         this.board.fillGrid(this.humanPlayer, this.computerPlayer) 
-
+         
         //Seed players' starting fences
         for (let i = 0; i < 5; i++) { 
             this.humanPlayer.addFence()
             this.computerPlayer.addFence()
         }
+        
+        //test maze solver
+        let m = new MazeSolver(this.humanPlayer, this.computerPlayer, this._dupeGrid(this.board.grid))
+        console.log(m.canSolve)
 
         return this.gameLoop()
     }
@@ -82,26 +87,24 @@ export default class Game {
 
 
     //REFACTOR ONTO HUMANPLAYER?
+    //*Allow player to "GRAB" their token
     selectToken() {
         const tokenSquares = Array.from(document.getElementsByClassName("playerSquare"))
             .map(el => el)
 
+        //get square that holds players token
         const tokenSquare = tokenSquares.filter(square => {
             let tokenPos = this._getPosArray.call(square)
             let playerPos = this.currentPlayer.token.getPos()
             return tokenPos[0] === playerPos[0] && tokenPos[1] === playerPos[1]
         })
-
-        tokenSquare.forEach( square => { square.addEventListener("click", event => {
-            const pos = event.target.getAttribute("data-pos").split(",")
         
+        //allow player to click on the square to pick up token
+        tokenSquare[0].addEventListener("click", event => {
+            const pos = event.target.getAttribute("data-pos").split(",")
             const token = this.board.getSquare(pos).getToken()
-            console.log("selected")
             return this.placeToken()
-            // return true
-        })})
-
-        //WIP! add select fence
+        })
     }
 
 
@@ -130,13 +133,11 @@ export default class Game {
         validMoveSquares.forEach(square => square.addEventListener("click", event => {
             const clickedPos = square.getAttribute("data-pos").split(",")
             const clickedSquare = this.board.getSquare(clickedPos)
-
             this.setToken(clickedSquare)
             
-            //WIP! end of move turn logic goes here
             if (event.target) {
                 this.humanPlayer.movesUntilNewFence--
-                console.log(this.humanPlayer.movesUntilNewFence)
+                
                 if (this.humanPlayer.movesUntilNewFence === 0) {
                     this.computerPlayer.addFence()
                     this.humanPlayer.movesUntilNewFence = this.computerPlayer.totalFences 
@@ -236,6 +237,24 @@ export default class Game {
         return parseInt(pos1[0]) === parseInt(pos2[0]) && parseInt(pos1[1]) === parseInt(pos2[1])
     }
 
+    _dupeGrid(grid) {
+        let duped = []
+
+        grid.forEach(row => {
+            let newRow = []
+            row.forEach(square => {
+                if (square.type === "token") {
+                    newRow.push("X")
+                } else {
+                    newRow.push(0)
+                }
+            })
+            duped.push(newRow)
+        })
+
+        return duped
+    }
+
 
     //computer moves its token
     //REFACTOR ONTO COMPUTERPLAYER?
@@ -253,5 +272,6 @@ export default class Game {
         this.switchCurrentPlayer()
         return this.gameLoop()
     }
+
 }
 
