@@ -1,6 +1,7 @@
 import Board from "./board/Board"
 import ComputerPlayer from "./player/_computerPlayer"
 import HumanPlayer from "./player/_humanPlayer"
+// import * as readline from 'readline'
 
 export default class Game {
     constructor(playerColor="Blue", computerColor="Red") {
@@ -22,16 +23,64 @@ export default class Game {
             computerPlayer.addFence()
         }
 
-        return this.gameTurn()
+        return this.play()
     }
 
-    gameTurn() { //NOT GAME READY
-        const gameOver = this.isGameOver()
+    play() {
+        const rlInterface = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+            terminal: false
+          });
+
+          this.gameLoop(function () {
+            rlInterface.close();
+            rlInterface = null;
+          });
+    }
+
+    playTurn() {
+        this.board.render();
+        rlInterface.question(
+        this.turn , //POSE QUESTION FOR USER
+        handleResponse.bind(this)
+        );
+
+        function handleResponse(answer) {
+        let pos = JSON.parse(answer);
+        if (!this.board.validMove(pos, this.turn)) {
+        console.log("Invalid move!");
+        this.playTurn(callback);
+    return;
+    }
+
+    this.board.placePiece(pos, this.turn);
+    this._flipTurn();
+    callback();
+  }
+    }
+
+    gameLoop() { //NOT GAME READY
+        const gameOver = this.isGameOver() //refactor into WIN Screen LATER
         
-        if (!gameOver) {
+        if (gameOver) {
+
+        } else if (this.currentPlayer = this.humanPlayer) {
             this._resetHTML() //FOR DEV ONLY
             this.board.render()
-            return this.selectToken()
+            return this.playTurn()
+        } else {
+            //computer turn
+        }
+
+            
+            // let turnOver = false
+
+            // while(!turnOver) {
+                
+                // turnOver = this.playTurn()
+                
+            // }
         }
 
 
@@ -42,16 +91,9 @@ export default class Game {
         If move, reduce opponents movesUntilNewFence counter and respond accoordingly.
         */
 
-        // if (this.currentPlayer === this.humanPlayer) {
-        // }
-  
-            // return this.gameTurn()
         
-    }
+    
 
-    playTurn() {
-        return this.selectToken || this.selectFence
-    }
 
     //for DEV ONLY
     _resetHTML() {
@@ -82,7 +124,7 @@ export default class Game {
             if (token && token.myToken(this.currentPlayer)) {
                 return this.placeToken(pos)
             } else {
-                return this.gameTurn()
+                return this.playTurn()
             }
 
         })})
@@ -118,7 +160,7 @@ export default class Game {
             
             //WIP! end of tune logic goes here
             if (event.target) {
-                return this.gameTurn()
+                return true
             }
         }))
     }
