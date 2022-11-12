@@ -1,7 +1,6 @@
 import Board from "./board/Board"
 import ComputerPlayer from "./player/_computerPlayer"
 import HumanPlayer from "./player/_humanPlayer"
-// import * as readline from 'readline'
 
 export default class Game {
     constructor(playerColor="Blue", computerColor="Red") {
@@ -23,42 +22,20 @@ export default class Game {
             computerPlayer.addFence()
         }
 
-        return this.play()
-    }
-
-    play() {
-        const rlInterface = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-            terminal: false
-          });
-
-          this.gameLoop(function () {
-            rlInterface.close();
-            rlInterface = null;
-          });
+        return this.gameLoop()
     }
 
     playTurn() {
-        this.board.render();
-        rlInterface.question(
-        this.turn , //POSE QUESTION FOR USER
-        handleResponse.bind(this)
-        );
-
-        function handleResponse(answer) {
-        let pos = JSON.parse(answer);
-        if (!this.board.validMove(pos, this.turn)) {
-        console.log("Invalid move!");
-        this.playTurn(callback);
-    return;
+        let tokenSelected = this.selectToken()
+        // let fenceSelected = this.selectFence()
+        // if (tokenSelected) {
+        //     this.placeToken()
+        // }
+        // console.log("loop?")
+        // this.selectFence()
+        // return this.gameLoop()
     }
-
-    this.board.placePiece(pos, this.turn);
-    this._flipTurn();
-    callback();
-  }
-    }
+    
 
     gameLoop() { //NOT GAME READY
         const gameOver = this.isGameOver() //refactor into WIN Screen LATER
@@ -115,30 +92,34 @@ export default class Game {
     selectToken() {
         const tokenSquares = Array.from(document.getElementsByClassName("playerSquare"))
             .map(el => el)
-        
-        tokenSquares.forEach( square => { square.addEventListener("click", event => {
+
+        const tokenSquare = tokenSquares.filter(square => {
+            let tokenPos = this._getPosArray.call(square)
+            let playerPos = this.currentPlayer.token.getPos()
+            return tokenPos[0] === playerPos[0] && tokenPos[1] === playerPos[1]
+        })
+
+        tokenSquare.forEach( square => { square.addEventListener("click", event => {
             const pos = event.target.getAttribute("data-pos").split(",")
         
             const token = this.board.getSquare(pos).getToken()
-            
-            if (token && token.myToken(this.currentPlayer)) {
-                return this.placeToken(pos)
-            } else {
-                return this.playTurn()
-            }
-
+            console.log("selected")
+            return this.placeToken()
+            // return true
         })})
-        
+
         //WIP! add select fence
     }
 
 
     //NEED: valid moves logic, countdown movesUntilNextFence for opponent
-    placeToken(startPos) {
+    placeToken() {
+        const startPos = this.currentPlayer.token.getPos()
         const moveSquares =  Array.from(document.getElementsByClassName("square")).map(el => el)
         const validMoves = this.board.validMoveToken(startPos)
         const validMoveSquares = []
         
+        //Get Valid Move Squares
         for (let i = 0; i < moveSquares.length; i++) {
             let square = moveSquares[i]
 
@@ -151,7 +132,8 @@ export default class Game {
                 }
             }
         }
-        
+        console.log(validMoveSquares)
+        //Add Event Listerers for Valid Squares
         validMoveSquares.forEach(square => square.addEventListener("click", event => {
             const clickedPos = square.getAttribute("data-pos").split(",")
             const clickedSquare = this.board.getSquare(clickedPos)
@@ -160,7 +142,7 @@ export default class Game {
             
             //WIP! end of tune logic goes here
             if (event.target) {
-                return true
+                return this.gameLoop()
             }
         }))
     }
@@ -194,6 +176,9 @@ export default class Game {
         alert(`${player.color} WON!`)
     }
 
+    _getPosArray() {
+        return this.getAttribute("data-pos").split(",").map(el => parseInt(el))
+    }
 
 }
 
