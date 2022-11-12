@@ -3,7 +3,7 @@ import renderThree from "./scripts/threejs/threeJS";
 
 //DEV: COMMENT BACK IN IF "DEFER" BREAKS
 // document.addEventListener("DOMContentLoaded", () => {
-    renderThree()
+    // renderThree()
 
 
     const game = new Game()

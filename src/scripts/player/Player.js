@@ -7,7 +7,7 @@ export default class Player {
         this.fences = []
         this.totalFences = 0
         this.token = new Token(color, null, this)
-        this.movesUntilNewFence = 0
+        this.movesUntilNewFence = 5
     }
 
     addFence() {

@@ -136,6 +136,7 @@ export default class Game {
             //WIP! end of move turn logic goes here
             if (event.target) {
                 this.humanPlayer.movesUntilNewFence--
+                console.log(this.humanPlayer.movesUntilNewFence)
                 if (this.humanPlayer.movesUntilNewFence === 0) {
                     this.computerPlayer.addFence()
                     this.humanPlayer.movesUntilNewFence = this.computerPlayer.totalFences 
