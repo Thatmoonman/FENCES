@@ -125,7 +125,7 @@ export default class Game {
                 }
             }
         }
-        console.log(validMoveSquares)
+    
         //Add Event Listerers for Valid Squares
         validMoveSquares.forEach(square => square.addEventListener("click", event => {
             const clickedPos = square.getAttribute("data-pos").split(",")
@@ -162,7 +162,7 @@ export default class Game {
         const unplayedFences = Array.from(fenceBoxEle.childNodes).map(el => el)
 
         unplayedFences.forEach( fence => {
-            fence.addEventListener( "click" , event => {
+            fence.addEventListener( "click" , () => {
                 return this.placeFenceStart()
             })
         })
@@ -172,7 +172,7 @@ export default class Game {
     placeFenceStart() {
         const nodes = Array.from(document.getElementsByClassName("node")).map(el => el)
         nodes.filter(node => this.board.nodeFree(this._getPosArray.call(node)))
-        nodes.forEach( node => node.addEventListener( "click", event => {
+        nodes.forEach( node => node.addEventListener( "click", () => {
             const startPos = this._getPosArray.call(node)
             return this.placeFenceEnd(startPos)
         }))
@@ -180,7 +180,33 @@ export default class Game {
     }
 
     placeFenceEnd(startPos) {
-        const validFenceMoves = this.board.validMoveFence(startPos)        
+        const validFences = this.board.validMoveFence(startPos)
+        const allNodes = Array.from(document.getElementsByClassName("node")).map(el => el)
+        const endNodes = []
+
+        validFences.forEach(validFence => {
+            for (let i = 0; i < allNodes.length; i++) {
+                let nodePos = this._getPosArray.call(allNodes[i])
+                if (nodePos[0] === validFence["nextNode"][0] && nodePos[1] === validFence["nextNode"][1]) {
+                    validFence["nodeLi"] = allNodes[i]
+                }
+            }
+        })
+        
+        // Need grab end node LI for event listening, then on click, change node square to hold, plus fences associated with that node
+        validFences.forEach(fenceObj => {
+            fenceObj["nodeLi"].addEventListener( "click", () => {
+                fenceObj["fences"].forEach( fence => {
+                    let fenceSquare = this.board.getSquare(fence)
+                    fenceSquare.addToken(this.humanPlayer.color)
+                })
+                this.board.getSquare(fenceObj["nextNode"]).holds++
+                this.humanPlayer.fences.pop()
+                this.switchCurrentPlayer()
+                return this.gameLoop()
+            })
+        })
+        
     }
 
     isGameOver() {
@@ -203,6 +229,11 @@ export default class Game {
     //string to int helper function for position
     _getPosArray() {
         return this.getAttribute("data-pos").split(",").map(el => parseInt(el))
+    }
+
+    //helper for Position Array Equality
+    _compareArrays() {
+
     }
 
 

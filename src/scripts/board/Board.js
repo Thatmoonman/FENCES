@@ -84,9 +84,15 @@ export default class Board {
                     }
                 } else if (square.type === "fence" && i % 2 === 0) {
                     let fenceSpace = this.buildSpace("li", "verticalFence", square.pos)
-                    renderRow.appendChild(fenceSpace)                    
+                    if (square.holds.length) {
+                        fenceSpace.style.backgroundColor = square.holds[0]
+                    }
+                    renderRow.appendChild(fenceSpace)             
                 } else if (square.type === "fence") {
                     let fenceSpace = this.buildSpace("li", "horizontalFence", square.pos)
+                    if (square.holds.length) {
+                        fenceSpace.style.backgroundColor = square.holds[0]
+                    }
                     renderRow.appendChild(fenceSpace)                    
                 } else {
                     let nodeSpace = this.buildSpace("li", "node", square.pos)
@@ -204,6 +210,10 @@ export default class Board {
             [[0, 1], [0, 3]],
             [[0, 1], [0, -3]] 
         ]
+
+        const nodePlacements = [
+            [4, 0], [-4, 0], [0, 4], [0, -4]
+        ]
         
         const validFences = []
 
@@ -215,9 +225,17 @@ export default class Board {
                 [nodePos[0] + fencePlacements[i][1][0],
                 nodePos[1] + fencePlacements[i][1][1]]
             ]
+
+            let nextNode = [
+                nodePos[0] + nodePlacements[i][0],
+                nodePos[1] + nodePlacements[i][1]
+            ]
+           
+
             let inbounds = true
             let free = true
             let solvable = true
+            let validFence
 
             if (fencePlacement[0][0] < 0 || fencePlacement[0][1] < 0 || fencePlacement[1][0] < 0 || fencePlacement[1][1] < 0
                 || fencePlacement[0][0] > 16 || fencePlacement[0][1] > 16 || fencePlacement[1][0] > 16 || fencePlacement[1][1] > 16
@@ -230,10 +248,14 @@ export default class Board {
             }
 
             if (inbounds && free && solvable) {
-                validFences.push(fencePlacement)
+                validFence = {
+                    "fences": fencePlacement,
+                    "nextNode": nextNode
+                }
+                validFences.push(validFence)
             }
         }
-        console.log(validFences)
+    
         return validFences
     }
         //if fence move, dupes grid, places fence, and checkes that grid is still solveable for both players.
