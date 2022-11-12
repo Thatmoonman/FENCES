@@ -36,7 +36,7 @@ export default class Game {
     playTurn() {
         
         this.selectToken()
-        // let fenceSelected = this.selectFence()
+        this.selectFence()
     
     }
     
@@ -145,6 +145,8 @@ export default class Game {
                 return this.gameLoop()
             }
         }))
+
+        //ADD event listener for start space: UNDO
     }
     //REFACTOR ONTO PLAYER?
     setToken(square) {
@@ -156,11 +158,29 @@ export default class Game {
     }
 
     selectFence() {
+        const fenceBoxEle = document.getElementById("humanPlayerFences")
+        const unplayedFences = Array.from(fenceBoxEle.childNodes).map(el => el)
+
+        unplayedFences.forEach( fence => {
+            fence.addEventListener( "click" , event => {
+                return this.placeFenceStart()
+            })
+        })
         
     }
 
-    placeFence() {
+    placeFenceStart() {
+        const nodes = Array.from(document.getElementsByClassName("node")).map(el => el)
+        nodes.filter(node => this.board.nodeFree(this._getPosArray.call(node)))
+        nodes.forEach( node => node.addEventListener( "click", event => {
+            const startPos = this._getPosArray.call(node)
+            return this.placeFenceEnd(startPos)
+        }))
 
+    }
+
+    placeFenceEnd(startPos) {
+        const validFenceMoves = this.board.validMoveFence(startPos)        
     }
 
     isGameOver() {

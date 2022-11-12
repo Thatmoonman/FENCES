@@ -10,11 +10,13 @@ export default class Board {
     }
 
     buildBoard() {
-        for (let i = 0 ; i < 17; i++) {
+        
+        for (let i = 0; i < 17; i++) {
             let row = []
-
+            
             for (let j = 0; j < 17; j++) {
-
+                
+                let edgeNodesHold = 0
                 let pos = [j, i]
                 let type = ""
                 let iEven = (i + 2) % 2 === 0 
@@ -24,11 +26,28 @@ export default class Board {
                     type = "token"
                 } else if (iEven && !jEven || !iEven && jEven) {
                     type = "fence"
+                } else if (
+                    i === 1 && j === 1 
+                    || i === 1 && j === 15 
+                    || i === 15 && j === 1
+                    || i === 15 && j === 15
+                    ) {
+                        type = "node"
+                        edgeNodesHold = 2
+                } else if (i === 1 || i === 15 || j === 1 || j === 15) {
+                    type = "node"
+                    edgeNodesHold = 1
                 } else {
                     type = "node"
                 }
                 
                 let square = new Square(pos, type)
+        
+                for (let i = 0; i < edgeNodesHold; i++) {     
+                    square.addToken("BLOCK")
+                }
+                    
+                
                 row.push(square)
             }
             this.grid.push(row)
@@ -48,7 +67,6 @@ export default class Board {
     }
 
     render() {
-        
         this.grid.forEach( (row, i) => {
             let gameBoard = document.getElementById("gameBoard")
             let renderRow = document.createElement("ul")
@@ -100,8 +118,6 @@ export default class Board {
                 fenceBox.appendChild(fence)
             }
         })
-
-
     }
 
     buildSpace(ele, classAttr, pos) {
@@ -171,10 +187,61 @@ export default class Board {
         return validMoves
     }
 
-    validMoveFence() {}
+    nodeFree(nodePos) {
+        const node = this.getSquare(nodePos)
+        if (node.holds.length < 4) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    validMoveFence(nodePos) {
+        
+        const fencePlacements = [
+            [[1, 0], [3, 0]],
+            [[-1, 0], [-3, 0]],
+            [[0, 1], [0, 3]],
+            [[0, 1], [0, -3]] 
+        ]
+        
+        const validFences = []
+
+        for (let i = 0; i < 4; i++) {
+
+            let fencePlacement = [
+                [nodePos[0] + fencePlacements[i][0][0],
+                nodePos[1] + fencePlacements[i][0][1]],
+                [nodePos[0] + fencePlacements[i][1][0],
+                nodePos[1] + fencePlacements[i][1][1]]
+            ]
+            let inbounds = true
+            let free = true
+            let solvable = true
+
+            if (fencePlacement[0][0] < 0 || fencePlacement[0][1] < 0 || fencePlacement[1][0] < 0 || fencePlacement[1][1] < 0
+                || fencePlacement[0][0] > 16 || fencePlacement[0][1] > 16 || fencePlacement[1][0] > 16 || fencePlacement[1][1] > 16
+                ) {
+                inbounds = false
+            } else if (this.getSquare(fencePlacement[0]).filled() || this.getSquare(fencePlacement[1]).filled()) {
+                free = false
+            } else if (!this.solvable(nodePos, fencePlacement)){
+                   solvable = false
+            }
+
+            if (inbounds && free && solvable) {
+                validFences.push(fencePlacement)
+            }
+        }
+        console.log(validFences)
+        return validFences
+    }
         //if fence move, dupes grid, places fence, and checkes that grid is still solveable for both players.
         // #gridDup(grid), #solveforPlayer(player)
-    
+
+    solvable(nodePos, fencePlacement) {
+        return true
+    }
 
 }
 
