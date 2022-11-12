@@ -87,6 +87,10 @@ export default class Board {
             } else {
                 fenceBox = document.getElementById("computerPlayerFences")
             }
+
+            while (fenceBox.firstChild) {
+                fenceBox.removeChild(fenceBox.firstChild)
+            }
             
             let fences = player.fences.length
             

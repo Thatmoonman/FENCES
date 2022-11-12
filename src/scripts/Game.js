@@ -12,7 +12,9 @@ export default class Game {
         this.newGame() 
     }
 
-    reset() {   //*RESETS GAME BOARD*
+    reset() {   //*RESETS GAME BOARD* => move this to INDEX.JS
+        this.humanPlayer = new HumanPlayer(this.humanPlayer.color)
+        this.computerPlayer = new ComputerPlayer(this.computerPlayer.color)
         this.board = new Board(this.humanPlayer, this.computerPlayer)
         this.currentPlayer = this.humanPlayer
         return this.newGame()
