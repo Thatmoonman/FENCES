@@ -182,25 +182,25 @@ export default class Game {
     placeFenceEnd(startPos) {
         const validFences = this.board.validMoveFence(startPos)
         const allNodes = Array.from(document.getElementsByClassName("node")).map(el => el)
-        const endNodes = []
+        console.log(validFences)
 
         validFences.forEach(validFence => {
             for (let i = 0; i < allNodes.length; i++) {
                 let nodePos = this._getPosArray.call(allNodes[i])
-                if (nodePos[0] === validFence["nextNode"][0] && nodePos[1] === validFence["nextNode"][1]) {
+                if (this._compareArrays(nodePos, validFence["endNode"])) {
                     validFence["nodeLi"] = allNodes[i]
                 }
             }
         })
         
-        // Need grab end node LI for event listening, then on click, change node square to hold, plus fences associated with that node
         validFences.forEach(fenceObj => {
             fenceObj["nodeLi"].addEventListener( "click", () => {
                 fenceObj["fences"].forEach( fence => {
                     let fenceSquare = this.board.getSquare(fence)
                     fenceSquare.addToken(this.humanPlayer.color)
                 })
-                this.board.getSquare(fenceObj["nextNode"]).holds++
+                this.board.getSquare(fenceObj["midNode"]).holds.push("MID")
+                this.board.getSquare(fenceObj["endNode"]).holds.push("FENCE")
                 this.humanPlayer.fences.pop()
                 this.switchCurrentPlayer()
                 return this.gameLoop()
@@ -232,8 +232,8 @@ export default class Game {
     }
 
     //helper for Position Array Equality
-    _compareArrays() {
-
+    _compareArrays(pos1, pos2) {
+        return parseInt(pos1[0]) === parseInt(pos2[0]) && parseInt(pos1[1]) === parseInt(pos2[1])
     }
 
 

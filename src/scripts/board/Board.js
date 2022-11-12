@@ -202,6 +202,7 @@ export default class Board {
         }
     }
 
+
     validMoveFence(nodePos) {
         
         const fencePlacements = [
@@ -211,7 +212,11 @@ export default class Board {
             [[0, 1], [0, -3]] 
         ]
 
-        const nodePlacements = [
+        const midNodePlacements = [
+            [2, 0], [-2, 0], [0, 2], [0, -2]
+        ]
+
+        const endNodePlacements = [
             [4, 0], [-4, 0], [0, 4], [0, -4]
         ]
         
@@ -226,31 +231,38 @@ export default class Board {
                 nodePos[1] + fencePlacements[i][1][1]]
             ]
 
-            let nextNode = [
-                nodePos[0] + nodePlacements[i][0],
-                nodePos[1] + nodePlacements[i][1]
+            let midNode = [
+                nodePos[0] + midNodePlacements[i][0],
+                nodePos[1] + midNodePlacements[i][1]
+            ]
+
+            let endNode = [
+                nodePos[0] + endNodePlacements[i][0],
+                nodePos[1] + endNodePlacements[i][1]
             ]
            
 
             let inbounds = true
             let free = true
+            let notCrossing = true
             let solvable = true
             let validFence
 
-            if (fencePlacement[0][0] < 0 || fencePlacement[0][1] < 0 || fencePlacement[1][0] < 0 || fencePlacement[1][1] < 0
-                || fencePlacement[0][0] > 16 || fencePlacement[0][1] > 16 || fencePlacement[1][0] > 16 || fencePlacement[1][1] > 16
-                ) {
+            if (endNode[0] < 0 || endNode[0] > 16 || endNode[1] < 0 || endNode[1] > 16) {
                 inbounds = false
             } else if (this.getSquare(fencePlacement[0]).filled() || this.getSquare(fencePlacement[1]).filled()) {
                 free = false
+            } else if (this.getSquare(midNode).holds.includes("MID")) {
+                notCrossing = false
             } else if (!this.solvable(nodePos, fencePlacement)){
                    solvable = false
             }
 
-            if (inbounds && free && solvable) {
+            if (inbounds && free && notCrossing && solvable) {
                 validFence = {
                     "fences": fencePlacement,
-                    "nextNode": nextNode
+                    "midNode": midNode,
+                    "endNode": endNode
                 }
                 validFences.push(validFence)
             }
