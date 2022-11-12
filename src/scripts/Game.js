@@ -49,6 +49,10 @@ export default class Game {
         
     }
 
+    playTurn() {
+        return this.selectToken || this.selectFence
+    }
+
     //for DEV ONLY
     _resetHTML() {
         const board = document.getElementById("gameBoard")
