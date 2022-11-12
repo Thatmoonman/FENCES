@@ -9,45 +9,51 @@ export default class Game {
         this.computerPlayer = new ComputerPlayer(computerColor)
         this.currentPlayer = this.humanPlayer
         
-        this.newGame(this.humanPlayer, this.computerPlayer) 
+        this.newGame() 
     }
 
-    newGame(humanPlayer, computerPlayer) {    
+    reset() {
+        this.board = new Board()
+        this.currentPlayer = this.humanPlayer
+        return this.newGame()
+    }
+
+    newGame() {    
         // adds starting positions to board
-        this.board.fillGrid(humanPlayer, computerPlayer) 
-        
+        this.board.fillGrid(this.humanPlayer, this.computerPlayer) 
+
         //Seed players' starting fences
         for (let i = 0; i < 5; i++) { 
-            humanPlayer.addFence()
-            computerPlayer.addFence()
+            this.humanPlayer.addFence()
+            this.computerPlayer.addFence()
         }
 
         return this.gameLoop()
     }
 
     playTurn() {
-        let tokenSelected = this.selectToken()
+        
+        this.selectToken()
         // let fenceSelected = this.selectFence()
-        // if (tokenSelected) {
-        //     this.placeToken()
-        // }
-        // console.log("loop?")
-        // this.selectFence()
-        // return this.gameLoop()
+    
     }
     
 
     gameLoop() { //NOT GAME READY
         const gameOver = this.isGameOver() //refactor into WIN Screen LATER
-        
-        if (gameOver) {
 
-        } else if (this.currentPlayer = this.humanPlayer) {
+        if (gameOver) {
+        
+        } else if (this.currentPlayer === this.humanPlayer) {
             this._resetHTML() //FOR DEV ONLY
-            this.board.render()
             return this.playTurn()
         } else {
-            //computer turn
+            let computerTurn = this.currentPlayer.playTurn()
+            if (computerTurn = "move") {
+                return this.computerMove()
+            } else {
+
+            }
         }
 
             
@@ -78,6 +84,7 @@ export default class Game {
         while(board.firstChild) {
             board.removeChild(board.firstChild)
         }
+        this.board.render()
     }
 
     switchCurrentPlayer() {
@@ -140,8 +147,9 @@ export default class Game {
 
             this.setToken(clickedSquare)
             
-            //WIP! end of tune logic goes here
+            //WIP! end of turn logic goes here
             if (event.target) {
+                this.switchCurrentPlayer()
                 return this.gameLoop()
             }
         }))
@@ -151,6 +159,7 @@ export default class Game {
         this.board.getSquare(this.currentPlayer.token.getPos()).removeToken() //remove token from start square
         this.currentPlayer.token.setPos(square) //update token location
         square.addToken(this.currentPlayer.token) //put new token in new square
+        this._resetHTML()
         return square
     }
 
@@ -163,9 +172,11 @@ export default class Game {
     }
 
     isGameOver() {
-        if (parseInt(this.humanPlayer.token.getPos[1]) === 0) {
+        if (parseInt(this.humanPlayer.token.getPos()[1]) === 0) {
+            console.log("human won")
             return this.gameOver(this.humanPlayer)
-        } else if (this.computerPlayer.token.getPos[1] === 16) {
+        } else if (parseInt(this.computerPlayer.token.getPos()[1]) === 16) {
+            console.log("computer won")
             return this.gameOver(this.computerPlayer)
         } else {
             return false
@@ -174,11 +185,22 @@ export default class Game {
 
     gameOver(player) {
         alert(`${player.color} WON!`)
+        return this.reset()
     }
 
     _getPosArray() {
         return this.getAttribute("data-pos").split(",").map(el => parseInt(el))
     }
 
+
+    computerMove(pos=[0,2]) {
+        const currentPos = this.currentPlayer.token.getPos()
+        const movePos = [currentPos[0] + pos[0], currentPos[1] + pos[1]]
+        const moveSquare = this.board.getSquare(movePos)
+        this.setToken(moveSquare)
+
+        this.switchCurrentPlayer()
+        return this.gameLoop()
+    }
 }
 

@@ -20,4 +20,7 @@ export default class Player {
         return this.fences.length
     }
 
+    playTurn() {
+        console.log("NOT SELECTING COMPUTER PLAYER")
+    }
 }

@@ -9,4 +9,16 @@ export default class ComputerPlayer extends Player {
             movesUntilNewFence, movesUntilNewFence, 
             token, token)
     }
+
+    playTurn() {
+        /*logic for choosing whether to move or fence
+        HELPER FUNC NEED:
+            maze solver
+            move token
+            place fence
+        */
+
+        //FOR DEV
+        return "move"
+    }
 }
