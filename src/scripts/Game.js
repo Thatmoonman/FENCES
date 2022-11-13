@@ -32,8 +32,9 @@ export default class Game {
         }
         
         //test maze solver
+    
         let m = new MazeSolver(this.humanPlayer, this.computerPlayer, this._dupeGrid(this.board.grid))
-        // console.log(m)
+        console.log(m.canSolve)
 
         return this.gameLoop()
     }

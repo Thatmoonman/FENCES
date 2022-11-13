@@ -9,7 +9,6 @@ export default class MazePath {
         this.consideredPositions = []
         
         this.buildMoveTree(this.rootNode)
-        console.log(this.rootNode)
     }
 
     validMoves(startPos) {
@@ -86,8 +85,7 @@ export default class MazePath {
     }
 
     findDFS(target) {
-        // console.log(this.tree)
-        // return this.tree.dfs(target)
+        return this.rootNode.dfs(target)
     }
 
     findBFS(target) {

@@ -34,16 +34,18 @@ export default class MazeSolver {
     }
 
     isSolvable(startPos, endPosArray) {
-        let endPos = false
+        let endPos
         
         for (let i = 0; i < endPosArray.length; i++) {
             let tree = new MazePath(startPos, endPosArray[i], this.grid)
-            // console.log(tree)
-            // endPos = tree.findDFS(endPosArray)
+            endPos = tree.findDFS(endPosArray[i])
+            if (endPos) break;
         }
 
         return !!endPos
     }
+
+
         
    
         /*iterate through every position ***can stop once you find one path to end***
@@ -60,14 +62,14 @@ export default class MazeSolver {
         --> end means no empty squares that have not been visited yet
     */
 
-    _at(pos1, pos2=[0,0]) {
-        let newPos = [pos1[0] + pos2[0], pos1[1] + pos2[1]]
-        return this.grid[newPos[1]][newPos[0]]
-    }
+    // _at(pos1, pos2=[0,0]) {
+    //     let newPos = [pos1[0] + pos2[0], pos1[1] + pos2[1]]
+    //     return this.grid[newPos[1]][newPos[0]]
+    // }
 
-    _compareArrays(pos1, pos2) {
-        return parseInt(pos1[0]) === parseInt(pos2[0]) && parseInt(pos1[1]) === parseInt(pos2[1])
-    }
+    // _compareArrays(pos1, pos2) {
+    //     return parseInt(pos1[0]) === parseInt(pos2[0]) && parseInt(pos1[1]) === parseInt(pos2[1])
+    // }
 
 }
 

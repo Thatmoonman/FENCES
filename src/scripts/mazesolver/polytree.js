@@ -14,16 +14,24 @@ export default class PolyTreeNode {
     }
 
     dfs(targetValue) {
-        if (this.value === targetValue) return this
+        if (this.value[0] === targetValue[0] && this.value[1] === targetValue[1]) return this
 
-        this.children.forEach( child => {
+        for (let i = 0; i < this.children.length; i++) {
+            let child = this.children[i]
             let currentChild = this.dfs.call(child, targetValue)
-            if (currentChild) {
-                return currentChild
-            } else {
-                return null
-            }
-        })
+            if (currentChild) return currentChild
+        }
+
+
+        // this.children.forEach( child => {
+        //     let currentChild = this.dfs.call(child, targetValue)
+        //     console.log(currentChild)
+        //     if (currentChild) {
+        //         return currentChild
+        //     } 
+        // })
+
+        return undefined
     }
 
     bfs(targetValue) {
