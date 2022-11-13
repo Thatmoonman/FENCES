@@ -51,11 +51,11 @@ export default class Game {
             this._resetHTML() //FOR DEV ONLY
             return this.playTurn()
         } else {
-            let currentBoard = new MazeSolver(this.computerPlayer, this.humanPlayer, this._dupeGrid(this.board.grid))
+            const currentBoard = new MazeSolver(this.computerPlayer, this.humanPlayer, this._dupeGrid(this.board.grid))
             this.computerPlayer.goal = currentBoard.shortestPath
 
-            let computerTurn = this.computerPlayer.playTurn()
-            if (computerTurn = "move") {
+            const computerTurn = this.computerPlayer.computerTurnLogic()
+            if (computerTurn === "move") {
                 return this.computerMove()
             } else {
                 return this.computerFence()
@@ -298,9 +298,38 @@ export default class Game {
         return this.gameLoop()
     }
 
-    computerFence() {}
+    computerFence() {
+        if (!this.computerPlayer.fences.length) return this.computerMove()
+
+        const opponentPos = this.humanPlayer.token.getPos()
+        const pathToLose = new MazeSolver(this.humanPlayer, this.computerPlayer, this._dupeGrid(this.board.grid))
+        const assumedPath = pathToLose.shortestPath
+        
+        while (assumedPath.length) {
+            let nextMove = assumedPath.shift()
+            let fencePosStart = this.getNearestNode(opponentPos, nextMove)
+            console.log(fencePosStart)
+            let validFences = this.board.validMoveFence(fencePosStart)
+
+            for (let i = 0; i < validFences.length; i++) {
+                let validFence = validFences[i]
+                if (this._compareArrays(validFence["startNode"], fencePosStart)) {
+                    return this.placeComputerFence(validFence)
+                }
+            }
+        } 
+        
+    }
 
     computerJump() {}
+
+    placeComputerFence(fencObj) {
+        console.log(fencObj)
+    }
+
+    getNearestNode(pos1, pos2) {
+        
+    }
 
 }
 

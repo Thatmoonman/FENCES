@@ -18,7 +18,7 @@ export default class ComputerPlayer extends Player {
         this.goal
     }
 
-    playTurn() {
+    computerTurnLogic() {
         let moveChance = .5
         let moveDifferential = this.watchPlayer["moves"] - this.watchPlayer["fences"]
 
