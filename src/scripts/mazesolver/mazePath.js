@@ -1,7 +1,8 @@
 import PolyTreeNode from "./polytree"
 
 export default class MazePath {
-    constructor(startPos) {
+    constructor(startPos, grid) {
+        this.grid = grid
         this.startPos = startPos
         this.rootNode = new PolyTreeNode(startPos)
         this.consideredPositions = [startPos]
@@ -17,6 +18,8 @@ export default class MazePath {
 
         newValidMoves = newValidMoves.filter(pos => {
             pos[0] >= 0 && pos[1] >= 0 && pos[1] <= 16 && pos[1] <= 16
+        }).filter(pos => {
+            if (this.grid._at(pos)) return pos
         })
 
         return newValidMoves
@@ -30,7 +33,7 @@ export default class MazePath {
 
         while (moves.length) {
             let currentNode = moves.shift()
-            let currentChildren = newMovePositions(currentNode.value)
+            let currentChildren = this.newMovePositions(currentNode.value)
             currentChildren.forEach(child => {
                 let childNode = new PolyTreeNode(child)
                 currentNode.addChildren(childNode)
@@ -52,12 +55,17 @@ export default class MazePath {
 
     }
 
-    findDFS() {
+    findDFS(target) {
+        return true
+    }
+
+    findBFS(target) {
 
     }
 
-    findBFS() {
-        
+    _at(pos1, pos2=[0,0]) {
+        let newPos = [pos1[0] + pos2[0], pos1[1] + pos2[1]]
+        return this.grid[newPos[1]][newPos[0]]
     }
 
 }

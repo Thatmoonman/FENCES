@@ -1,4 +1,5 @@
 import HumanPlayer from "../player/_humanPlayer"
+import MazePath from "./mazePath"
 
 export default class MazeSolver {
     constructor(currentPlayer, opponent, grid) {
@@ -9,7 +10,7 @@ export default class MazeSolver {
         const startPos = currentPlayer.token.getPos()
         const endPosArray = this.getEndPos(currentPlayer)
 
-        this.canSolve = this.isSolvable(startPos, endPosArray, this.grid)
+        this.canSolve = this.isSolvable(startPos, endPosArray)
     }
 
     getEndPos(player) {
@@ -33,14 +34,14 @@ export default class MazeSolver {
     }
 
     isSolvable(startPos, endPosArray) {
+        let endPos = false
         
         for (let i = 0; i < endPosArray.length; i++) {
-            let tree = this.buildTree(startPos, endPosArray[i])
-            if (tree) return tree
+            let tree = new MazePath(startPos, this.grid)
+            endPos = tree.findDFS(endPosArray)
         }
 
-        //if dfs tree from start to end ==> return true, else false
-        
+        return !!endPos
     }
         
    
