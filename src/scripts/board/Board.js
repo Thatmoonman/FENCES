@@ -209,16 +209,16 @@ export default class Board {
             [[1, 0], [3, 0]],
             [[-1, 0], [-3, 0]],
             [[0, 1], [0, 3]],
-            [[0, 1], [0, -3]] 
+            [[0, -1], [0, -3]] 
         ]
 
         const midNodePlacements = [
             [2, 0], [-2, 0], [0, 2], [0, -2]
         ]
 
-        const endNodePlacements = [
-            [4, 0], [-4, 0], [0, 4], [0, -4]
-        ]
+        // const endNodePlacements = [
+        //     [4, 0], [-4, 0], [0, 4], [0, -4]
+        // ]
         
         const validFences = []
 
@@ -236,10 +236,10 @@ export default class Board {
                 nodePos[1] + midNodePlacements[i][1]
             ]
 
-            let endNode = [
-                nodePos[0] + endNodePlacements[i][0],
-                nodePos[1] + endNodePlacements[i][1]
-            ]
+            // let endNode = [
+            //     nodePos[0] + endNodePlacements[i][0],
+            //     nodePos[1] + endNodePlacements[i][1]
+            // ]
            
 
             let inbounds = true
@@ -248,7 +248,7 @@ export default class Board {
             let solvable = true
             let validFence
 
-            if (endNode[0] < 0 || endNode[0] > 16 || endNode[1] < 0 || endNode[1] > 16) {
+            if (midNode[0] < 0 || midNode[0] > 16 || midNode[1] < 0 || midNode[1] > 16) {
                 inbounds = false
             } else if (this.getSquare(fencePlacement[0]).filled() || this.getSquare(fencePlacement[1]).filled()) {
                 free = false
@@ -261,10 +261,12 @@ export default class Board {
             if (inbounds && free && notCrossing && solvable) {
                 validFence = {
                     "fences": fencePlacement,
+                    "startNode": nodePos,
                     "midNode": midNode,
-                    "endNode": endNode
+                    // "endNode": endNode
                 }
                 validFences.push(validFence)
+                console.log(validFence)
             }
         }
     

@@ -183,12 +183,11 @@ export default class Game {
     placeFenceEnd(startPos) {
         const validFences = this.board.validMoveFence(startPos)
         const allNodes = Array.from(document.getElementsByClassName("node")).map(el => el)
-        console.log(validFences)
 
         validFences.forEach(validFence => {
             for (let i = 0; i < allNodes.length; i++) {
                 let nodePos = this._getPosArray.call(allNodes[i])
-                if (this._compareArrays(nodePos, validFence["endNode"])) {
+                if (this._compareArrays(nodePos, validFence["midNode"])) {
                     validFence["nodeLi"] = allNodes[i]
                 }
             }
@@ -200,8 +199,9 @@ export default class Game {
                     let fenceSquare = this.board.getSquare(fence)
                     fenceSquare.addToken(this.humanPlayer.color)
                 })
+                this.board.getSquare(fenceObj["startNode"]).holds.push("Fence")
                 this.board.getSquare(fenceObj["midNode"]).holds.push("MID")
-                this.board.getSquare(fenceObj["endNode"]).holds.push("FENCE")
+                // this.board.getSquare(fenceObj["endNode"]).holds.push("FENCE")
                 this.humanPlayer.fences.pop()
                 this.switchCurrentPlayer()
                 return this.gameLoop()
@@ -237,6 +237,7 @@ export default class Game {
         return parseInt(pos1[0]) === parseInt(pos2[0]) && parseInt(pos1[1]) === parseInt(pos2[1])
     }
 
+    //Duplicate grid into GRAPH form for maze solver
     _dupeGrid(grid) {
         let duped = []
 
