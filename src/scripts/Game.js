@@ -4,7 +4,7 @@ import ComputerPlayer from "./player/_computerPlayer"
 import HumanPlayer from "./player/_humanPlayer"
 
 export default class Game {
-    constructor(playerColor="Blue", computerColor="Red") {
+    constructor(playerColor="blue", computerColor="red") {
         this.humanPlayer = new HumanPlayer(playerColor)
         this.computerPlayer = new ComputerPlayer(computerColor)
         this.currentPlayer = this.humanPlayer
@@ -98,11 +98,11 @@ export default class Game {
             let playerPos = this.currentPlayer.token.getPos()
             return tokenPos[0] === playerPos[0] && tokenPos[1] === playerPos[1]
         })
-        
+
         //allow player to click on the square to pick up token
-        tokenSquare[0].addEventListener("click", event => {
-            const pos = event.target.getAttribute("data-pos").split(",")
-            const token = this.board.getSquare(pos).getToken()
+        tokenSquare[0].firstChild.addEventListener("click", event => {
+            event.target.setAttribute("class", "token highlighted")
+            const pos = tokenSquare[0].getAttribute("data-pos").split(",")
             return this.placeToken()
         })
     }
@@ -128,7 +128,15 @@ export default class Game {
                 }
             }
         }
+
+        //glow effect for possible moves
+        validMoveSquares.forEach(square => {
+            let selector = document.createElement("div")
+            selector.setAttribute("class", "selector highlighted")
+            square.appendChild(selector)
+        })
     
+        
         //Add Event Listerers for Valid Squares
         validMoveSquares.forEach(square => square.addEventListener("click", event => {
             const clickedPos = square.getAttribute("data-pos").split(",")
@@ -149,7 +157,8 @@ export default class Game {
 
         //ADD event listener for start space: UNDO
     }
-    //REFACTOR ONTO PLAYER?
+
+    //*Remove token from current square and set onto new*
     setToken(square) {
         this.board.getSquare(this.currentPlayer.token.getPos()).removeToken() //remove token from start square
         this.currentPlayer.token.setPos(square) //update token location
@@ -158,28 +167,35 @@ export default class Game {
         return square
     }
 
+    //*Grab Fence Piece*
     selectFence() {
         const fenceBoxEle = document.getElementById("humanPlayerFences")
         const unplayedFences = Array.from(fenceBoxEle.childNodes).map(el => el)
 
         unplayedFences.forEach( fence => {
             fence.addEventListener( "click" , () => {
+                fence.setAttribute("class", "highlighted")
                 return this.placeFenceStart()
             })
         })
         
     }
 
+    //*Select starting edge for Fence
     placeFenceStart() {
         const nodes = Array.from(document.getElementsByClassName("node")).map(el => el)
         nodes.filter(node => this.board.nodeFree(this._getPosArray.call(node)))
         nodes.forEach( node => node.addEventListener( "click", () => {
+            node.setAttribute("class", "node start-highlighted")
             const startPos = this._getPosArray.call(node)
             return this.placeFenceEnd(startPos)
         }))
 
+        //NEED LOGIC FOR UNDOING SELECTION AND NOT ALLOWING MULTIPLE NODE SELECTIONS OR CHANGE SELECTION
+
     }
 
+    //*Select midpoint for Fence and place fence on board
     placeFenceEnd(startPos) {
         const validFences = this.board.validMoveFence(startPos)
         const allNodes = Array.from(document.getElementsByClassName("node")).map(el => el)
@@ -188,6 +204,7 @@ export default class Game {
             for (let i = 0; i < allNodes.length; i++) {
                 let nodePos = this._getPosArray.call(allNodes[i])
                 if (this._compareArrays(nodePos, validFence["midNode"])) {
+                    allNodes[i].setAttribute("class", "node end-highlighted")
                     validFence["nodeLi"] = allNodes[i]
                 }
             }
@@ -201,7 +218,6 @@ export default class Game {
                 })
                 this.board.getSquare(fenceObj["startNode"]).holds.push("Fence")
                 this.board.getSquare(fenceObj["midNode"]).holds.push("MID")
-                // this.board.getSquare(fenceObj["endNode"]).holds.push("FENCE")
                 this.humanPlayer.fences.pop()
                 this.switchCurrentPlayer()
                 return this.gameLoop()

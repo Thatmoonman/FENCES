@@ -76,7 +76,10 @@ export default class Board {
                 if (square.type === "token") {
                     if (square.holds.length) {
                         let tokenStart = this.buildSpace("li", "playerSquare", square.pos)
-                        tokenStart.innerText = square.token()
+                        let token = document.createElement("div")
+                        token.setAttribute("class", "token")
+                        token.style.backgroundColor = square.getToken().color
+                        tokenStart.appendChild(token)
                         renderRow.appendChild(tokenStart)
                     } else {
                         let emptySquare = this.buildSpace("li", "square", square.pos)

@@ -15,7 +15,10 @@
       background-color: grey;
       
       &.square {
+         display: flex;
             color: white;
+            justify-content: center;
+            align-items: center;
       }
       
       &.verticalFence {
@@ -35,4 +38,37 @@
       }
    
    }
+}
+
+.token {
+   border: 1px solid black;
+   border-radius: 50%;
+   width: 38px;
+   height: 38px;
+}
+
+.selector {
+   border: 1px solid black;
+   border-radius: 50%;
+   background: none;
+   width: 1px;
+   height: 1px;
+   align-self: center;
+   justify-self: center;
+}
+
+.highlighted {
+   box-shadow: 0 0 1px 3px #fff,  /* inner white */
+   //  0 0 2px 5px #f0f, /* middle magenta */
+   //  0 0 140px 90px #0ff /* outer cyan */
+   ;
+   
+}
+
+.start-highlighted {
+   box-shadow: 0 0 1px 3px yellow,  
+}
+
+.end-highlighted {
+   box-shadow: 0 0 1px 3px green;
 }

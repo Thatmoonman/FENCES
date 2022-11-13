@@ -21,7 +21,10 @@
   background-color: grey;
 }
 #gameBoard > ul > li.square {
+  display: flex;
   color: white;
+  justify-content: center;
+  align-items: center;
 }
 #gameBoard > ul > li.verticalFence {
   width: 10px;
@@ -37,6 +40,35 @@
   background-color: red;
 }
 
+.token {
+  border: 1px solid black;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+}
+
+.selector {
+  border: 1px solid black;
+  border-radius: 50%;
+  background: none;
+  width: 1px;
+  height: 1px;
+  align-self: center;
+  justify-self: center;
+}
+
+.highlighted {
+  box-shadow: 0 0 1px 3px #fff;
+}
+
+.start-highlighted {
+  box-shadow: 0 0 1px 3px yellow;
+}
+
+.end-highlighted {
+  box-shadow: 0 0 1px 3px green;
+}
+
 #humanPlayerFences, #computerPlayerFences {
   display: flex;
   flex-direction: column;
@@ -46,6 +78,7 @@
   height: 300px;
   padding: 20px;
   border: 2px solid black;
+  background-color: gray;
 }
 #humanPlayerFences > li, #computerPlayerFences > li {
   display: block;
