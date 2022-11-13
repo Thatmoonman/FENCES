@@ -30,11 +30,6 @@ export default class Game {
             this.humanPlayer.addFence()
             this.computerPlayer.addFence()
         }
-        
-        //test maze solver
-    
-        let m = new MazeSolver(this.humanPlayer, this.computerPlayer, this._dupeGrid(this.board.grid))
-        console.log(m.shortestPath)
 
         return this.gameLoop()
     }
@@ -56,13 +51,18 @@ export default class Game {
             this._resetHTML() //FOR DEV ONLY
             return this.playTurn()
         } else {
-            let computerTurn = this.currentPlayer.playTurn()
+            let currentBoard = new MazeSolver(this.computerPlayer, this.humanPlayer, this._dupeGrid(this.board.grid))
+            this.computerPlayer.goal = currentBoard.shortestPath
+
+            let computerTurn = this.computerPlayer.playTurn()
             if (computerTurn = "move") {
                 return this.computerMove()
             } else {
-
+                return this.computerFence()
             }
         }
+
+
     }
 
 
@@ -164,6 +164,7 @@ export default class Game {
         this.board.getSquare(this.currentPlayer.token.getPos()).removeToken() //remove token from start square
         this.currentPlayer.token.setPos(square) //update token location
         square.addToken(this.currentPlayer.token) //put new token in new square
+        this.computerPlayer.watchPlayer["moves"]++
         this._resetHTML()
         return square
     }
@@ -220,6 +221,7 @@ export default class Game {
                 this.board.getSquare(fenceObj["startNode"]).holds.push("Fence")
                 this.board.getSquare(fenceObj["midNode"]).holds.push("MID")
                 this.humanPlayer.fences.pop()
+                this.computerPlayer.watchPlayer["fences"]++
                 this.switchCurrentPlayer()
                 return this.gameLoop()
             })
@@ -278,9 +280,12 @@ export default class Game {
 
     //computer moves its token
     //REFACTOR ONTO COMPUTERPLAYER?
-    computerMove(pos=[0,2]) {
-        const currentPos = this.currentPlayer.token.getPos()
-        const movePos = [currentPos[0] + pos[0], currentPos[1] + pos[1]]
+    computerMove() {
+        const currentPos = this.computerPlayer.token.getPos()
+        const movePos = this.computerPlayer.goal.shift()
+        if (this._compareArrays(this.humanPlayer.token.getPos(), movePos)) {
+            //Jump mechanic
+        }
         const moveSquare = this.board.getSquare(movePos)
         this.setToken(moveSquare)
 
@@ -292,6 +297,10 @@ export default class Game {
         this.switchCurrentPlayer()
         return this.gameLoop()
     }
+
+    computerFence() {}
+
+    computerJump() {}
 
 }
 

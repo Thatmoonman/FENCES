@@ -62,7 +62,7 @@ export default class MazeSolver {
                 shortestPath = path
             }
         }
-
+        shortestPath.shift()
         return shortestPath
     }
 

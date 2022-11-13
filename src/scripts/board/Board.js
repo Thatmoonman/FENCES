@@ -269,7 +269,6 @@ export default class Board {
                     // "endNode": endNode
                 }
                 validFences.push(validFence)
-                console.log(validFence)
             }
         }
     
