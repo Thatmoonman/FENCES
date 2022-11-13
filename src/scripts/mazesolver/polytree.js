@@ -7,8 +7,9 @@ export default class PolyTreeNode {
     }
 
     addChildren(childNode) {
-        if (!children.include(childNode)) {
+        if (!this._childrenIncludes(childNode.value)) {
             childNode.parent = this
+            this.children.push(childNode)
         }
     }
 
@@ -53,6 +54,14 @@ export default class PolyTreeNode {
         return path
     }
 
+    _childrenIncludes(pos) {
+        for (let i = 0; i < this.children.length; i++) {
+            if (this.children[i][0] === pos[0] && this.children[i][1] === pos[1]) {
+                    return true
+            }
+        }
+        return false
+    }
 
 }
     

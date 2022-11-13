@@ -37,8 +37,9 @@ export default class MazeSolver {
         let endPos = false
         
         for (let i = 0; i < endPosArray.length; i++) {
-            let tree = new MazePath(startPos, this.grid)
-            endPos = tree.findDFS(endPosArray)
+            let tree = new MazePath(startPos, endPosArray[i], this.grid)
+            // console.log(tree)
+            // endPos = tree.findDFS(endPosArray)
         }
 
         return !!endPos

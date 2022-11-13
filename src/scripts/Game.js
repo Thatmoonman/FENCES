@@ -33,7 +33,7 @@ export default class Game {
         
         //test maze solver
         let m = new MazeSolver(this.humanPlayer, this.computerPlayer, this._dupeGrid(this.board.grid))
-        console.log(m)
+        // console.log(m)
 
         return this.gameLoop()
     }
@@ -261,9 +261,11 @@ export default class Game {
             let newRow = []
             row.forEach(square => {
                 if (square.type === "token") {
-                    newRow.push("X")
+                    return newRow.push("X")
+                } else if (square.type === "fence" && !square.holds.length) {
+                    return newRow.push("X")
                 } else {
-                    newRow.push(0)
+                    return newRow.push(0)
                 }
             })
             duped.push(newRow)
