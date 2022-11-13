@@ -11,6 +11,11 @@ export default class MazeSolver {
         const endPosArray = this.getEndPos(currentPlayer)
 
         this.canSolve = this.isSolvable(startPos, endPosArray)
+        if (this.canSolve) {
+            this.shortestPath = this.shortestPathToEnd(startPos, endPosArray)
+        } else {
+            this.shortestPath = false
+        }
     }
 
     getEndPos(player) {
@@ -43,6 +48,22 @@ export default class MazeSolver {
         }
 
         return !!endPos
+    }
+
+    shortestPathToEnd(startPos, endPosArray) {
+        let shortestPath
+
+        for (let i = 0; i < endPosArray.length; i++) {
+            let tree = new MazePath(startPos, endPosArray[i], this.grid)
+            let path = tree.findBFS(endPosArray[i])
+            if (!shortestPath) {
+                shortestPath = path
+            } else if (path.length < shortestPath.length) {
+                shortestPath = path
+            }
+        }
+
+        return shortestPath
     }
 
 

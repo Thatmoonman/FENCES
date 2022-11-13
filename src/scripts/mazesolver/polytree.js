@@ -14,7 +14,7 @@ export default class PolyTreeNode {
     }
 
     dfs(targetValue) {
-        if (this.value[0] === targetValue[0] && this.value[1] === targetValue[1]) return this
+        if (this._compareArrays(this.value, targetValue)) return this
 
         for (let i = 0; i < this.children.length; i++) {
             let child = this.children[i]
@@ -22,36 +22,25 @@ export default class PolyTreeNode {
             if (currentChild) return currentChild
         }
 
-
-        // this.children.forEach( child => {
-        //     let currentChild = this.dfs.call(child, targetValue)
-        //     console.log(currentChild)
-        //     if (currentChild) {
-        //         return currentChild
-        //     } 
-        // })
-
         return undefined
     }
 
     bfs(targetValue) {
-        treeQueue = [this]
+        let treeQueue = [this]
 
         while (treeQueue.length) {
             let currentNode = treeQueue.shift()
-            if (currentNode.value === targetValue) {
-                return currentNode
+            
+            if (this._compareArrays(currentNode.value, targetValue)) {
+                return this.tracePathBack(currentNode)
             } else {
-                treeQueue.concat(currentNode.children)
+                currentNode.children.forEach( child => treeQueue.push(child))
             }
         }
-
-        return null
     }
 
 
-    tracePathBack() {
-        let currentNode = this
+    tracePathBack(currentNode) {
         let path = [currentNode.value]
 
         while (currentNode.parent) {
@@ -64,11 +53,16 @@ export default class PolyTreeNode {
 
     _childrenIncludes(pos) {
         for (let i = 0; i < this.children.length; i++) {
-            if (this.children[i][0] === pos[0] && this.children[i][1] === pos[1]) {
+            let child = this.children[i]
+            if (this._compareArrays(child.value, pos)) {
                     return true
             }
         }
         return false
+    }
+
+    _compareArrays(pos1, pos2) {
+        return parseInt(pos1[0]) === parseInt(pos2[0]) && parseInt(pos1[1]) === parseInt(pos2[1])
     }
 
 }

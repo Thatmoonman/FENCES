@@ -55,7 +55,6 @@ export default class MazePath {
     
 
     buildMoveTree(rootNode) {
-
         const moves = [rootNode]
 
         while (moves.length) {
@@ -89,7 +88,7 @@ export default class MazePath {
     }
 
     findBFS(target) {
-
+        return this.rootNode.bfs(target)
     }
 
     //Find symbol at pos in grid
