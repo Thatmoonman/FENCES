@@ -281,5 +281,22 @@ export default class Board {
         return true
     }
 
+    // return two node points between two positions
+    getNearestNode(pos1, pos2) {
+        if (pos1[0] === pos2[0]) {
+            if (pos1[1] < pos2[1]) {
+                return [[pos1[0] - 1, pos1[1] + 1], [pos1[0] + 1, pos1[1] + 1]]//pos1 above
+            } else {
+                return [[pos1[0] - 1, pos1[1] - 1], [pos1[0] + 1, pos1[1] - 1]]//pos1 below
+            }
+        } else {
+            if (pos1[1] < pos2[1]) {
+                return [[pos1[0] + 1, pos1[1] + 1], [pos1[0] + 1, pos1[1] - 1]] //pos1 to left
+            } else {
+                return [[pos1[0] - 1, pos1[1] + 1], [pos1[0] - 1, pos1[1] - 1]]//pos1 to right
+            }
+        }
+    }
+
 }
 

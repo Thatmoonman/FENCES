@@ -307,15 +307,19 @@ export default class Game {
         
         while (assumedPath.length) {
             let nextMove = assumedPath.shift()
-            let fencePosStart = this.getNearestNode(opponentPos, nextMove)
-            console.log(fencePosStart)
-            let validFences = this.board.validMoveFence(fencePosStart)
-
-            for (let i = 0; i < validFences.length; i++) {
-                let validFence = validFences[i]
-                if (this._compareArrays(validFence["startNode"], fencePosStart)) {
-                    return this.placeComputerFence(validFence)
+            let fencePosStartArray = this.board.getNearestNode(opponentPos, nextMove)
+            
+            for (let i = 0; i < 2; i++) {
+                let fencePosStart = fencePosStartArray[i]
+                let validFences = this.board.validMoveFence(fencePosStart)
+    
+                for (let j = 0; j < validFences.length; j++) {
+                    let validFence = validFences[i]
+                    if (this._compareArrays(validFence["startNode"], fencePosStart)) {
+                        return this.placeComputerFence(validFence)
+                    }
                 }
+
             }
         } 
         
@@ -323,12 +327,17 @@ export default class Game {
 
     computerJump() {}
 
-    placeComputerFence(fencObj) {
-        console.log(fencObj)
-    }
-
-    getNearestNode(pos1, pos2) {
+    placeComputerFence(fenceObj) {
+        fenceObj["fences"].forEach(fence => {
+            let fenceSquare = this.board.getSquare(fence)
+            fenceSquare.addToken(this.computerPlayer.color)
+        })
+        this.board.getSquare(fenceObj["startNode"]).holds.push("Fence")
+        this.board.getSquare(fenceObj["midNode"]).holds.push("MID")
+        this.computerPlayer.fences.pop()
+        this.switchCurrentPlayer()
         
+        return this.gameLoop()
     }
 
 }
