@@ -104,13 +104,14 @@ export default class Game {
         tokenSquare[0].firstChild.addEventListener("click", event => {
             event.target.setAttribute("class", "token highlighted")
             const pos = tokenSquare[0].getAttribute("data-pos").split(",")
-            return this.placeToken()
+            event.target.addEventListener("click", () => this.gameLoop())
+            return this.placeToken(event.target)
         })
     }
 
 
     //REFACTOR ONTO HUMANPLAYER?
-    placeToken() {
+    placeToken(startDiv) {
         const startPos = this.currentPlayer.token.getPos()
         const moveSquares =  Array.from(document.getElementsByClassName("square")).map(el => el)
         const validMoves = this.board.validMoveToken(startPos)
@@ -155,8 +156,6 @@ export default class Game {
                 return this.gameLoop()
             }
         }))
-
-        //ADD event listener for start space: UNDO
     }
 
     //*Remove token from current square and set onto new*
@@ -177,6 +176,7 @@ export default class Game {
         unplayedFences.forEach( fence => {
             fence.addEventListener( "click" , () => {
                 fence.setAttribute("class", "highlighted")
+                fence.addEventListener("click", () => this.gameLoop())
                 return this.placeFenceStart()
             })
         })
@@ -187,30 +187,32 @@ export default class Game {
     placeFenceStart() {
         const nodes = Array.from(document.getElementsByClassName("node")).map(el => el)
         nodes.filter(node => this.board.nodeFree(this._getPosArray.call(node)))
-        nodes.forEach( node => node.addEventListener( "click", () => {
+        nodes.forEach( node => node.addEventListener( "click", (event) => {
             node.setAttribute("class", "node start-highlighted")
-            const startPos = this._getPosArray.call(node)
-            return this.placeFenceEnd(startPos)
+            return this.placeFenceEnd(event.target)
         }))
-
-        //NEED LOGIC FOR UNDOING SELECTION AND NOT ALLOWING MULTIPLE NODE SELECTIONS OR CHANGE SELECTION
-
     }
 
     //*Select midpoint for Fence and place fence on board
-    placeFenceEnd(startPos) {
+    placeFenceEnd(startNode) {
+        const startPos = this._getPosArray.call(startNode)
         const validFences = this.board.validMoveFence(startPos)
         const allNodes = Array.from(document.getElementsByClassName("node")).map(el => el)
+        startNode.addEventListener("click", () => this.gameLoop())
+        const validNodes = []
 
         validFences.forEach(validFence => {
             for (let i = 0; i < allNodes.length; i++) {
                 let nodePos = this._getPosArray.call(allNodes[i])
                 if (this._compareArrays(nodePos, validFence["midNode"])) {
                     allNodes[i].setAttribute("class", "node end-highlighted")
+                    validNodes.push(allNodes[i])
                     validFence["nodeLi"] = allNodes[i]
                 }
             }
         })
+
+        startNode.addEventListener("click", () => this.gameLoop())
         
         validFences.forEach(fenceObj => {
             fenceObj["nodeLi"].addEventListener( "click", () => {
@@ -319,9 +321,9 @@ export default class Game {
                         return this.placeComputerFence(validFence)
                     }
                 }
-
             }
-        } 
+        }
+        return this.computerMove()
         
     }
 
