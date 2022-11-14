@@ -1,6 +1,12 @@
-import Fence from "../piece/_Fence"
-import HumanPlayer from "../player/_humanPlayer"
-import Square from "./Square"
+import HumanPlayer from "../player/_humanPlayer";
+import Square from "./Square";
+import * as THREE from 'three';
+import { GridHelper, Raycaster, SpotLight, SpotLightHelper, TextureLoader } from 'three';
+import renderCamera from '../threejs/orbitalcam';
+import grass from '../../assets/images/grass.jpg';
+import sky from '../../assets/images/grass.jpg';
+
+
 
 export default class Board {
     constructor(humanPlayer, computerPlayer) {
@@ -67,6 +73,65 @@ export default class Board {
     }
 
     render() {
+        //render 3d, enable shadows, set to window size, append to html
+        const renderer = new THREE.WebGLRenderer();
+        renderer.shadowMap.enabled = true;
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        //create "scene" and "perspective camera"
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(
+            45,
+            window.innerWidth / window.innerHeight,
+            .1,
+            500
+        ); 
+        
+        //orbital movement camera
+        const orbit = renderCamera(camera, renderer.domElement);
+        camera.position.set(0, 20, 40);
+        orbit.update();
+
+        //ambient dim light source (base line)
+        const ambientLight = new THREE.AmbientLight(0x666666);
+        scene.add(ambientLight)
+
+        //axes helper for x, y, z values
+        const axesHelper = new THREE.AxesHelper(5);
+        scene.add(axesHelper);
+
+        //ground plane
+        const planeGeometryGround = new THREE.PlaneGeometry(1000, 1000);
+        const planeMaterialGround = new THREE.MeshStandardMaterial({
+            color: "yellow",
+            side: THREE.DoubleSide
+        });
+        const planeGround = new THREE.Mesh(planeGeometryGround, planeMaterialGround);
+        scene.add(planeGround);
+        planeGround.rotation.x = -0.5 * Math.PI;
+        planeGround.receiveShadow = true;
+
+        //grid helper for ground plane
+        const gridHelper = new GridHelper(30, 17);
+        scene.add(gridHelper);
+
+        //background images
+        const cubeTextureLoader = new THREE.CubeTextureLoader();
+        scene.background = cubeTextureLoader.load([
+            grass,
+            grass,
+            grass,
+            grass,
+            grass,
+            sky
+        ]);
+
+        
+        
+        
+
+
         this.grid.forEach( (row, i) => {
             let gameBoard = document.getElementById("gameBoard")
             let renderRow = document.createElement("ul")
@@ -126,6 +191,12 @@ export default class Board {
                 fence.style.backgroundColor = player.color
                 fenceBox.appendChild(fence)
             }
+
+            function animate() {
+                renderer.render(scene, camera)
+            }
+    
+            renderer.setAnimationLoop(animate);
         })
     }
 

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GridHelper, SpotLight, SpotLightHelper, TextureLoader } from 'three';
+import { GridHelper, Raycaster, SpotLight, SpotLightHelper, TextureLoader } from 'three';
 import renderCamera from './orbitalcam';
 import * as dat from 'dat.gui';
 import milkyway from '../../assets/images/milkyway.jpg'
@@ -12,10 +12,12 @@ export default function renderThree() {
 
     renderer.shadowMap.enabled = true;
     
-    renderer.setSize(window.innerHeight, window.innerWidth)
+    renderer.setSize(window.innerWidth, window.innerHeight)
     
-    const threedee = document.getElementsByClassName("3dContainer")
-    threedee[0].appendChild(renderer.domElement);
+    // const threedee = document.getElementsByClassName("threedeeContainer")
+    // threedee[0].appendChild(renderer.domElement);
+
+    document.body.appendChild(renderer.domElement);
     
     const scene = new THREE.Scene();
     
@@ -64,6 +66,7 @@ export default function renderThree() {
     sphere.position.set(5, 20, 0);
     sphere.castShadow = true;
 
+    const sphereId = sphere.id
 
     const ambientLight = new THREE.AmbientLight(0x333333);
     scene.add(ambientLight);
@@ -126,6 +129,43 @@ export default function renderThree() {
     scene.add(box2);
     box2.position.set(0, 15, 10)
     box2.material.map = textureLoader.load(milkyway)
+    box2.name = "theBox";
+
+    const plane2Geometry = new THREE.PlaneGeometry(10, 10, 10, 10);
+    const plane2Material = new THREE.MeshBasicMaterial({
+        color: 0xFFFFFF,
+        wireframe: true
+    });
+    const plane2 = new THREE.Mesh(plane2Geometry, plane2Material);
+    scene.add(plane2);
+    plane2.position.set(10, 10 ,15);
+
+    plane2.geometry.attributes.position.array[0] -= 10 * Math.random();
+    plane2.geometry.attributes.position.array[1] -= 10 * Math.random();
+    plane2.geometry.attributes.position.array[2] -= 10 * Math.random();
+    const lastPointZ = plane2.geometry.attributes.position.array.length - 1;
+    plane2.geometry.attributes.position.array[lastPointZ] -= 10 * Math.random();
+
+    const vShader = `
+        void main() {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `;
+
+    const fShader = `
+        void main() {
+            gl_FragColor = vec4(0.5, 0.5, 1.0, 1.0);
+        }
+    `;
+
+    const sphere2Geometery = new THREE.SphereGeometry(4);
+    const sphere2Material = new THREE.ShaderMaterial({
+        vertexShader: vShader,
+        fragmentShader: fShader
+    })
+    const sphere2 = new THREE.Mesh(sphere2Geometery, sphere2Material);
+    scene.add(sphere2);
+    sphere2.position.set(-5, 10, 10);
 
     const gui = new dat.GUI()
 
@@ -156,6 +196,14 @@ export default function renderThree() {
 
     let step = 0;
 
+    const mousePosition = new THREE.Vector2();
+    window.addEventListener('mousemove', function(e) {
+        mousePosition.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mousePosition.y = - (e.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    const rayCaster = new THREE.Raycaster();
+
     function animate() {
         box.rotation.x += 0.01;
         box.rotation.y += 0.01;
@@ -168,9 +216,34 @@ export default function renderThree() {
         spotLight.intensity = options.intensity;
         sLightHelper.update()
 
+        rayCaster.setFromCamera(mousePosition, camera);
+        const intersects = rayCaster.intersectObjects(scene.children);
+
+        for (let i = 0; i < intersects.length; i++) {
+            if (intersects[i].object.id === sphereId) {
+                intersects[i].object.material.color.set("green");
+            }
+            if (intersects[i].object.name === "theBox") {
+                intersects[i].object.rotation.x += 0.01;
+                intersects[i].object.rotation.y += 0.01;
+            }
+        }
+
+        plane2.geometry.attributes.position.array[0] = 10 * Math.random();
+        plane2.geometry.attributes.position.array[1] = 10 * Math.random();
+        plane2.geometry.attributes.position.array[2] = 10 * Math.random();
+        plane2.geometry.attributes.position.array[lastPointZ] = 10 * Math.random();
+        plane2.geometry.attributes.position.needsUpdate = true;
+
         renderer.render(scene, camera)
     }
 
     renderer.setAnimationLoop(animate)
+
+    window.addEventListener("resize", function() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight)
+    })
 }
 
