@@ -19,7 +19,7 @@ export default class ComputerPlayer extends Player {
     }
 
     computerTurnLogic() {
-        let moveChance = .5
+        let moveChance = .6
         let moveDifferential = this.watchPlayer["moves"] - this.watchPlayer["fences"]
 
         if (moveDifferential = 1) {

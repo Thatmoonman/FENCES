@@ -282,6 +282,7 @@ export default class Board {
     }
 
     // return two node points between two positions
+    //NEED TO CHECK FOR NODES EXISTENCE!
     getNearestNode(pos1, pos2) {
         if (pos1[0] === pos2[0]) {
             if (pos1[1] < pos2[1]) {

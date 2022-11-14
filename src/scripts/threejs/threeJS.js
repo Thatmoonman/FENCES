@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GridHelper } from 'three';
 import renderCamera from './orbitalcam';
 
 export default function renderThree() {
@@ -25,7 +26,7 @@ export default function renderThree() {
     
     // camera.position.z = 5;
     // camera.position.y = 2;
-    camera.position.set(0, -40, 20);
+    camera.position.set(0, 20, 40);
     orbit.update();
     
     const boxGeometry = new THREE.BoxGeometry();
@@ -34,9 +35,27 @@ export default function renderThree() {
     scene.add(box);
 
     const planeGeometry = new THREE.PlaneGeometry(30, 30)
-    const planeMaterial = new THREE.MeshBasicMaterial({color: "orange"})
+    const planeMaterial = new THREE.MeshBasicMaterial({
+        color: "orange",
+        side: THREE.DoubleSide //Both sides of plane visible
+    });
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     scene.add(plane);
+
+    plane.rotation.x = -0.5 * Math.PI;
+
+    const gridHelper = new GridHelper(30, 17);
+    scene.add(gridHelper);
+
+    const sphereGeometry = new THREE.SphereGeometry(4, 50, 50);
+    const sphereMaterial = new THREE.MeshBasicMaterial({
+        color: "white",
+        wireframe: false
+    });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    scene.add(sphere);
+
+    sphere.position.set(10, 4, 0)
 
     function annimate() {
         box.rotation.x += 0.01;
