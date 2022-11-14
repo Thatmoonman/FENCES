@@ -1,10 +1,10 @@
 import HumanPlayer from "../player/_humanPlayer";
 import Square from "./Square";
 import * as THREE from 'three';
-import { GridHelper, Raycaster, SpotLight, SpotLightHelper, TextureLoader } from 'three';
+import { DirectionalLight, GridHelper, Raycaster, SpotLight, SpotLightHelper, TextureLoader } from 'three';
 import renderCamera from '../threejs/orbitalcam';
-import grass from '../../assets/images/grass.jpg';
-import sky from '../../assets/images/grass.jpg';
+import grass from '../../assets/images/grass2.png';
+import sky from '../../assets/images/sky.jpg';
 
 
 
@@ -72,6 +72,9 @@ export default class Board {
         computerStart.addToken(computerToken)
     }
 
+    //IDEA: BUTTON TO RECENTER CAMERA
+    //IDEA: SPOTLIGHT ON WINNER TOKEN
+    //PAINT RENDERED HTML BOARD ON TOP OF GAMEBOARD
     render() {
         //render 3d, enable shadows, set to window size, append to html
         const renderer = new THREE.WebGLRenderer();
@@ -85,7 +88,7 @@ export default class Board {
             45,
             window.innerWidth / window.innerHeight,
             .1,
-            500
+            1000
         ); 
         
         //orbital movement camera
@@ -95,17 +98,36 @@ export default class Board {
 
         //ambient dim light source (base line)
         const ambientLight = new THREE.AmbientLight(0x666666);
-        scene.add(ambientLight)
+        // scene.add(ambientLight)
+
+        //Directional Light for game board
+        const directionalBoardLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
+        scene.add(directionalBoardLight);
+        directionalBoardLight.position.set(-30, 50, 25);
+        directionalBoardLight.castShadow = true;
+        directionalBoardLight.shadow.camera.bottom = -18;
+        directionalBoardLight.shadow.camera.top = 18;
+        directionalBoardLight.shadow.camera.left = -22;
+        directionalBoardLight.shadow.camera.right = 22;
+
+        //Direction Light and Shadow Helpers for game board
+        const dBoardLightHelper = new THREE.DirectionalLightHelper(directionalBoardLight, 5);
+        scene.add(dBoardLightHelper);
+        const dBoardShadowHelper = new THREE.CameraHelper(directionalBoardLight.shadow.camera);
+        scene.add(dBoardShadowHelper);
+
+        //S
 
         //axes helper for x, y, z values
         const axesHelper = new THREE.AxesHelper(5);
         scene.add(axesHelper);
 
         //ground plane
-        const planeGeometryGround = new THREE.PlaneGeometry(1000, 1000);
+        const planeGeometryGround = new THREE.PlaneGeometry(500, 500);
         const planeMaterialGround = new THREE.MeshStandardMaterial({
-            color: "yellow",
-            side: THREE.DoubleSide
+            // color: 0xA1DF50, //grass green
+            color: "grey", //DEV USE
+            // side: THREE.DoubleSide
         });
         const planeGround = new THREE.Mesh(planeGeometryGround, planeMaterialGround);
         scene.add(planeGround);
@@ -113,19 +135,59 @@ export default class Board {
         planeGround.receiveShadow = true;
 
         //grid helper for ground plane
-        const gridHelper = new GridHelper(30, 17);
+        const gridHelper = new GridHelper(30, 17, "white");
+        gridHelper.position.set(0, 1.1, 0)
         scene.add(gridHelper);
+
 
         //background images
         const cubeTextureLoader = new THREE.CubeTextureLoader();
         scene.background = cubeTextureLoader.load([
             grass,
             grass,
+            sky,
+            sky,
             grass,
-            grass,
-            grass,
-            sky
+            grass
         ]);
+
+        //Render Game Board
+        const gameBoardGeometry = new THREE.BoxGeometry(30, 2, 30);
+        const gameBoardMaterial = new THREE.MeshStandardMaterial({
+            color: "black", //DEV USE
+            wireframe: false
+        })
+        const gameBoard = new THREE.Mesh(gameBoardGeometry, gameBoardMaterial);
+        scene.add(gameBoard);
+        // gameBoard.rotation.x = -0.5 * Math.PI;
+        gameBoard.position.set(0, 0, 1)
+        gameBoard.receiveShadow = true;
+
+
+        const playerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
+        const playerPieceMaterial = new THREE.MeshStandardMaterial({
+            color: "blue"
+        });
+        const playerPiece = new THREE.Mesh(playerPieceGeometry, playerPieceMaterial);
+        playerPiece.castShadow = true;
+
+        const computerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
+        const computerPieceMaterial = new THREE.MeshStandardMaterial({
+            color: "red"
+        });
+        const computerPiece = new THREE.Mesh(computerPieceGeometry, computerPieceMaterial);
+        computerPiece.castShadow = true;
+
+        scene.add(playerPiece);
+        scene.add(computerPiece);
+
+        playerPiece.position.set(17, 0, -2)
+        computerPiece.position.set(17, 0, 2)
+        
+
+        this.grid.forEach( (row, i) => {
+            
+        })
 
         
         
