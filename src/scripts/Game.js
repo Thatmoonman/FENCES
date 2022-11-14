@@ -21,7 +21,8 @@ export default class Game {
         return this.newGame()
     }
 
-    newGame() { //*STARTS A NEW GAME*
+    //*STARTS A NEW GAME*
+    newGame() { 
         // adds starting positions to board
         this.board.fillGrid(this.humanPlayer, this.computerPlayer) 
          
@@ -42,7 +43,7 @@ export default class Game {
     }
     
 
-    gameLoop() { //NOT GAME READY
+    gameLoop() { 
         const gameOver = this.isGameOver() //refactor into WIN Screen LATER
 
         if (gameOver) {
