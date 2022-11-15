@@ -178,17 +178,19 @@ export default class Board {
         gameBoard.receiveShadow = true;
         gameBoard.castShadow = true;
 
-
+        //PLAYER TOKEN PIECE
         const playerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
         const playerPieceMaterial = new THREE.MeshStandardMaterial({
             color: this.players[0].color
         });
         const playerPiece = new THREE.Mesh(playerPieceGeometry, playerPieceMaterial);
+        this.scene.add(playerPiece);
+        this.interactionManager.add(playerPiece)
         playerPiece.castShadow = true;
         playerPiece.name = "humanToken"
-        const playerId = playerPiece.id
-        this.interactionManager.add(playerPiece)
+        const playerId = playerPiece.id //NEED?
         
+        //PLAYER SELECTED DIAMOND
         const tokenselectorGeometery = new THREE.OctahedronGeometry(.75)
         const tokenselectorMaterial = new THREE.MeshStandardMaterial({color: "yellow"});
         const tokenselector = new THREE.Mesh(tokenselectorGeometery, tokenselectorMaterial);
@@ -198,15 +200,42 @@ export default class Board {
         tokenselector.name = "tokenSelector"
         tokenselector.visible = false
 
+        //PLAYER FENCE
+        const playerFenceGeometry = new THREE.BoxGeometry(1, 4, 8)
+        const playerFenceMaterial = new THREE.MeshStandardMaterial({
+            color: this.players[0].color
+        })
+        const playerFence = new THREE.Mesh(playerFenceGeometry, playerFenceMaterial)
+        this.scene.add(playerFence)
+        this.interactionManager.add(playerFence)
+        playerFence.castShadow = true;
+        playerFence.receiveShadow = true;
+        playerFence.name = "playerFence"
+        playerFence.position.set(-25, 0, 5)
+
+        //COMPUTER TOKEN PIECE
         const computerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
         const computerPieceMaterial = new THREE.MeshStandardMaterial({
             color: this.players[1].color
         });
         const computerPiece = new THREE.Mesh(computerPieceGeometry, computerPieceMaterial);
-        computerPiece.castShadow = true;
-
-        this.scene.add(playerPiece);
         this.scene.add(computerPiece);
+        computerPiece.castShadow = true;
+        computerPiece.name = "computerToken"
+
+        //COMPUTER FENCE
+        const computerFenceGeometry = new THREE.BoxGeometry(1, 4, 8)
+        const computerFenceMaterial = new THREE.MeshStandardMaterial({
+            color: this.players[1].color
+        })
+        const computerFence = new THREE.Mesh(computerFenceGeometry, computerFenceMaterial)
+        this.scene.add(computerFence)
+        this.interactionManager.add(computerFence)
+        computerFence.castShadow = true;
+        computerFence.receiveShadow = true;
+        computerFence.name = "computerFence"
+        computerFence.position.set(25, 0, -5)
+        
 
         playerPiece.position.set(0, 2, 20)
         computerPiece.position.set(0, 2, -20)
@@ -347,18 +376,20 @@ export default class Board {
             }
 
             //*****ANIMATION LOOP FOR RENDERED BOARD*****
-        
-            this.renderer.setAnimationLoop(this.animate(this.scene, this.renderer, this.camera, this.interactionManager, rayCaster, mousePosition));
+            const scene = this.scene
+            const interactionManager = this.interactionManager
+            function animate() {
+                rayCaster.setFromCamera(mousePosition, camera);
+                const intersects = rayCaster.intersectObjects(scene.children);
+
+                interactionManager.update()
+
+                renderer.render(scene, camera)
+            }
+    
+            this.renderer.setAnimationLoop(animate);
+            this.renderer.render(this.scene, camera)
         })
-    }
-
-    animate(scene, renderer, camera, interactionManager, rayCaster, mousePosition) {
-        rayCaster.setFromCamera(mousePosition, camera);
-
-        const intersects = rayCaster.intersectObjects(scene.children);
-
-        interactionManager.update()
-        renderer.render(scene, camera)
     }
 
     buildSpace(ele, classAttr, pos) {
