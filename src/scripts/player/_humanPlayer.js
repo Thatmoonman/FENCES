@@ -9,6 +9,7 @@ export default class HumanPlayer extends Player {
             movesUntilNewFence, movesUntilNewFence, 
             token, token
         )
+        this.selector
     }
 
 }

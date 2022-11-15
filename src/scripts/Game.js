@@ -102,30 +102,29 @@ export default class Game {
 
         //var constructor from scene
         let playerToken;
+        let tokenSelector;
         for (let i = 0; i < scene.children.length; i++) {
             if (scene.children[i].name === "humanToken") {playerToken = scene.children[i]}
+            if (scene.children[i].name === "tokenSelector") {tokenSelector = scene.children[i]}
         }
         
         //Select and unselect cycle for player's token
-        this.board.interactionManager.add(playerToken);
         playerToken.addEventListener("click", function selectPlayerToken(event) {
             
             //set highlighted functionality
-            const tokenselectorGeometery = new THREE.OctahedronGeometry(.75)
-            const tokenselectorMaterial = new THREE.MeshStandardMaterial({color: "yellow"});
-            const tokenselector = new THREE.Mesh(tokenselectorGeometery, tokenselectorMaterial);
-            that.board.scene.add(tokenselector);
+            
+            tokenSelector.visible = true;
             let targetPos = event.target.position
-            tokenselector.position.set(targetPos["x"], 6, targetPos["z"]);
+            tokenSelector.position.set(targetPos["x"], 6, targetPos["z"]);
             
             function animateToken() {
-                tokenselector.rotation.y += .02;
+                tokenSelector.rotation.y += .02;
                 renderer.render(scene, camera);
             }
-            if (tokenselector) renderer.setAnimationLoop(animateToken);
+            if (tokenSelector) renderer.setAnimationLoop(animateToken);
             
             playerToken.removeEventListener("click", selectPlayerToken);
-            return that.placeToken(playerToken, tokenselector);
+            return that.placeToken(playerToken, tokenSelector);
         })
 
 
@@ -151,31 +150,63 @@ export default class Game {
 
 
     //REFACTOR ONTO HUMANPLAYER?
-    placeToken(playerTokenObj, tokenselector) {
+    placeToken(playerTokenObj, tokenSelector) {
         const that = this
         const startPos = this.currentPlayer.token.getPos();
         const validMoves = this.board.validMoveToken(startPos);
         const validSquares = []
 
-        playerTokenObj.addEventListener("click", function unselectPlayerToken() { 
-            that.board.scene.remove(tokenselector)
-            playerTokenObj.removeEventListener("click", unselectPlayerToken);
-            revertSquares
-            return that.gameLoop();
-        })
-
+        //Build valid Squares Obj for preserving Square color and easy Mesh access via obj.name
         validMoves.forEach(validMove => {
             that.board.scene.children.forEach(square => {
                 if (square.type === "Mesh" && that._compareArrays(square.name.split(","), validMove)) {
                     validSquares.push({ "square": square, "color": square.material.color.getHex() })
+                }   
+            })
+        })
+
+        //helper function to undo move player action
+        function unselectPlayerToken() { 
+            tokenSelector.visible = false
+            if (revertSquares() && removeUnselect()) {
+                return that.playTurn();
+            } else {
+                console.log("ERROR")
+            }
+        }
+
+        //return squares to starting color helper function
+        function revertSquares() {
+            console.log(validSquares)
+            validSquares.forEach( squareObj => {
+                let square = squareObj["square"]
+                let color = squareObj["color"]
+                square.material.color.set(color)
+                that.board.interactionManager.remove(square)
+                removeUnselect()
+            })
+            return true
+        }
+
+        //helper function to remove unselect event listener from player token
+        function removeUnselect() {
+            playerTokenObj.removeEventListener("click", unselectPlayerToken)                        
+            return true
+        }
+
+        playerTokenObj.addEventListener("click", unselectPlayerToken)
+
+        validMoves.forEach(validMove => {
+            that.board.scene.children.forEach(square => {
+                if (square.type === "Mesh" && that._compareArrays(square.name.split(","), validMove)) {
                     square.material.color.set("green")
 
                     this.board.interactionManager.add(square);
                     square.addEventListener("click", function moveToken() {
-                        that.board.scene.remove(tokenselector)
-                        let movePos = square.name.split(",").map(el => parseInt(el))
-                        playerTokenObj.position.set(-20 + (2.5 * movePos[0]), 2, -20 + (2.5 * movePos[1]))
-                        that.humanPlayer.token.setPos(that.board.getSquare(movePos))
+                        // let movePos = square.name.split(",").map(el => parseInt(el))
+                        playerTokenObj.position.set(-20 + (2.5 * validMove[0]), 2, -20 + (2.5 * validMove[1]))
+                        const moveSquare = that.board.getSquare(validMove)
+                        that.setToken(moveSquare)
 
                         that.humanPlayer.movesUntilNewFence--
                         if (that.humanPlayer.movesUntilNewFence === 0) {
@@ -183,21 +214,14 @@ export default class Game {
                             that.humanPlayer.movesUntilNewFence = that.computerPlayer.totalFences 
                         }
 
+                        tokenSelector.visible = false
+                        square.removeEventListener("click", moveToken)
                         revertSquares()
                         // that.switchCurrentPlayer()
                         return that.gameLoop()
                     });
                 }
             })
-
-            function revertSquares() {
-                validSquares.forEach( squareObj => {
-                    let square = squareObj["square"]
-                    let color = squareObj["color"]
-                    square.material.color.set(color)
-                    square.removeEventListener("click", function(){});
-                })
-            }
         })        
 
         
@@ -251,7 +275,7 @@ export default class Game {
         this.currentPlayer.token.setPos(square) //update token location
         square.addToken(this.currentPlayer.token) //put new token in new square
         this.computerPlayer.watchPlayer["moves"]++
-        this._resetHTML()
+        // this._resetHTML()
         return square
     }
 

@@ -187,7 +187,16 @@ export default class Board {
         playerPiece.castShadow = true;
         playerPiece.name = "humanToken"
         const playerId = playerPiece.id
+        this.interactionManager.add(playerPiece)
         
+        const tokenselectorGeometery = new THREE.OctahedronGeometry(.75)
+        const tokenselectorMaterial = new THREE.MeshStandardMaterial({color: "yellow"});
+        const tokenselector = new THREE.Mesh(tokenselectorGeometery, tokenselectorMaterial);
+        this.players[0].selectorIcon = tokenselector
+        this.scene.add(tokenselector)
+        tokenselector.material.color.set("yellow")
+        tokenselector.name = "tokenSelector"
+        tokenselector.visible = false
 
         const computerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
         const computerPieceMaterial = new THREE.MeshStandardMaterial({
