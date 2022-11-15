@@ -347,22 +347,18 @@ export default class Board {
             }
 
             //*****ANIMATION LOOP FOR RENDERED BOARD*****
-            const scene = this.scene
-            function animate() {
-                rayCaster.setFromCamera(mousePosition, camera);
-                const intersects = rayCaster.intersectObjects(scene.children);
-
-                for (let i = 0; i < intersects.length; i++) {
-                    if (intersects[i].object.id === playerId) {
-                       
-                    }
-                }
-
-                renderer.render(scene, camera)
-            }
-    
-            this.renderer.setAnimationLoop(animate);
+        
+            this.renderer.setAnimationLoop(this.animate(this.scene, this.renderer, this.camera, this.interactionManager, rayCaster, mousePosition));
         })
+    }
+
+    animate(scene, renderer, camera, interactionManager, rayCaster, mousePosition) {
+        rayCaster.setFromCamera(mousePosition, camera);
+
+        const intersects = rayCaster.intersectObjects(scene.children);
+
+        interactionManager.update()
+        renderer.render(scene, camera)
     }
 
     buildSpace(ele, classAttr, pos) {

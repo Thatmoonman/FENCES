@@ -1,5 +1,6 @@
 import * as THREE from "three"
 import { Box2, Camera } from "three"
+import { MapControls } from "three/examples/jsm/controls/OrbitControls"
 import Board from "./board/Board"
 import MazeSolver from "./mazesolver/mazesolver"
 import ComputerPlayer from "./player/_computerPlayer"
@@ -39,7 +40,7 @@ export default class Game {
 
     playTurn() {
         this.selectToken()
-        this.selectFence()
+        // this.selectFence()
     
     }
     
@@ -51,7 +52,7 @@ export default class Game {
         
         } else if (this.currentPlayer === this.humanPlayer) {
             // this._resetHTML() //FOR DEV ONLY
-            return this.playTurn()
+            this.playTurn()
         } else {
             const currentBoard = new MazeSolver(this.computerPlayer, this.humanPlayer, this._dupeGrid(this.board.grid))
             this.computerPlayer.goal = currentBoard.shortestPath
@@ -63,8 +64,6 @@ export default class Game {
                 return this.computerFence()
             }
         }
-
-
     }
 
 
@@ -110,20 +109,22 @@ export default class Game {
         
         //Select and unselect cycle for player's token
         playerToken.addEventListener("click", function selectPlayerToken(event) {
-            
+            event.stopPropagation();
+            that.board.interactionManager.update();
+            playerToken.removeEventListener("click", selectPlayerToken);
+            console.log("token click")
             //set highlighted functionality
             
             tokenSelector.visible = true;
             let targetPos = event.target.position
             tokenSelector.position.set(targetPos["x"], 6, targetPos["z"]);
+            renderer.render(scene, camera);
             
-            function animateToken() {
-                tokenSelector.rotation.y += .02;
-                renderer.render(scene, camera);
-            }
-            if (tokenSelector) renderer.setAnimationLoop(animateToken);
+            // function animateToken() {
+            //     tokenSelector.rotation.y += .02;
+            // }
+            // if (tokenSelector) renderer.setAnimationLoop(animateToken);
             
-            playerToken.removeEventListener("click", selectPlayerToken);
             return that.placeToken(playerToken, tokenSelector);
         })
 
@@ -152,10 +153,13 @@ export default class Game {
     //REFACTOR ONTO HUMANPLAYER?
     placeToken(playerTokenObj, tokenSelector) {
         const that = this
+        const renderer = this.board.renderer
+        const scene = this.board.scene;
+        const camera = this.board.camera
         const startPos = this.currentPlayer.token.getPos();
         const validMoves = this.board.validMoveToken(startPos);
         const validSquares = []
-
+        
         //Build valid Squares Obj for preserving Square color and easy Mesh access via obj.name
         validMoves.forEach(validMove => {
             that.board.scene.children.forEach(square => {
@@ -164,46 +168,61 @@ export default class Game {
                 }   
             })
         })
-
+        
+        
         //helper function to undo move player action
-        function unselectPlayerToken() { 
-            tokenSelector.visible = false
-            if (revertSquares() && removeUnselect()) {
-                return that.playTurn();
-            } else {
-                console.log("ERROR")
-            }
-        }
+        // function unselectPlayerToken() { 
+        //     tokenSelector.visible = false
+        //     if (revertSquares()) {
+        //         return that.gameLoop();
+        //     } else {
+        //         console.log("ERROR")
+        //     }
+        // }
+
+        //helper function to remove unselect event listener from player token
+        // function removeUnselect() {
+        //     console.log(playerTokenObj)
+        //     playerTokenObj.removeEventListener("click", unselectPlayerToken)                        
+        //     return true
+        // }
+
 
         //return squares to starting color helper function
         function revertSquares() {
-            console.log(validSquares)
             validSquares.forEach( squareObj => {
                 let square = squareObj["square"]
                 let color = squareObj["color"]
                 square.material.color.set(color)
                 that.board.interactionManager.remove(square)
-                removeUnselect()
+                that.board.interactionManager.update();
+                // removeUnselect()
             })
-            return true
+            while(validSquares.length) {
+                validSquares.pop()
+            }
+            renderer.render(scene, camera)
+            return that.endPlayerTurn()
         }
 
-        //helper function to remove unselect event listener from player token
-        function removeUnselect() {
-            playerTokenObj.removeEventListener("click", unselectPlayerToken)                        
-            return true
-        }
+        //add event listener to player token to undo selection
+        // playerTokenObj.addEventListener("click", unselectPlayerToken)
 
-        playerTokenObj.addEventListener("click", unselectPlayerToken)
-
+        //iterate through valid moves, attaching event handlers to valid squares
+        //and highlight them in green
         validMoves.forEach(validMove => {
             that.board.scene.children.forEach(square => {
                 if (square.type === "Mesh" && that._compareArrays(square.name.split(","), validMove)) {
+                    //set valid move squares to GREEN
                     square.material.color.set("green")
 
+                    //add event listener to square
                     this.board.interactionManager.add(square);
-                    square.addEventListener("click", function moveToken() {
-                        // let movePos = square.name.split(",").map(el => parseInt(el))
+                    that.board.interactionManager.update();
+                    square.addEventListener("click", function moveToken(event) {
+                        event.stopPropagation();
+                        square.removeEventListener("click", moveToken)
+                        validSquares.forEach(square => square["square"].removeEventListener("click", moveToken))
                         playerTokenObj.position.set(-20 + (2.5 * validMove[0]), 2, -20 + (2.5 * validMove[1]))
                         const moveSquare = that.board.getSquare(validMove)
                         that.setToken(moveSquare)
@@ -215,15 +234,16 @@ export default class Game {
                         }
 
                         tokenSelector.visible = false
-                        square.removeEventListener("click", moveToken)
+                        
                         revertSquares()
                         // that.switchCurrentPlayer()
-                        return that.gameLoop()
+                        // return that.gameLoop()
                     });
                 }
             })
         })        
 
+        renderer.render(scene, camera)
         
         //***HTML VERSION*****//
         //Get Valid Move Squares
@@ -276,7 +296,20 @@ export default class Game {
         square.addToken(this.currentPlayer.token) //put new token in new square
         this.computerPlayer.watchPlayer["moves"]++
         // this._resetHTML()
-        return square
+    }
+
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async endPlayerTurn() {
+        // console.log("wait")
+        // await this.sleep(1000)
+        // console.log("go")
+        this.board.renderer.render(this.board.scene, this.board.camera)
+        this.board.interactionManager.update();
+        // this.switchCurrentPlayer()
+        return this.gameLoop()
     }
 
     //*Grab Fence Piece*
@@ -401,6 +434,8 @@ export default class Game {
         }
         const moveSquare = this.board.getSquare(movePos)
         this.setToken(moveSquare)
+
+
 
         this.computerPlayer.movesUntilNewFence--
         if (this.computerPlayer.movesUntilNewFence === 0) {
