@@ -1,4 +1,5 @@
 import * as THREE from "three"
+import { Box2, Camera } from "three"
 import Board from "./board/Board"
 import MazeSolver from "./mazesolver/mazesolver"
 import ComputerPlayer from "./player/_computerPlayer"
@@ -96,6 +97,8 @@ export default class Game {
 
         //scene Object containing rendered objects
         const scene = this.board.scene;
+        const renderer = this.board.renderer
+        const camera = this.board.camera
 
         //var constructor from scene
         let playerToken;
@@ -106,20 +109,23 @@ export default class Game {
         //Select and unselect cycle for player's token
         this.board.interactionManager.add(playerToken);
         playerToken.addEventListener("click", function selectPlayerToken(event) {
+            
             //set highlighted functionality
-            const tokenselectorGeometery = new THREE.ConeGeometry(1, 7);
+            const tokenselectorGeometery = new THREE.OctahedronGeometry(.75)
             const tokenselectorMaterial = new THREE.MeshStandardMaterial({color: "yellow"});
             const tokenselector = new THREE.Mesh(tokenselectorGeometery, tokenselectorMaterial);
             that.board.scene.add(tokenselector);
-            tokenselector.position.set(event.target.position["x"], event.target.position["y"], event.target.position["z"]);
-
+            let targetPos = event.target.position
+            tokenselector.position.set(targetPos["x"], 6, targetPos["z"]);
+            
+            function animateToken() {
+                tokenselector.rotation.y += .02;
+                renderer.render(scene, camera);
+            }
+            if (tokenselector) renderer.setAnimationLoop(animateToken);
+            
             playerToken.removeEventListener("click", selectPlayerToken);
-            playerToken.addEventListener("click", function unselectPlayerToken() { 
-                tokenselector.removeFromParent();
-                playerToken.removeEventListener("click", unselectPlayerToken);
-                return that.gameLoop();
-            })
-            return that.placeToken(playerToken);
+            return that.placeToken(playerToken, tokenselector);
         })
 
 
@@ -145,61 +151,98 @@ export default class Game {
 
 
     //REFACTOR ONTO HUMANPLAYER?
-    placeToken(playerTokenObj) {
+    placeToken(playerTokenObj, tokenselector) {
         const that = this
         const startPos = this.currentPlayer.token.getPos();
         const validMoves = this.board.validMoveToken(startPos);
+        const validSquares = []
 
-        validMoves.forEach((validMove, i) => {
-            that.board.scene.children.forEach(child => {
-                if (child.type === "Mesh" && that._compareArrays(child.name.split(","), validMove)) {
-                    console.log(child.position)
+        playerTokenObj.addEventListener("click", function unselectPlayerToken() { 
+            that.board.scene.remove(tokenselector)
+            playerTokenObj.removeEventListener("click", unselectPlayerToken);
+            revertSquares
+            return that.gameLoop();
+        })
+
+        validMoves.forEach(validMove => {
+            that.board.scene.children.forEach(square => {
+                if (square.type === "Mesh" && that._compareArrays(square.name.split(","), validMove)) {
+                    validSquares.push({ "square": square, "color": square.material.color.getHex() })
+                    square.material.color.set("green")
+
+                    this.board.interactionManager.add(square);
+                    square.addEventListener("click", function moveToken() {
+                        that.board.scene.remove(tokenselector)
+                        let movePos = square.name.split(",").map(el => parseInt(el))
+                        playerTokenObj.position.set(-20 + (2.5 * movePos[0]), 2, -20 + (2.5 * movePos[1]))
+                        that.humanPlayer.token.setPos(that.board.getSquare(movePos))
+
+                        that.humanPlayer.movesUntilNewFence--
+                        if (that.humanPlayer.movesUntilNewFence === 0) {
+                            that.computerPlayer.addFence()
+                            that.humanPlayer.movesUntilNewFence = that.computerPlayer.totalFences 
+                        }
+
+                        revertSquares()
+                        // that.switchCurrentPlayer()
+                        return that.gameLoop()
+                    });
                 }
             })
+
+            function revertSquares() {
+                validSquares.forEach( squareObj => {
+                    let square = squareObj["square"]
+                    let color = squareObj["color"]
+                    square.material.color.set(color)
+                    square.removeEventListener("click", function(){});
+                })
+            }
         })        
 
         
+        //***HTML VERSION*****//
         //Get Valid Move Squares
-        const validMoveSquares = []
-        const moveSquares =  Array.from(document.getElementsByClassName("square")).map(el => el)
-        for (let i = 0; i < moveSquares.length; i++) {
-            let square = moveSquares[i]
+        // const validMoveSquares = []
+        // const moveSquares =  Array.from(document.getElementsByClassName("square")).map(el => el)
+        // for (let i = 0; i < moveSquares.length; i++) {
+        //     let square = moveSquares[i]
 
-            for (let j = 0; j < validMoves.length; j++) {
-                let validMove = validMoves[j]
-                let squarePos = square.getAttribute("data-pos").split(",").map(pos => parseInt(pos))
+        //     for (let j = 0; j < validMoves.length; j++) {
+        //         let validMove = validMoves[j]
+        //         let squarePos = square.getAttribute("data-pos").split(",").map(pos => parseInt(pos))
     
-                if (validMove[0] === squarePos[0] && validMove[1] === squarePos[1]) {
-                    validMoveSquares.push(square)
-                }
-            }
-        }
+        //         if (validMove[0] === squarePos[0] && validMove[1] === squarePos[1]) {
+        //             validMoveSquares.push(square)
+        //         }
+        //     }
+        // }
 
-        //glow effect for possible moves
-        validMoveSquares.forEach(square => {
-            let selector = document.createElement("div")
-            selector.setAttribute("class", "selector highlighted")
-            square.appendChild(selector)
-        })
+        // //glow effect for possible moves
+        // validMoveSquares.forEach(square => {
+        //     let selector = document.createElement("div")
+        //     selector.setAttribute("class", "selector highlighted")
+        //     square.appendChild(selector)
+        // })
     
         
-        //Add Event Listerers for Valid Squares
-        validMoveSquares.forEach(square => square.addEventListener("click", event => {
-            const clickedPos = square.getAttribute("data-pos").split(",")
-            const clickedSquare = this.board.getSquare(clickedPos)
-            this.setToken(clickedSquare)
+        // //Add Event Listerers for Valid Squares
+        // validMoveSquares.forEach(square => square.addEventListener("click", event => {
+        //     const clickedPos = square.getAttribute("data-pos").split(",")
+        //     const clickedSquare = this.board.getSquare(clickedPos)
+        //     this.setToken(clickedSquare)
             
-            if (event.target) {
-                this.humanPlayer.movesUntilNewFence--
+        //     if (event.target) {
+        //         this.humanPlayer.movesUntilNewFence--
                 
-                if (this.humanPlayer.movesUntilNewFence === 0) {
-                    this.computerPlayer.addFence()
-                    this.humanPlayer.movesUntilNewFence = this.computerPlayer.totalFences 
-                }
-                this.switchCurrentPlayer()
-                return this.gameLoop()
-            }
-        }))
+        //         if (this.humanPlayer.movesUntilNewFence === 0) {
+        //             this.computerPlayer.addFence()
+        //             this.humanPlayer.movesUntilNewFence = this.computerPlayer.totalFences 
+        //         }
+        //         this.switchCurrentPlayer()
+        //         return this.gameLoop()
+        //     }
+        // }))
     }
 
     //*Remove token from current square and set onto new*

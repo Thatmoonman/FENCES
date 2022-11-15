@@ -15,6 +15,8 @@ export default class Board {
         this.players = [humanPlayer, computerPlayer]
         this.buildBoard()
         this.scene = new THREE.Scene();
+        this.renderer = new THREE.WebGLRenderer();
+        this.camera
         this.interactionManager
     }
 
@@ -84,10 +86,10 @@ export default class Board {
     //PAINT RENDERED HTML BOARD ON TOP OF GAMEBOARD
     render() {
         //render 3d, enable shadows, set to window size, append to html
-        const renderer = new THREE.WebGLRenderer();
-        renderer.shadowMap.enabled = true;
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+        
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(this.renderer.domElement);
 
         //create "camera" and "perspective camera"
         const camera = new THREE.PerspectiveCamera(
@@ -96,15 +98,16 @@ export default class Board {
             .1,
             1000
         ); 
+        this.camera = camera
         
         //orbital movement camera
-        const orbit = renderCamera(camera, renderer.domElement);
-        camera.position.set(0, 20, 50);
+        const orbit = renderCamera(camera, this.renderer.domElement);
+        camera.position.set(0, 40, 50);
         orbit.update();
         this.interactionManager = new InteractionManager(
-            renderer,
+            this.renderer,
             camera,
-            renderer.domElement
+            this.renderer.domElement
           );
 
         //ambient dim light source (base line)
@@ -264,6 +267,7 @@ export default class Board {
         });
         const rayCaster = new THREE.Raycaster();
 
+        const renderer = this.renderer
         //Window Resize
         window.addEventListener("resize", function() {
             camera.aspect = window.innerWidth / window.innerHeight;
@@ -348,7 +352,7 @@ export default class Board {
                 renderer.render(scene, camera)
             }
     
-            renderer.setAnimationLoop(animate);
+            this.renderer.setAnimationLoop(animate);
         })
     }
 
