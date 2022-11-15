@@ -5,6 +5,7 @@ import { DirectionalLight, GridHelper, Raycaster, SpotLight, SpotLightHelper, Te
 import renderCamera from '../threejs/orbitalcam';
 import grass from '../../assets/images/grass2.png';
 import sky from '../../assets/images/sky.jpg';
+import { InteractionManager } from 'three.interactive'
 
 
 
@@ -14,8 +15,10 @@ export default class Board {
         this.players = [humanPlayer, computerPlayer]
         this.buildBoard()
         this.scene = new THREE.Scene();
-        this.mouseClick
+        this.interactionManager
     }
+
+    
 
     buildBoard() {
         
@@ -72,6 +75,8 @@ export default class Board {
         computerPlayer.token.pos = computerStart
         const computerToken = computerPlayer.token
         computerStart.addToken(computerToken)
+
+        return this.render() //COMMENT OUT FOR HTML DEV TESTING
     }
 
     //IDEA: BUTTON TO RECENTER CAMERA
@@ -96,6 +101,11 @@ export default class Board {
         const orbit = renderCamera(camera, renderer.domElement);
         camera.position.set(0, 20, 50);
         orbit.update();
+        this.interactionManager = new InteractionManager(
+            renderer,
+            camera,
+            renderer.domElement
+          );
 
         //ambient dim light source (base line)
         const ambientLight = new THREE.AmbientLight(0x666666);

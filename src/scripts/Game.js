@@ -1,3 +1,4 @@
+import * as THREE from "three"
 import Board from "./board/Board"
 import MazeSolver from "./mazesolver/mazesolver"
 import ComputerPlayer from "./player/_computerPlayer"
@@ -36,7 +37,6 @@ export default class Game {
     }
 
     playTurn() {
-        
         this.selectToken()
         this.selectFence()
     
@@ -49,7 +49,7 @@ export default class Game {
         if (gameOver) {
         
         } else if (this.currentPlayer === this.humanPlayer) {
-            this._resetHTML() //FOR DEV ONLY
+            // this._resetHTML() //FOR DEV ONLY
             return this.playTurn()
         } else {
             const currentBoard = new MazeSolver(this.computerPlayer, this.humanPlayer, this._dupeGrid(this.board.grid))
@@ -91,49 +91,77 @@ export default class Game {
     //REFACTOR ONTO HUMANPLAYER?
     //*Allow player to "GRAB" their token
     selectToken() {
-        //scene Object containing rendered objects
-        const scene = this.board.scene
-        //var constructor from scene
-        let playerToken
+        //capture Game context
+        let that = this;
 
+        //scene Object containing rendered objects
+        const scene = this.board.scene;
+
+        //var constructor from scene
+        let playerToken;
         for (let i = 0; i < scene.children.length; i++) {
             if (scene.children[i].name === "humanToken") {playerToken = scene.children[i]}
-
         }
         
-        playerToken.addEventListener("click", event => {
-            console.log("works")
+        //Select and unselect cycle for player's token
+        this.board.interactionManager.add(playerToken);
+        playerToken.addEventListener("click", function selectPlayerToken(event) {
+            //set highlighted functionality
+            const tokenselectorGeometery = new THREE.ConeGeometry(1, 7);
+            const tokenselectorMaterial = new THREE.MeshStandardMaterial({color: "yellow"});
+            const tokenselector = new THREE.Mesh(tokenselectorGeometery, tokenselectorMaterial);
+            that.board.scene.add(tokenselector);
+            tokenselector.position.set(event.target.position["x"], event.target.position["y"], event.target.position["z"]);
+
+            playerToken.removeEventListener("click", selectPlayerToken);
+            playerToken.addEventListener("click", function unselectPlayerToken() { 
+                tokenselector.removeFromParent();
+                playerToken.removeEventListener("click", unselectPlayerToken);
+                return that.gameLoop();
+            })
+            return that.placeToken(playerToken);
         })
 
 
-        const tokenSquares = Array.from(document.getElementsByClassName("playerSquare"))
-            .map(el => el)
+        //*****USED FOR HTML GAME*****/
+        // const tokenSquares = Array.from(document.getElementsByClassName("playerSquare"))
+        //     .map(el => el)
 
         //get square that holds players token
-        const tokenSquare = tokenSquares.filter(square => {
-            let tokenPos = this._getPosArray.call(square)
-            let playerPos = this.currentPlayer.token.getPos()
-            return tokenPos[0] === playerPos[0] && tokenPos[1] === playerPos[1]
-        })
+        // const tokenSquare = tokenSquares.filter(square => {
+        //     let tokenPos = this._getPosArray.call(square)
+        //     let playerPos = this.currentPlayer.token.getPos()
+        //     return tokenPos[0] === playerPos[0] && tokenPos[1] === playerPos[1]
+        // })
 
         //allow player to click on the square to pick up token
-        tokenSquare[0].firstChild.addEventListener("click", event => {
-            event.target.setAttribute("class", "token highlighted")
-            const pos = tokenSquare[0].getAttribute("data-pos").split(",")
-            event.target.addEventListener("click", () => this.gameLoop())
-            return this.placeToken(event.target)
-        })
+        // tokenSquare[0].firstChild.addEventListener("click", event => {
+        //     event.target.setAttribute("class", "token highlighted")
+        //     const pos = tokenSquare[0].getAttribute("data-pos").split(",")
+        //     event.target.addEventListener("click", () => this.gameLoop())
+        //     return this.placeToken(event.target)
+        // })
     }
 
 
     //REFACTOR ONTO HUMANPLAYER?
-    placeToken(startDiv) {
-        const startPos = this.currentPlayer.token.getPos()
-        const moveSquares =  Array.from(document.getElementsByClassName("square")).map(el => el)
-        const validMoves = this.board.validMoveToken(startPos)
-        const validMoveSquares = []
+    placeToken(playerTokenObj) {
+        const that = this
+        const startPos = this.currentPlayer.token.getPos();
+        const validMoves = this.board.validMoveToken(startPos);
+
+        validMoves.forEach((validMove, i) => {
+            that.board.scene.children.forEach(child => {
+                if (child.type === "Mesh" && that._compareArrays(child.name.split(","), validMove)) {
+                    console.log(child.position)
+                }
+            })
+        })        
+
         
         //Get Valid Move Squares
+        const validMoveSquares = []
+        const moveSquares =  Array.from(document.getElementsByClassName("square")).map(el => el)
         for (let i = 0; i < moveSquares.length; i++) {
             let square = moveSquares[i]
 
