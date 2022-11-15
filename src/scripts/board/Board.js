@@ -207,7 +207,7 @@ export default class Board {
         })
         const playerFence = new THREE.Mesh(playerFenceGeometry, playerFenceMaterial)
         this.scene.add(playerFence)
-        this.interactionManager.add(playerFence)
+        // this.interactionManager.add(playerFence)
         playerFence.castShadow = true;
         playerFence.receiveShadow = true;
         playerFence.name = "playerFence"
@@ -480,10 +480,6 @@ export default class Board {
         const midNodePlacements = [
             [2, 0], [-2, 0], [0, 2], [0, -2]
         ]
-
-        // const endNodePlacements = [
-        //     [4, 0], [-4, 0], [0, 4], [0, -4]
-        // ]
         
         const validFences = []
 
@@ -500,11 +496,6 @@ export default class Board {
                 nodePos[0] + midNodePlacements[i][0],
                 nodePos[1] + midNodePlacements[i][1]
             ]
-
-            // let endNode = [
-            //     nodePos[0] + endNodePlacements[i][0],
-            //     nodePos[1] + endNodePlacements[i][1]
-            // ]
            
 
             let inbounds = true
@@ -556,7 +547,7 @@ export default class Board {
             if (pos1[1] < pos2[1]) {
                 return [[pos1[0] + 1, pos1[1] + 1], [pos1[0] + 1, pos1[1] - 1]] //pos1 to left
             } else {
-                return [[pos1[0] - 1, pos1[1] + 1], [pos1[0] - 1, pos1[1] - 1]]//pos1 to right
+                return [[pos1[0] - 1, pos1[1] - 1], [pos1[0] - 1, pos1[1] + 1]]//pos1 to right
             }
         }
     }
