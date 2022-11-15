@@ -91,6 +91,21 @@ export default class Game {
     //REFACTOR ONTO HUMANPLAYER?
     //*Allow player to "GRAB" their token
     selectToken() {
+        //scene Object containing rendered objects
+        const scene = this.board.scene
+        //var constructor from scene
+        let playerToken
+
+        for (let i = 0; i < scene.children.length; i++) {
+            if (scene.children[i].name === "humanToken") {playerToken = scene.children[i]}
+
+        }
+        
+        playerToken.addEventListener("click", event => {
+            console.log("works")
+        })
+
+
         const tokenSquares = Array.from(document.getElementsByClassName("playerSquare"))
             .map(el => el)
 

@@ -13,6 +13,8 @@ export default class Board {
         this.grid = []
         this.players = [humanPlayer, computerPlayer]
         this.buildBoard()
+        this.scene = new THREE.Scene();
+        this.mouseClick
     }
 
     buildBoard() {
@@ -82,8 +84,7 @@ export default class Board {
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        //create "scene" and "perspective camera"
-        const scene = new THREE.Scene();
+        //create "camera" and "perspective camera"
         const camera = new THREE.PerspectiveCamera(
             45,
             window.innerWidth / window.innerHeight,
@@ -93,34 +94,34 @@ export default class Board {
         
         //orbital movement camera
         const orbit = renderCamera(camera, renderer.domElement);
-        camera.position.set(0, 20, 40);
+        camera.position.set(0, 20, 50);
         orbit.update();
 
         //ambient dim light source (base line)
         const ambientLight = new THREE.AmbientLight(0x666666);
-        // scene.add(ambientLight)
+        this.scene.add(ambientLight)
 
         //Directional Light for game board
         const directionalBoardLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
-        scene.add(directionalBoardLight);
-        directionalBoardLight.position.set(-30, 50, 25);
+        this.scene.add(directionalBoardLight);
+        directionalBoardLight.position.set(-30, 60, 25);
         directionalBoardLight.castShadow = true;
-        directionalBoardLight.shadow.camera.bottom = -18;
-        directionalBoardLight.shadow.camera.top = 18;
-        directionalBoardLight.shadow.camera.left = -22;
-        directionalBoardLight.shadow.camera.right = 22;
+        directionalBoardLight.shadow.camera.bottom = -30;
+        directionalBoardLight.shadow.camera.top = 30;
+        directionalBoardLight.shadow.camera.left = -30;
+        directionalBoardLight.shadow.camera.right = 30;
 
         //Direction Light and Shadow Helpers for game board
         const dBoardLightHelper = new THREE.DirectionalLightHelper(directionalBoardLight, 5);
-        scene.add(dBoardLightHelper);
+        this.scene.add(dBoardLightHelper);
         const dBoardShadowHelper = new THREE.CameraHelper(directionalBoardLight.shadow.camera);
-        scene.add(dBoardShadowHelper);
+        this.scene.add(dBoardShadowHelper);
 
         //S
 
         //axes helper for x, y, z values
         const axesHelper = new THREE.AxesHelper(5);
-        scene.add(axesHelper);
+        this.scene.add(axesHelper);
 
         //ground plane
         const planeGeometryGround = new THREE.PlaneGeometry(500, 500);
@@ -130,19 +131,19 @@ export default class Board {
             // side: THREE.DoubleSide
         });
         const planeGround = new THREE.Mesh(planeGeometryGround, planeMaterialGround);
-        scene.add(planeGround);
+        this.scene.add(planeGround);
         planeGround.rotation.x = -0.5 * Math.PI;
         planeGround.receiveShadow = true;
 
         //grid helper for ground plane
-        const gridHelper = new GridHelper(30, 17, "white");
+        const gridHelper = new GridHelper(44, 9, "white");
         gridHelper.position.set(0, 1.1, 0)
-        scene.add(gridHelper);
+        this.scene.add(gridHelper);
 
 
         //background images
         const cubeTextureLoader = new THREE.CubeTextureLoader();
-        scene.background = cubeTextureLoader.load([
+        this.scene.background = cubeTextureLoader.load([
             grass,
             grass,
             sky,
@@ -152,47 +153,115 @@ export default class Board {
         ]);
 
         //Render Game Board
-        const gameBoardGeometry = new THREE.BoxGeometry(30, 2, 30);
+        const gameBoardGeometry = new THREE.BoxGeometry(44, 1, 44);
         const gameBoardMaterial = new THREE.MeshStandardMaterial({
             color: "black", //DEV USE
             wireframe: false
         })
         const gameBoard = new THREE.Mesh(gameBoardGeometry, gameBoardMaterial);
-        scene.add(gameBoard);
+        this.scene.add(gameBoard);
         // gameBoard.rotation.x = -0.5 * Math.PI;
-        gameBoard.position.set(0, 0, 1)
+        gameBoard.position.set(0, 0, 0)
         gameBoard.receiveShadow = true;
+        gameBoard.castShadow = true;
 
 
         const playerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
         const playerPieceMaterial = new THREE.MeshStandardMaterial({
-            color: "blue"
+            color: this.players[0].color
         });
         const playerPiece = new THREE.Mesh(playerPieceGeometry, playerPieceMaterial);
         playerPiece.castShadow = true;
+        playerPiece.name = "humanToken"
+        const playerId = playerPiece.id
+        
 
         const computerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
         const computerPieceMaterial = new THREE.MeshStandardMaterial({
-            color: "red"
+            color: this.players[1].color
         });
         const computerPiece = new THREE.Mesh(computerPieceGeometry, computerPieceMaterial);
         computerPiece.castShadow = true;
 
-        scene.add(playerPiece);
-        scene.add(computerPiece);
+        this.scene.add(playerPiece);
+        this.scene.add(computerPiece);
 
-        playerPiece.position.set(17, 0, -2)
-        computerPiece.position.set(17, 0, 2)
+        playerPiece.position.set(0, 2, 20)
+        computerPiece.position.set(0, 2, -20)
         
 
-        this.grid.forEach( (row, i) => {
-            
+        this.grid.forEach( (row, j) => {
+            row.forEach( (square, i) => {
+                let humanColor = this.players[0].color
+                let computerColor = this.players[1].color
+                
+                if (square.type === "token" && j === 0) {
+                    let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
+                    let tokenSquareMaterial = new THREE.MeshStandardMaterial({
+                        color: `${humanColor}`
+                    });
+                    let tokenSquare = new THREE.Mesh(tokenSquareGeometry, tokenSquareMaterial);
+                    this.scene.add(tokenSquare);
+                    tokenSquare.position.set(-20 + (2.5 * i), 0, -20);
+                    tokenSquare.receiveShadow = true;
+                    tokenSquare.castShadow = true;
+                    tokenSquare.name = `${[i, j]}`
+                } else if (square.type === "token" && j === 16) {
+                    let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
+                    let tokenSquareMaterial = new THREE.MeshStandardMaterial({
+                        color: `${computerColor}`
+                    });
+                    let tokenSquare = new THREE.Mesh(tokenSquareGeometry, tokenSquareMaterial);
+                    this.scene.add(tokenSquare);
+                    tokenSquare.position.set(-20 + (2.5 * i), 0, 20);
+                    tokenSquare.receiveShadow = true;
+                    tokenSquare.castShadow = true;
+                    tokenSquare.name = `${[i, j]}`
+                } else if (square.type === "token") {
+                    let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
+                    let tokenSquareMaterial = new THREE.MeshStandardMaterial({
+                        color: "white"
+                    });
+                    let tokenSquare = new THREE.Mesh(tokenSquareGeometry, tokenSquareMaterial);
+                    this.scene.add(tokenSquare);
+                    tokenSquare.position.set(-20 + (2.5 * i), 0, -20 + (2.5 * j));
+                    tokenSquare.receiveShadow = true;
+                    tokenSquare.castShadow = true;
+                    tokenSquare.name = `${[i, j]}`
+                } else if (square.type === "fence") {
+                    //DO NOTHING?
+                } else if (square.type === "node") {
+                    let nodeGeometry = new THREE.BoxGeometry(1, 5, 1);
+                    let nodeMaterial = new THREE.MeshStandardMaterial({
+                        color: "white"
+                    });
+                    let node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+                    this.scene.add(node);
+                    node.position.set(-20 + (2.5 * i), 0, -20 + (2.5 * j));
+                    node.receiveShadow = true;
+                    node.name = `${[i, j]}`
+                }
+            })
         })
 
-        
-        
-        
+        //FENCE STABLE?
 
+        //Mouse Position Listener
+        const mousePosition = new THREE.Vector2();
+        window.addEventListener('mousemove', function(e) {
+            mousePosition.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mousePosition.y = - (e.clientY / window.innerHeight) * 2 + 1;
+        });
+        const rayCaster = new THREE.Raycaster();
+
+        //Window Resize
+        window.addEventListener("resize", function() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight)
+        })
+
+        //***RENDER HTML GAME*****//
 
         this.grid.forEach( (row, i) => {
             let gameBoard = document.getElementById("gameBoard")
@@ -254,7 +323,18 @@ export default class Board {
                 fenceBox.appendChild(fence)
             }
 
+            //*****ANIMATION LOOP FOR RENDERED BOARD*****
+            const scene = this.scene
             function animate() {
+                rayCaster.setFromCamera(mousePosition, camera);
+                const intersects = rayCaster.intersectObjects(scene.children);
+
+                for (let i = 0; i < intersects.length; i++) {
+                    if (intersects[i].object.id === playerId) {
+                       
+                    }
+                }
+
                 renderer.render(scene, camera)
             }
     

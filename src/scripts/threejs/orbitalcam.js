@@ -5,7 +5,7 @@ export default function renderCamera(camera, renderer) {
     const orbitControls = new OrbitControls(camera, renderer) 
     
     //limit range from going below deck
-    orbitControls.maxPolarAngle = (Math.PI / 2.25) 
+    orbitControls.maxPolarAngle = (Math.PI / 2.3) 
     
     //limit zoom range
     orbitControls.minDistance = 8;
