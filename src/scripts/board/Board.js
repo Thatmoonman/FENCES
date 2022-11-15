@@ -201,7 +201,7 @@ export default class Board {
         tokenselector.visible = false
 
         //PLAYER FENCE
-        const playerFenceGeometry = new THREE.BoxGeometry(1, 4, 8)
+        const playerFenceGeometry = new THREE.BoxGeometry(1, 5, 9)
         const playerFenceMaterial = new THREE.MeshStandardMaterial({
             color: this.players[0].color
         })
@@ -224,13 +224,12 @@ export default class Board {
         computerPiece.name = "computerToken"
 
         //COMPUTER FENCE
-        const computerFenceGeometry = new THREE.BoxGeometry(1, 4, 8)
+        const computerFenceGeometry = new THREE.BoxGeometry(1, 5, 9)
         const computerFenceMaterial = new THREE.MeshStandardMaterial({
             color: this.players[1].color
         })
         const computerFence = new THREE.Mesh(computerFenceGeometry, computerFenceMaterial)
         this.scene.add(computerFence)
-        this.interactionManager.add(computerFence)
         computerFence.castShadow = true;
         computerFence.receiveShadow = true;
         computerFence.name = "computerFence"

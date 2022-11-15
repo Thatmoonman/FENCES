@@ -308,9 +308,10 @@ export default class Game {
                 return that.placeFenceStart(playerFence, tokenSelector)
             })
         } else {
-            playerFence.material.color.set("grey")
+            // playerFence.material.color.set("grey")
         }
 
+        //**HTML*** */
         // const fenceBoxEle = document.getElementById("humanPlayerFences")
         // const unplayedFences = Array.from(fenceBoxEle.childNodes).map(el => el)
 
@@ -326,6 +327,7 @@ export default class Game {
 
     //*Select starting edge for Fence
     placeFenceStart(playerFence, tokenSelector) {
+        const that = this
         const scene = this.board.scene
         const allNodes = []
         this.board.grid.forEach(row => {
@@ -351,12 +353,15 @@ export default class Game {
                         event.stopPropagation();
                         tokenSelector.position.set( -20 + (2.5 * nodePos[0]), 3, -20 + (2.5 * nodePos[1]))
                         sceneNodes.forEach(node => node.removeEventListener("click", startFence))
-                        placeFenceEnd(playerFence, tokenSelector, sceneNodes)
+                        that.board.interactionManager.update()
+
+                        that.placeFenceEnd(playerFence, tokenSelector, node, sceneNodes)
                     })
                 }
             }
         })
 
+        //***HTML */
         // sceneNodes.forEach( node => {
         //     let nodePos = node.name
         // })
@@ -371,41 +376,79 @@ export default class Game {
     }
 
     //*Select midpoint for Fence and place fence on board
-    placeFenceEnd(startNode) {
-        const startPos = this._getPosArray.call(startNode)
+    placeFenceEnd(playerFence, tokenSelector, startNode, sceneNodes) {
+        const that = this
+        const startPos = startNode.name.split(",").map(el => parseInt(el))
         const validFences = this.board.validMoveFence(startPos)
-        const allNodes = Array.from(document.getElementsByClassName("node")).map(el => el)
-        startNode.addEventListener("click", () => this.gameLoop())
-        const validNodes = []
+        console.log(validFences)
 
-        validFences.forEach(validFence => {
-            for (let i = 0; i < allNodes.length; i++) {
-                let nodePos = this._getPosArray.call(allNodes[i])
-                if (this._compareArrays(nodePos, validFence["midNode"])) {
-                    allNodes[i].setAttribute("class", "node end-highlighted")
-                    validNodes.push(allNodes[i])
-                    validFence["nodeLi"] = allNodes[i]
+        sceneNodes.forEach(node => {
+            let nodePos = node.name.split(",").map(el => parseInt(el))
+            validFences.forEach(fenceObj => {
+                if (this._compareArrays(nodePos, fenceObj["midNode"])) {
+                    node.addEventListener("click", function addFence(event) {
+                        const newFence = playerFence.clone()
+                        that.board.scene.add(newFence)
+                        newFence.position.set(-20 + (2.5 * nodePos[0]), 0, -20 + (2.5 * nodePos[1]))
+                        if (fenceObj["midNode"][1] === fenceObj["startNode"][1]) {
+                            newFence.rotation.y = Math.PI / 2
+                        }
+                        node.material.color.set(that.humanPlayer.color)
+
+                        that.board.getSquare(fenceObj["startNode"]).holds.push("Fence")
+                        that.board.getSquare(fenceObj["midNode"]).holds.push("MID")
+                        that.humanPlayer.fences.pop()
+                        that.computerPlayer.watchPlayer["fences"]++
+                        tokenSelector.visible = false
+
+                        that.resetNodeEvents(sceneNodes)
+                        that.switchCurrentPlayer()
+                        return that.gameLoop()
+                    })
                 }
-            }
-        })
-
-        startNode.addEventListener("click", () => this.gameLoop())
-        
-        validFences.forEach(fenceObj => {
-            fenceObj["nodeLi"].addEventListener( "click", () => {
-                fenceObj["fences"].forEach( fence => {
-                    let fenceSquare = this.board.getSquare(fence)
-                    fenceSquare.addToken(this.humanPlayer.color)
-                })
-                this.board.getSquare(fenceObj["startNode"]).holds.push("Fence")
-                this.board.getSquare(fenceObj["midNode"]).holds.push("MID")
-                this.humanPlayer.fences.pop()
-                this.computerPlayer.watchPlayer["fences"]++
-                this.switchCurrentPlayer()
-                return this.gameLoop()
             })
         })
+
+        //***HTML*** */
+        // const allNodes = Array.from(document.getElementsByClassName("node")).map(el => el)
+        // startNode.addEventListener("click", () => this.gameLoop())
+        // const validNodes = []
+
+        // validFences.forEach(validFence => {
+        //     for (let i = 0; i < allNodes.length; i++) {
+        //         let nodePos = this._getPosArray.call(allNodes[i])
+        //         if (this._compareArrays(nodePos, validFence["midNode"])) {
+        //             allNodes[i].setAttribute("class", "node end-highlighted")
+        //             validNodes.push(allNodes[i])
+        //             validFence["nodeLi"] = allNodes[i]
+        //         }
+        //     }
+        // })
+
+        // startNode.addEventListener("click", () => this.gameLoop())
         
+        // validFences.forEach(fenceObj => {
+        //     fenceObj["nodeLi"].addEventListener( "click", () => {
+        //         fenceObj["fences"].forEach( fence => {
+        //             let fenceSquare = this.board.getSquare(fence)
+        //             fenceSquare.addToken(this.humanPlayer.color)
+        //         })
+        //         this.board.getSquare(fenceObj["startNode"]).holds.push("Fence")
+        //         this.board.getSquare(fenceObj["midNode"]).holds.push("MID")
+        //         this.humanPlayer.fences.pop()
+        //         this.computerPlayer.watchPlayer["fences"]++
+        //         this.switchCurrentPlayer()
+        //         return this.gameLoop()
+        //     })
+        // })
+        
+    }
+
+    resetNodeEvents(nodes){
+        nodes.forEach(node => {
+            this.board.interactionManager.remove(node)
+        })
+        this.board.interactionManager.update()
     }
 
     isGameOver() {
@@ -425,10 +468,10 @@ export default class Game {
         return this.reset()
     }
 
-    //string to int helper function for position
-    _getPosArray() {
-        return this.getAttribute("data-pos").split(",").map(el => parseInt(el))
-    }
+    //string to int helper function for position HTML
+    // _getPosArray() {
+    //     return this.getAttribute("data-pos").split(",").map(el => parseInt(el))
+    // }
 
     //helper for Position Array Equality
     _compareArrays(pos1, pos2) {
