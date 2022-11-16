@@ -119,8 +119,12 @@
   background-color: rgba(0, 0, 255, 0.788);
   border: 5px solid gray;
   border-radius: 5%;
+  justify-content: center;
+  align-items: center;
+}
+.endTurn > p {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-  font-size: 5000;
+  font-size: xx-large;
   font-weight: bold;
   color: white;
 }

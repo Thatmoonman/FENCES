@@ -110,6 +110,7 @@ export default class Board {
         //ambient dim light source (base line)
         const ambientLight = new THREE.AmbientLight(0x666666);
         this.scene.add(ambientLight)
+        ambientLight.name = "ambientLight"
 
         //Directional Light for game board
         const directionalBoardLight = new THREE.DirectionalLight(0xFFFFFF, 0.5);
@@ -191,6 +192,8 @@ export default class Board {
             color: "white"
         })
         const rules = new THREE.Mesh(rulesGeometry, rulesMatertial)
+        rules.castShadow = true;
+        rules.receiveShadow = true;
         this.buildRules(rules)
 
         //rulesclickbox
@@ -204,7 +207,25 @@ export default class Board {
         rulesClick.position.set(-10, 0, -32)
         rulesClick.material.visible = false
 
+        const rulesSpotlight = new THREE.SpotLight(0xFBFAF5);
+        this.scene.add(rulesSpotlight)
+        rulesSpotlight.position.set(-30, 60, 0)
+        rulesSpotlight.castShadow = true;
+        rulesSpotlight.penumbra = .8;
+        rulesSpotlight.angle = 0.1;
+        rulesSpotlight.target = rulesClick
+
         //Render Links
+
+        //Win Light
+        const winLight = new THREE.SpotLight(0xFFFFFF);
+        this.scene.add(winLight);
+        winLight.position.set(0, 80, 0)
+        winLight.angle = .025;
+        winLight.penumbra = .3;
+        winLight.visible = false;
+        winLight.name = "winLight"
+
 
         //logo light
         const directionalLogoLight = new THREE.DirectionalLight(0xFFFFFF, .6)
@@ -460,32 +481,32 @@ export default class Board {
         for (let i = 0; i < 30; i++) {
             rulesquares.push(rules.clone())
         }
-        rulesquares[0].position.set(-16, 0, -33) //r
-        rulesquares[1].position.set(-16, 0, -32) //r
-        rulesquares[2].position.set(-16, 0, -31) //r
-        rulesquares[3].position.set(-15, 0, -33) //u
-        rulesquares[4].position.set(-13.5, 0, -33) //u
-        rulesquares[5].position.set(-13.5, 0, -32) //u
-        rulesquares[6].position.set(-13.5, 0, -31) //u 
-        rulesquares[7].position.set(-13.5, 0, -31) //u
-        rulesquares[8].position.set(-12.5, 0, -31) //u
-        rulesquares[9].position.set(-11.5, 0, -31) //u
-        rulesquares[10].position.set(-11.5, 0, -32) //u
-        rulesquares[11].position.set(-11.5, 0, -33) //u
-        rulesquares[12].position.set(-10, 0, -33) //l
-        rulesquares[13].position.set(-10, 0, -32) //l
-        rulesquares[14].position.set(-10, 0, -31) //l
-        rulesquares[15].position.set(-8.5, 0, -32.5) //e
-        rulesquares[16].position.set(-8.5, 0, -31.5) //e
-        rulesquares[17].position.set(-7.5, 0, -33.5) //e
-        rulesquares[18].position.set(-7.5, 0, -32) //e
-        rulesquares[19].position.set(-7.5, 0, -30.5) //e
-        rulesquares[20].position.set(-6.5, 0, -32.5) //e
-        rulesquares[21].position.set(-6.5, 0, -30.75) //e
-        rulesquares[22].position.set(-5, 0, -32.5) //s
-        rulesquares[23].position.set(-5, 0, -31) //s
-        rulesquares[24].position.set(-4, 0, -31.5) //s
-        rulesquares[25].position.set(-4, 0, -33.5) //s
+        rulesquares[0].position.set(-16, 3, -31) //r
+        rulesquares[1].position.set(-16, 2, -31) //r
+        rulesquares[2].position.set(-16, 1, -31) //r
+        rulesquares[3].position.set(-15, 3, -31) //r
+        rulesquares[4].position.set(-13.5, 3, -31) //u
+        rulesquares[5].position.set(-13.5, 2, -31) //u
+        rulesquares[6].position.set(-13.5, 1, -31) //u 
+        rulesquares[7].position.set(-13.5, 1, -31) //u
+        rulesquares[8].position.set(-12.5, 1, -31) //u
+        rulesquares[9].position.set(-11.5, 1, -31) //u
+        rulesquares[10].position.set(-11.5, 2, -31) //u
+        rulesquares[11].position.set(-11.5, 3, -31) //u
+        rulesquares[12].position.set(-10, 3, -31) //l
+        rulesquares[13].position.set(-10, 2, -31) //l
+        rulesquares[14].position.set(-10, 1, -31) //l
+        rulesquares[15].position.set(-8.5, 2.5, -31) //e
+        rulesquares[16].position.set(-8.5, 1.5, -31) //e
+        rulesquares[17].position.set(-7.5, 3.5, -31) //e
+        rulesquares[18].position.set(-7.5, 2, -31) //e
+        rulesquares[19].position.set(-7.75, .25, -31) //e
+        rulesquares[20].position.set(-6.5, 2.75, -31) //e
+        rulesquares[21].position.set(-6.75, .25, -31) //e
+        rulesquares[22].position.set(-5, 2.5, -31) //s
+        rulesquares[23].position.set(-5, .5, -31) //s
+        rulesquares[24].position.set(-4, 1.5, -31) //s
+        rulesquares[25].position.set(-4, 3.5, -31) //s
         
 
         rulesquares.forEach(square => this.scene.add(square))
