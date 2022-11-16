@@ -2,13 +2,14 @@ import Player from "./Player";
 
 
 export default class ComputerPlayer extends Player {
-    constructor(color, fences, totalFences, movesUntilNewFence, token) {
+    constructor(color, fences, totalFences, movesUntilNewFence, token, moves) {
         super(
             color, color, 
             fences, fences,
             totalFences, totalFences,
             movesUntilNewFence, movesUntilNewFence, 
-            token, token)
+            token, token
+            )
 
         this.watchPlayer = {
             "moves": 0,

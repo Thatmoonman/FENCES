@@ -1,7 +1,7 @@
 import Player from "./Player"
 
 export default class HumanPlayer extends Player {
-    constructor(color, fences, totalFences, movesUntilNewFence, token) {
+    constructor(color, fences, totalFences, movesUntilNewFence, token, moves) {
         super(
             color, color, 
             fences, fences, 
@@ -9,7 +9,7 @@ export default class HumanPlayer extends Player {
             movesUntilNewFence, movesUntilNewFence, 
             token, token
         )
-        this.selector
+        this.selectorIcon
     }
 
 }
