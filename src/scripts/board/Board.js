@@ -5,8 +5,8 @@ import { DirectionalLight, GridHelper, Raycaster, SpotLight, SpotLightHelper, Te
 import renderCamera from '../threejs/orbitalcam';
 import grass from '../../assets/images/grass2.png';
 import sky from '../../assets/images/sky.jpg';
+import wood from '../../assets/images/wood.jpg'
 import { InteractionManager } from 'three.interactive'
-
 
 
 export default class Board {
@@ -19,8 +19,6 @@ export default class Board {
         this.camera
         this.interactionManager
     }
-
-    
 
     buildBoard() {
         
@@ -86,7 +84,7 @@ export default class Board {
     //PAINT RENDERED HTML BOARD ON TOP OF GAMEBOARD
     render() {
         //render 3d, enable shadows, set to window size, append to html
-        
+
         this.renderer.shadowMap.enabled = true;
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
@@ -165,6 +163,10 @@ export default class Board {
             grass
         ]);
 
+        //wood texture
+        const textureLoader = new THREE.TextureLoader();
+
+
         //Render Game Board
         const gameBoardGeometry = new THREE.BoxGeometry(44, 1, 44);
         const gameBoardMaterial = new THREE.MeshStandardMaterial({
@@ -182,13 +184,13 @@ export default class Board {
         const playerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
         const playerPieceMaterial = new THREE.MeshStandardMaterial({
             color: this.players[0].color
+            // map: textureLoader.load(wood)
         });
         const playerPiece = new THREE.Mesh(playerPieceGeometry, playerPieceMaterial);
         this.scene.add(playerPiece);
         this.interactionManager.add(playerPiece)
         playerPiece.castShadow = true;
         playerPiece.name = "humanToken"
-        const playerId = playerPiece.id //NEED?
         
         //PLAYER SELECTED DIAMOND
         const tokenselectorGeometery = new THREE.OctahedronGeometry(.75)
@@ -204,6 +206,7 @@ export default class Board {
         const playerFenceGeometry = new THREE.BoxGeometry(1, 5, 9)
         const playerFenceMaterial = new THREE.MeshStandardMaterial({
             color: this.players[0].color
+            // map: textureLoader.load(wood)
         })
         const playerFence = new THREE.Mesh(playerFenceGeometry, playerFenceMaterial)
         this.scene.add(playerFence)
@@ -217,6 +220,7 @@ export default class Board {
         const computerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
         const computerPieceMaterial = new THREE.MeshStandardMaterial({
             color: this.players[1].color
+            // map: textureLoader.load(wood)
         });
         const computerPiece = new THREE.Mesh(computerPieceGeometry, computerPieceMaterial);
         this.scene.add(computerPiece);
@@ -227,6 +231,7 @@ export default class Board {
         const computerFenceGeometry = new THREE.BoxGeometry(1, 5, 9)
         const computerFenceMaterial = new THREE.MeshStandardMaterial({
             color: this.players[1].color
+            // map: textureLoader.load(wood)
         })
         const computerFence = new THREE.Mesh(computerFenceGeometry, computerFenceMaterial)
         this.scene.add(computerFence)
@@ -249,6 +254,7 @@ export default class Board {
                     let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
                     let tokenSquareMaterial = new THREE.MeshStandardMaterial({
                         color: `${humanColor}`
+                        // map: textureLoader.load(wood)
                     });
                     let tokenSquare = new THREE.Mesh(tokenSquareGeometry, tokenSquareMaterial);
                     this.scene.add(tokenSquare);
@@ -260,6 +266,7 @@ export default class Board {
                     let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
                     let tokenSquareMaterial = new THREE.MeshStandardMaterial({
                         color: `${computerColor}`
+                        // map: textureLoader.load(wood)
                     });
                     let tokenSquare = new THREE.Mesh(tokenSquareGeometry, tokenSquareMaterial);
                     this.scene.add(tokenSquare);
@@ -271,6 +278,7 @@ export default class Board {
                     let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
                     let tokenSquareMaterial = new THREE.MeshStandardMaterial({
                         color: "white"
+                        // map: textureLoader.load(wood)
                     });
                     let tokenSquare = new THREE.Mesh(tokenSquareGeometry, tokenSquareMaterial);
                     this.scene.add(tokenSquare);
@@ -284,6 +292,7 @@ export default class Board {
                     let nodeGeometry = new THREE.BoxGeometry(1, 5, 1);
                     let nodeMaterial = new THREE.MeshStandardMaterial({
                         color: "white"
+                        // map: textureLoader.load(wood)
                     });
                     let node = new THREE.Mesh(nodeGeometry, nodeMaterial);
                     this.scene.add(node);
@@ -312,83 +321,22 @@ export default class Board {
             renderer.setSize(window.innerWidth, window.innerHeight)
         })
 
-        //***RENDER HTML GAME*****//
+        //*****ANIMATION LOOP FOR RENDERED BOARD*****
+        const scene = this.scene
+        const interactionManager = this.interactionManager
+        function animate() {
+            rayCaster.setFromCamera(mousePosition, camera);
+            tokenselector.rotation.y += 0.02
 
-        this.grid.forEach( (row, i) => {
-            let gameBoard = document.getElementById("gameBoard")
-            let renderRow = document.createElement("ul")
+            interactionManager.update()
 
-            row.forEach( square => {
-                
-                if (square.type === "token") {
-                    if (square.holds.length) {
-                        let tokenStart = this.buildSpace("li", "playerSquare", square.pos)
-                        let token = document.createElement("div")
-                        token.setAttribute("class", "token")
-                        token.style.backgroundColor = square.getToken().color
-                        tokenStart.appendChild(token)
-                        renderRow.appendChild(tokenStart)
-                    } else {
-                        let emptySquare = this.buildSpace("li", "square", square.pos)
-                        renderRow.appendChild(emptySquare)
-                    }
-                } else if (square.type === "fence" && i % 2 === 0) {
-                    let fenceSpace = this.buildSpace("li", "verticalFence", square.pos)
-                    if (square.holds.length) {
-                        fenceSpace.style.backgroundColor = square.holds[0]
-                    }
-                    renderRow.appendChild(fenceSpace)             
-                } else if (square.type === "fence") {
-                    let fenceSpace = this.buildSpace("li", "horizontalFence", square.pos)
-                    if (square.holds.length) {
-                        fenceSpace.style.backgroundColor = square.holds[0]
-                    }
-                    renderRow.appendChild(fenceSpace)                    
-                } else {
-                    let nodeSpace = this.buildSpace("li", "node", square.pos)
-                    renderRow.appendChild(nodeSpace)                   
-                }
-            })
-            gameBoard.appendChild(renderRow)
-        })
-    
+            renderer.render(scene, camera)
+        }
 
-        this.players.forEach( player => {
-            let fenceBox
+        this.renderer.setAnimationLoop(animate);
+        this.renderer.render(this.scene, camera)
 
-            if (player instanceof HumanPlayer) {
-                fenceBox = document.getElementById("humanPlayerFences")
-            } else {
-                fenceBox = document.getElementById("computerPlayerFences")
-            }
-
-            while (fenceBox.firstChild) {
-                fenceBox.removeChild(fenceBox.firstChild)
-            }
-            
-            let fences = player.fences.length
-            
-            for (let i = 0; i < fences; i++) {
-                let fence = document.createElement("li")
-                fence.style.backgroundColor = player.color
-                fenceBox.appendChild(fence)
-            }
-
-            //*****ANIMATION LOOP FOR RENDERED BOARD*****
-            const scene = this.scene
-            const interactionManager = this.interactionManager
-            function animate() {
-                rayCaster.setFromCamera(mousePosition, camera);
-                const intersects = rayCaster.intersectObjects(scene.children);
-
-                interactionManager.update()
-
-                renderer.render(scene, camera)
-            }
-    
-            this.renderer.setAnimationLoop(animate);
-            this.renderer.render(this.scene, camera)
-        })
+       
     }
 
     buildSpace(ele, classAttr, pos) {
@@ -554,3 +502,65 @@ export default class Board {
 
 }
 
+ //***RENDER HTML GAME*****//
+
+        // this.grid.forEach( (row, i) => {
+        //     let gameBoard = document.getElementById("gameBoard")
+        //     let renderRow = document.createElement("ul")
+
+        //     row.forEach( square => {
+                
+        //         if (square.type === "token") {
+        //             if (square.holds.length) {
+        //                 let tokenStart = this.buildSpace("li", "playerSquare", square.pos)
+        //                 let token = document.createElement("div")
+        //                 token.setAttribute("class", "token")
+        //                 token.style.backgroundColor = square.getToken().color
+        //                 tokenStart.appendChild(token)
+        //                 renderRow.appendChild(tokenStart)
+        //             } else {
+        //                 let emptySquare = this.buildSpace("li", "square", square.pos)
+        //                 renderRow.appendChild(emptySquare)
+        //             }
+        //         } else if (square.type === "fence" && i % 2 === 0) {
+        //             let fenceSpace = this.buildSpace("li", "verticalFence", square.pos)
+        //             if (square.holds.length) {
+        //                 fenceSpace.style.backgroundColor = square.holds[0]
+        //             }
+        //             renderRow.appendChild(fenceSpace)             
+        //         } else if (square.type === "fence") {
+        //             let fenceSpace = this.buildSpace("li", "horizontalFence", square.pos)
+        //             if (square.holds.length) {
+        //                 fenceSpace.style.backgroundColor = square.holds[0]
+        //             }
+        //             renderRow.appendChild(fenceSpace)                    
+        //         } else {
+        //             let nodeSpace = this.buildSpace("li", "node", square.pos)
+        //             renderRow.appendChild(nodeSpace)                   
+        //         }
+        //     })
+        //     gameBoard.appendChild(renderRow)
+        // })
+    
+
+        // this.players.forEach( player => {
+        //     let fenceBox
+
+        //     if (player instanceof HumanPlayer) {
+        //         fenceBox = document.getElementById("humanPlayerFences")
+        //     } else {
+        //         fenceBox = document.getElementById("computerPlayerFences")
+        //     }
+
+        //     while (fenceBox.firstChild) {
+        //         fenceBox.removeChild(fenceBox.firstChild)
+        //     }
+            
+        //     let fences = player.fences.length
+            
+        //     for (let i = 0; i < fences; i++) {
+        //         let fence = document.createElement("li")
+        //         fence.style.backgroundColor = player.color
+        //         fenceBox.appendChild(fence)
+        //     }
+        // })
