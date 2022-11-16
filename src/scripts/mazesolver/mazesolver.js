@@ -6,6 +6,7 @@ export default class MazeSolver {
         this.grid = grid
         this.currentPlayer = currentPlayer
         this.opponent = opponent
+        this.shortestPath
 
         const startPos = currentPlayer.token.getPos()
         const endPosArray = this.getEndPos(currentPlayer)

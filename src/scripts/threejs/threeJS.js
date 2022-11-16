@@ -2,8 +2,6 @@ import * as THREE from 'three';
 import { GridHelper, Raycaster, SpotLight, SpotLightHelper, TextureLoader } from 'three';
 import renderCamera from './orbitalcam';
 import * as dat from 'dat.gui';
-import milkyway from '../../assets/images/milkyway.jpg'
-import desert from '../../assets/images/desert.jpg'
 import sky from '../../assets/images/sky.jpg'
 
 export default function renderThree() {
