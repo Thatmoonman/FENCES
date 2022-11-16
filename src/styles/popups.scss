@@ -19,3 +19,20 @@
     }
 }
 
+.endTurn{
+    display: none;
+    z-index: 1;
+    position: absolute;
+    margin: 10% 30% 10% 30%;
+    padding: 10%;
+    width: 30%;
+    height: 25%;
+    background-color: rgba(0, 0, 255, 0.788);
+    border: 5px solid gray;
+    border-radius: 5%;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 5000;
+    font-weight: bold;
+    color: white
+}
+

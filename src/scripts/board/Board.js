@@ -243,7 +243,7 @@ export default class Board {
         });
         const playerPiece = new THREE.Mesh(playerPieceGeometry, playerPieceMaterial);
         this.scene.add(playerPiece);
-        this.interactionManager.add(playerPiece)
+        // this.interactionManager.add(playerPiece)
         playerPiece.castShadow = true;
         playerPiece.name = "humanToken"
         
@@ -265,7 +265,7 @@ export default class Board {
         })
         const playerFence = new THREE.Mesh(playerFenceGeometry, playerFenceMaterial)
         this.scene.add(playerFence)
-        this.interactionManager.add(playerFence)
+        // this.interactionManager.add(playerFence)
         playerFence.castShadow = true;
         playerFence.receiveShadow = true;
         playerFence.name = "playerFence"
@@ -460,7 +460,6 @@ export default class Board {
         for (let i = 0; i < 30; i++) {
             rulesquares.push(rules.clone())
         }
-        console.log(rulesquares[0].id)
         rulesquares[0].position.set(-16, 0, -33) //r
         rulesquares[1].position.set(-16, 0, -32) //r
         rulesquares[2].position.set(-16, 0, -31) //r

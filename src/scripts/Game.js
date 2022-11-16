@@ -9,7 +9,7 @@ export default class Game {
         this.computerPlayer = new ComputerPlayer(computerColor)
         this.currentPlayer = this.humanPlayer
         this.board = new Board(this.humanPlayer, this.computerPlayer) 
-        
+        this.onceperturn = true
         this.newGame() 
     }
 
@@ -75,6 +75,23 @@ export default class Game {
         }
     }
 
+    endTurn() {
+        const endTurnPopup = document.getElementsByClassName("endTurn")[0]
+        const startNextTurn = document.getElementsByClassName("startNextTurn")[0]
+        if (this.onceperturn === false) {
+        } else {
+            this.onceperturn = false
+            endTurnPopup.style.display = "block"
+            endTurnPopup.addEventListener("click", (e) => {
+                endTurnPopup.style.display = "none"
+                this.onceperturn = true
+                e.preventDefault();
+                e.stopPropagation();
+                this.switchCurrentPlayer();
+            }, {once: true})
+        }
+    }
+
 
     //REFACTOR ONTO HUMANPLAYER?
     //*Allow player to "GRAB" their token
@@ -89,11 +106,14 @@ export default class Game {
 
         //var constructor from scene
         let playerToken;
+        let playerFence;
         let tokenSelector;
         for (let i = 0; i < scene.children.length; i++) {
             if (scene.children[i].name === "humanToken") {playerToken = scene.children[i]}
             if (scene.children[i].name === "tokenSelector") {tokenSelector = scene.children[i]}
+            if (scene.children[i].name === "playerFence") {playerFence = scene.children[i]}
         }
+        this.board.interactionManager.add(playerToken)
         
         //Select and unselect cycle for player's token
         playerToken.addEventListener("click", function selectPlayerToken(event) {
@@ -105,18 +125,20 @@ export default class Game {
             tokenSelector.position.set(targetPos["x"], 6, targetPos["z"]);
             
             // playerToken.removeEventListener("click", selectPlayerToken);
-            return that.placeToken(playerToken, tokenSelector), 
+            return that.placeToken(playerToken, tokenSelector, playerFence), 
             {once: true}
         })        
     }
 
 
     //REFACTOR ONTO HUMANPLAYER?
-    placeToken(playerTokenObj, tokenSelector) {
+    placeToken(playerTokenObj, tokenSelector, playerFence) {
         const that = this
         const startPos = this.currentPlayer.token.getPos();
         const validMoves = this.board.validMoveToken(startPos);
         const validSquares = []
+
+        this.board.interactionManager.remove(playerFence)
         
         //Build valid Squares Obj for preserving Square color and easy Mesh access via obj.name
         validMoves.forEach(validMove => {
@@ -202,7 +224,9 @@ export default class Game {
                 removeUnselect()
                 squares.forEach(square => that.board.interactionManager.remove(square))
                 that._removeListeners(squares, moveToken)
-                return that.switchCurrentPlayer()
+                that.board.interactionManager.remove(playerTokenObj)
+                return that.endTurn()
+                // return that.switchCurrentPlayer()
             }, {once: true});
         })        
     }
@@ -229,6 +253,8 @@ export default class Game {
             if (scene.children[i].name === "playerFence") {playerFence = scene.children[i]}
             if (scene.children[i].name === "tokenSelector") {tokenSelector = scene.children[i]}
         }
+        this.board.interactionManager.add(playerFence)
+
         
         if (fences.length) {
             playerFence.material.color.set(this.humanPlayer.color)
@@ -236,6 +262,7 @@ export default class Game {
                 tokenSelector.position.set(-25, 4, 5)
                 tokenSelector.visible = true
                 playerFence.removeEventListener("click", selectFence)
+                that.board.interactionManager.remove(playerFence)
                 return that.placeFenceStart(playerFence, tokenSelector)
             }, {once: true})
         } else {
@@ -311,8 +338,10 @@ export default class Game {
 
                         that._removeListeners(sceneNodes, addFence)
                         sceneNodes.forEach(node => that.board.interactionManager.remove(node))
+                        that.board.interactionManager.remove(playerFence)
                         that.humanPlayer.moves += 1
-                        return that.switchCurrentPlayer()
+                        // return that.switchCurrentPlayer()
+                        return that.endTurn();
                     }, {once: true})
                 }
             })
