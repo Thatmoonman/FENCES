@@ -278,11 +278,6 @@ export default class Game {
                     }, {once: true})
                 }
 
-                function removeNodeListeners(func) {
-                    sceneNodes.forEach(node => {
-                        node.removeEventListener("click", func)
-                    })
-                }
             }
         })
     }
