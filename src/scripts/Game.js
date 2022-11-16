@@ -46,7 +46,7 @@ export default class Game {
         } else if (this.currentPlayer === this.humanPlayer) {
             // this._resetHTML() //FOR DEV ONLY
             return this.playTurn()
-        } else {
+        } else if (this.currentPlayer === this.computerPlayer) {
             const currentBoard = new MazeSolver(this.computerPlayer, this.humanPlayer, this._dupeGrid(this.board.grid))
             this.computerPlayer.goal = currentBoard.shortestPath
 
