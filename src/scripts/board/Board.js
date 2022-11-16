@@ -134,7 +134,7 @@ export default class Board {
         //ground plane
         const planeGeometryGround = new THREE.PlaneGeometry(500, 500);
         const planeMaterialGround = new THREE.MeshStandardMaterial({
-            color: 0xA1DF50, //grass green
+            color: 0x37AE0F //grass green
             // color: "grey", //DEV USE
             // side: THREE.DoubleSide
         });
@@ -239,7 +239,7 @@ export default class Board {
         })
         const playerFence = new THREE.Mesh(playerFenceGeometry, playerFenceMaterial)
         this.scene.add(playerFence)
-        // this.interactionManager.add(playerFence)
+        this.interactionManager.add(playerFence)
         playerFence.castShadow = true;
         playerFence.receiveShadow = true;
         playerFence.name = "playerFence"
@@ -687,7 +687,7 @@ export default class Board {
             if (pos1[1] < pos2[1]) {
                 return [[pos1[0] + 1, pos1[1] + 1], [pos1[0] + 1, pos1[1] - 1]] //pos1 to left
             } else {
-                return [[pos1[0] - 1, pos1[1] - 1], [pos1[0] - 1, pos1[1] + 1]]//pos1 to right
+                return [[pos1[0] - 1, pos1[1] + 1], [pos1[0] - 1, pos1[1] - 1]]//pos1 to right
             }
         }
     }
