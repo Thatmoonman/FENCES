@@ -108,11 +108,11 @@ export default class Board {
           );
 
         //ambient dim light source (base line)
-        const ambientLight = new THREE.AmbientLight(0x888888);
+        const ambientLight = new THREE.AmbientLight(0x666666);
         this.scene.add(ambientLight)
 
         //Directional Light for game board
-        const directionalBoardLight = new THREE.DirectionalLight(0xFFFFFF, 0.6);
+        const directionalBoardLight = new THREE.DirectionalLight(0xFFFFFF, 0.5);
         this.scene.add(directionalBoardLight);
         directionalBoardLight.position.set(-30, 60, 25);
         directionalBoardLight.castShadow = true;
@@ -122,19 +122,19 @@ export default class Board {
         directionalBoardLight.shadow.camera.right = 30;
 
         //Direction Light and Shadow Helpers for game board
-        const dBoardLightHelper = new THREE.DirectionalLightHelper(directionalBoardLight, 5);
-        this.scene.add(dBoardLightHelper);
-        const dBoardShadowHelper = new THREE.CameraHelper(directionalBoardLight.shadow.camera);
-        this.scene.add(dBoardShadowHelper);
+        // const dBoardLightHelper = new THREE.DirectionalLightHelper(directionalBoardLight, 5);
+        // this.scene.add(dBoardLightHelper);
+        // const dBoardShadowHelper = new THREE.CameraHelper(directionalBoardLight.shadow.camera);
+        // this.scene.add(dBoardShadowHelper);
         
         //axes helper for x, y, z values
-        const axesHelper = new THREE.AxesHelper(5);
-        this.scene.add(axesHelper);
+        // const axesHelper = new THREE.AxesHelper(5);
+        // this.scene.add(axesHelper);
 
         //ground plane
         const planeGeometryGround = new THREE.PlaneGeometry(500, 500);
         const planeMaterialGround = new THREE.MeshStandardMaterial({
-            color: 0x37AE0F //grass green
+            color: 0x55C233 //grass green
             // color: "grey", //DEV USE
             // side: THREE.DoubleSide
         });
@@ -144,21 +144,22 @@ export default class Board {
         planeGround.receiveShadow = true;
 
         //grid helper for ground plane
-        const gridHelper = new GridHelper(44, 9, "white");
-        gridHelper.position.set(0, 1.1, 0)
-        this.scene.add(gridHelper);
+        // const gridHelper = new GridHelper(44, 9, "white");
+        // gridHelper.position.set(0, 1.1, 0)
+        // this.scene.add(gridHelper);
 
 
         //background images
-        const cubeTextureLoader = new THREE.CubeTextureLoader();
-        this.scene.background = cubeTextureLoader.load([
-            grass,
-            grass,
-            sky,
-            sky,
-            grass,
-            grass
-        ]);
+        // const cubeTextureLoader = new THREE.CubeTextureLoader();
+        // this.scene.background = cubeTextureLoader.load([
+        //     grass,
+        //     grass,
+        //     sky,
+        //     sky,
+        //     grass,
+        //     grass
+        // ]);
+        this.scene.background = new THREE.Color( 0x87CEEB )
 
         //wood texture
         const textureLoader = new THREE.TextureLoader();
@@ -166,22 +167,47 @@ export default class Board {
         //Render Logo
         const squareGeometry = new THREE.BoxGeometry(1, 1, 1)
         const squareMaterial = new THREE.MeshStandardMaterial({
-            map: textureLoader.load(wood)
+            // map: textureLoader.load(wood)
+            color: "white"
         })
         const square = new THREE.Mesh(squareGeometry, squareMaterial)
         square.castShadow = true;
+        square.receiveShadow = true;
         const rectGeometry = new THREE.BoxGeometry(1, 3, 1)
         const rectMaterial = new THREE.MeshStandardMaterial({
-            map: textureLoader.load(wood)
+            // map: textureLoader.load(wood)
+            color: "white"
         })
         const rect = new THREE.Mesh(rectGeometry, rectMaterial)
         rect.castShadow = true;
+        rect.receiveShadow = true;
         this.buildLogo(square, rect)
         this.scene.add(square)
         square.position.set(0, -1, -50)
 
+        //Render Rules
+        const rulesGeometry = new THREE.BoxGeometry(1, 1, 1)
+        const rulesMatertial = new THREE.MeshStandardMaterial({
+            color: "white"
+        })
+        const rules = new THREE.Mesh(rulesGeometry, rulesMatertial)
+        this.buildRules(rules)
+
+        //rulesclickbox
+        const rulesclickGeometry = new THREE.BoxGeometry(12, 1, 4)
+        const rulesclickMatertial = new THREE.MeshBasicMaterial({
+            color: "white"
+        })
+        const rulesClick = new THREE.Mesh(rulesclickGeometry, rulesclickMatertial)
+        this.scene.add(rulesClick)
+        const rulesClickId = rulesClick.id
+        rulesClick.position.set(-10, 0, -32)
+        rulesClick.material.visible = false
+
+        //Render Links
+
         //logo light
-        const directionalLogoLight = new THREE.DirectionalLight(0xFFFFFF, .8)
+        const directionalLogoLight = new THREE.DirectionalLight(0xFFFFFF, .6)
         this.scene.add(directionalLogoLight)
         directionalLogoLight.position.set(-30, 60, 25);
         directionalLogoLight.castShadow = true,
@@ -199,7 +225,7 @@ export default class Board {
         //Render Game Board
         const gameBoardGeometry = new THREE.BoxGeometry(44, 1, 44);
         const gameBoardMaterial = new THREE.MeshStandardMaterial({
-            color: "black", //DEV USE
+            color: 0x4B382A,
             wireframe: false
         })
         const gameBoard = new THREE.Mesh(gameBoardGeometry, gameBoardMaterial);
@@ -212,8 +238,8 @@ export default class Board {
         //PLAYER TOKEN PIECE
         const playerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
         const playerPieceMaterial = new THREE.MeshStandardMaterial({
-            color: this.players[0].color,
-            map: textureLoader.load(wood)
+            color: this.players[0].color
+            // map: textureLoader.load(wood)
         });
         const playerPiece = new THREE.Mesh(playerPieceGeometry, playerPieceMaterial);
         this.scene.add(playerPiece);
@@ -234,8 +260,8 @@ export default class Board {
         //PLAYER FENCE
         const playerFenceGeometry = new THREE.BoxGeometry(1, 5, 9)
         const playerFenceMaterial = new THREE.MeshStandardMaterial({
-            color: this.players[0].color,
-            map: textureLoader.load(wood)
+            color: this.players[0].color
+            // map: textureLoader.load(wood)
         })
         const playerFence = new THREE.Mesh(playerFenceGeometry, playerFenceMaterial)
         this.scene.add(playerFence)
@@ -248,8 +274,8 @@ export default class Board {
         //COMPUTER TOKEN PIECE
         const computerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
         const computerPieceMaterial = new THREE.MeshStandardMaterial({
-            color: this.players[1].color,
-            map: textureLoader.load(wood)
+            color: this.players[1].color
+            // map: textureLoader.load(wood)
         });
         const computerPiece = new THREE.Mesh(computerPieceGeometry, computerPieceMaterial);
         this.scene.add(computerPiece);
@@ -259,8 +285,8 @@ export default class Board {
         //COMPUTER FENCE
         const computerFenceGeometry = new THREE.BoxGeometry(1, 5, 9)
         const computerFenceMaterial = new THREE.MeshStandardMaterial({
-            color: this.players[1].color,
-            map: textureLoader.load(wood)
+            color: this.players[1].color
+            // map: textureLoader.load(wood)
         })
         const computerFence = new THREE.Mesh(computerFenceGeometry, computerFenceMaterial)
         this.scene.add(computerFence)
@@ -282,8 +308,8 @@ export default class Board {
                 if (square.type === "token" && j === 0) {
                     let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
                     let tokenSquareMaterial = new THREE.MeshStandardMaterial({
-                        color: `${humanColor}`,
-                        map: textureLoader.load(wood)
+                        color: `${humanColor}`
+                        // map: textureLoader.load(wood)
                     });
                     let tokenSquare = new THREE.Mesh(tokenSquareGeometry, tokenSquareMaterial);
                     this.scene.add(tokenSquare);
@@ -294,8 +320,8 @@ export default class Board {
                 } else if (square.type === "token" && j === 16) {
                     let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
                     let tokenSquareMaterial = new THREE.MeshStandardMaterial({
-                        color: `${computerColor}`,
-                        map: textureLoader.load(wood)
+                        color: `${computerColor}`
+                        // map: textureLoader.load(wood)
                     });
                     let tokenSquare = new THREE.Mesh(tokenSquareGeometry, tokenSquareMaterial);
                     this.scene.add(tokenSquare);
@@ -306,8 +332,8 @@ export default class Board {
                 } else if (square.type === "token") {
                     let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
                     let tokenSquareMaterial = new THREE.MeshStandardMaterial({
-                        color: 0xFFFFFF,
-                        map: textureLoader.load(wood)
+                        color: 0xA47449
+                        // map: textureLoader.load(wood)
                     });
                     let tokenSquare = new THREE.Mesh(tokenSquareGeometry, tokenSquareMaterial);
                     this.scene.add(tokenSquare);
@@ -320,13 +346,14 @@ export default class Board {
                 } else if (square.type === "node") {
                     let nodeGeometry = new THREE.BoxGeometry(1, 5, 1);
                     let nodeMaterial = new THREE.MeshStandardMaterial({
-                        color: 0xFFFFFF,
-                        map: textureLoader.load(wood)
+                        color: 0xFFFFFF
+                        // map: textureLoader.load(wood)
                     });
                     let node = new THREE.Mesh(nodeGeometry, nodeMaterial);
                     this.scene.add(node);
                     node.position.set(-20 + (2.5 * i), 0, -20 + (2.5 * j));
                     node.receiveShadow = true;
+                    node.castShadow = true;
                     node.name = `${[i, j]}`
                 }
             })
@@ -349,12 +376,21 @@ export default class Board {
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight)
         })
-
+        
         //*****ANIMATION LOOP FOR RENDERED BOARD*****
         const scene = this.scene
         const interactionManager = this.interactionManager
         function animate() {
             rayCaster.setFromCamera(mousePosition, camera);
+            const intersects = rayCaster.intersectObjects(scene.children);
+            const displayRules = document.getElementById("rules")
+            
+            for (let i = 0; i < intersects.length; i++) {
+                if (intersects[i].object.id === rulesClickId) {
+                    displayRules.style.display = "flex"
+                }
+            }
+
             tokenselector.rotation.y += 0.02
 
             interactionManager.update()
@@ -417,6 +453,43 @@ export default class Board {
         rectangles[14].position.set(11, 4, -40) //S
 
         rectangles.forEach(rectangle => this.scene.add(rectangle))
+    }
+
+    buildRules(rules) {
+        let rulesquares = []
+        for (let i = 0; i < 30; i++) {
+            rulesquares.push(rules.clone())
+        }
+        console.log(rulesquares[0].id)
+        rulesquares[0].position.set(-16, 0, -33) //r
+        rulesquares[1].position.set(-16, 0, -32) //r
+        rulesquares[2].position.set(-16, 0, -31) //r
+        rulesquares[3].position.set(-15, 0, -33) //u
+        rulesquares[4].position.set(-13.5, 0, -33) //u
+        rulesquares[5].position.set(-13.5, 0, -32) //u
+        rulesquares[6].position.set(-13.5, 0, -31) //u 
+        rulesquares[7].position.set(-13.5, 0, -31) //u
+        rulesquares[8].position.set(-12.5, 0, -31) //u
+        rulesquares[9].position.set(-11.5, 0, -31) //u
+        rulesquares[10].position.set(-11.5, 0, -32) //u
+        rulesquares[11].position.set(-11.5, 0, -33) //u
+        rulesquares[12].position.set(-10, 0, -33) //l
+        rulesquares[13].position.set(-10, 0, -32) //l
+        rulesquares[14].position.set(-10, 0, -31) //l
+        rulesquares[15].position.set(-8.5, 0, -32.5) //e
+        rulesquares[16].position.set(-8.5, 0, -31.5) //e
+        rulesquares[17].position.set(-7.5, 0, -33.5) //e
+        rulesquares[18].position.set(-7.5, 0, -32) //e
+        rulesquares[19].position.set(-7.5, 0, -30.5) //e
+        rulesquares[20].position.set(-6.5, 0, -32.5) //e
+        rulesquares[21].position.set(-6.5, 0, -30.75) //e
+        rulesquares[22].position.set(-5, 0, -32.5) //s
+        rulesquares[23].position.set(-5, 0, -31) //s
+        rulesquares[24].position.set(-4, 0, -31.5) //s
+        rulesquares[25].position.set(-4, 0, -33.5) //s
+        
+
+        rulesquares.forEach(square => this.scene.add(square))
     }
 
     buildSpace(ele, classAttr, pos) {

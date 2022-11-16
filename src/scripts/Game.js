@@ -152,7 +152,7 @@ export default class Game {
                 } else if (pos[1] === 16) {
                     color = that.computerPlayer.color
                 } else {
-                    color = "white"
+                    color = 0xA47449
                 }
                 square.material.color.set(color)
                 that.board.interactionManager.remove(square)
