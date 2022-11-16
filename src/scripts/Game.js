@@ -314,38 +314,7 @@ export default class Game {
             })
         })
 
-        //***HTML*** */
-        // const allNodes = Array.from(document.getElementsByClassName("node")).map(el => el)
-        // startNode.addEventListener("click", () => this.gameLoop())
-        // const validNodes = []
-
-        // validFences.forEach(validFence => {
-        //     for (let i = 0; i < allNodes.length; i++) {
-        //         let nodePos = this._getPosArray.call(allNodes[i])
-        //         if (this._compareArrays(nodePos, validFence["midNode"])) {
-        //             allNodes[i].setAttribute("class", "node end-highlighted")
-        //             validNodes.push(allNodes[i])
-        //             validFence["nodeLi"] = allNodes[i]
-        //         }
-        //     }
-        // })
-
-        // startNode.addEventListener("click", () => this.gameLoop())
-        
-        // validFences.forEach(fenceObj => {
-        //     fenceObj["nodeLi"].addEventListener( "click", () => {
-        //         fenceObj["fences"].forEach( fence => {
-        //             let fenceSquare = this.board.getSquare(fence)
-        //             fenceSquare.addToken(this.humanPlayer.color)
-        //         })
-        //         this.board.getSquare(fenceObj["startNode"]).holds.push("Fence")
-        //         this.board.getSquare(fenceObj["midNode"]).holds.push("MID")
-        //         this.humanPlayer.fences.pop()
-        //         this.computerPlayer.watchPlayer["fences"]++
-        //         this.switchCurrentPlayer()
-        //         return this.gameLoop()
-        //     })
-        // })
+      
         
     }
 
@@ -610,3 +579,36 @@ export default class Game {
     // _getPosArray() {
     //     return this.getAttribute("data-pos").split(",").map(el => parseInt(el))
     // }
+
+      //***HTML*** */
+        // const allNodes = Array.from(document.getElementsByClassName("node")).map(el => el)
+        // startNode.addEventListener("click", () => this.gameLoop())
+        // const validNodes = []
+
+        // validFences.forEach(validFence => {
+        //     for (let i = 0; i < allNodes.length; i++) {
+        //         let nodePos = this._getPosArray.call(allNodes[i])
+        //         if (this._compareArrays(nodePos, validFence["midNode"])) {
+        //             allNodes[i].setAttribute("class", "node end-highlighted")
+        //             validNodes.push(allNodes[i])
+        //             validFence["nodeLi"] = allNodes[i]
+        //         }
+        //     }
+        // })
+
+        // startNode.addEventListener("click", () => this.gameLoop())
+        
+        // validFences.forEach(fenceObj => {
+        //     fenceObj["nodeLi"].addEventListener( "click", () => {
+        //         fenceObj["fences"].forEach( fence => {
+        //             let fenceSquare = this.board.getSquare(fence)
+        //             fenceSquare.addToken(this.humanPlayer.color)
+        //         })
+        //         this.board.getSquare(fenceObj["startNode"]).holds.push("Fence")
+        //         this.board.getSquare(fenceObj["midNode"]).holds.push("MID")
+        //         this.humanPlayer.fences.pop()
+        //         this.computerPlayer.watchPlayer["fences"]++
+        //         this.switchCurrentPlayer()
+        //         return this.gameLoop()
+        //     })
+        // })
