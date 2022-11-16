@@ -37,8 +37,6 @@ export default class Game {
     }
 
     gameLoop() { 
-        console.log(this.currentPlayer)
-        
         // const gameOver = this.isGameOver() //refactor into WIN Screen
         let gameOver = false
         if (gameOver) {
@@ -53,13 +51,13 @@ export default class Game {
             const computerTurn = this.computerPlayer.computerTurnLogic()
             if (computerTurn === "move") {
                 return this.computerMove()
-            } else {
+            } else if (computerTurn === "fence") {
                 return this.computerFence()
+            } else {
+                console.log("breaking at computer logic")
             }
         } else {
-            console.log("BROKE")
-            console.log(this.currentPlayer)
-            return this.switchCurrentPlayer()
+            console.log("Breaking at game loop")
         }
     }
 
@@ -232,13 +230,16 @@ export default class Game {
         }
         
         if (fences.length) {
+            playerFence.material.color.set(this.humanPlayer.color)
             playerFence.addEventListener("click", function selectFence() {
                 tokenSelector.position.set(-25, 4, 5)
                 tokenSelector.visible = true
                 // playerFence.removeEventListener("click", selectFence)
                 return that.placeFenceStart(playerFence, tokenSelector)
             }, {once: true})
-        } 
+        } else {
+            playerFence.material.color.set("grey")
+        }
     }
 
     //*Select starting edge for Fence
@@ -284,7 +285,7 @@ export default class Game {
     placeFenceEnd(playerFence, tokenSelector, startNode, sceneNodes) {
         const that = this
         const startPos = startNode.name.split(",").map(el => parseInt(el))
-        const validFences = this.board.validMoveFence(startPos)
+        const validFences = this.board.validPlayerFence(startPos)
         console.log(validFences)
 
         sceneNodes.forEach(node => {
@@ -292,6 +293,9 @@ export default class Game {
             validFences.forEach(fenceObj => {
                 if (this._compareArrays(nodePos, fenceObj["midNode"])) {
                     node.addEventListener("click", function addFence(event) {
+
+                        //Create new fence, add it to baord and position it properly
+                        let newFence = that.board.buildFence(that.humanPlayer)
                         const newFence = playerFence.clone()
                         that.board.scene.add(newFence)
                         newFence.position.set(-20 + (2.5 * nodePos[0]), 0, -20 + (2.5 * nodePos[1]))
@@ -307,6 +311,7 @@ export default class Game {
                         tokenSelector.visible = false
 
                         that.resetNodeEvents(sceneNodes)
+                        sceneNodes.forEach(node => that.board.interactionManager.remove(node))
                         that.switchCurrentPlayer()
                         return that.gameLoop()
                     })
@@ -369,7 +374,7 @@ export default class Game {
     }
 
     _removeListeners(array, func) {
-        array.forEach( ele => ele.removeEventListener("click", func))
+        array.forEach( ele => {ele.removeEventListener("click", func)})
     }
 
 
@@ -396,11 +401,28 @@ export default class Game {
             this.humanPlayer.addFence()
             this.computerPlayer.movesUntilNewFence = this.humanPlayer.totalFences
         }
+
+        return this.switchCurrentPlayer()
         this.switchCurrentPlayer()
         return this.gameLoop()
     }
 
     computerFence() {
+        //grab computer fence obj
+        if (!this.computerPlayer.fences.length) {
+            //turn computer fence grey here
+            return this.computerMove()
+        } else {
+            //turn computer fence computer color here
+            const pathToLose = new MazeSolver(this.humanPlayer, this.computerPlayer, this._dupeGrid(this.board.grid))
+            const assumedPath = pathToLose.shortestPath
+    
+            const randomSpot = Math.floor(Math.random() * (assumedPath.length - 2))
+    
+            const randomSquare1 = assumedPath[randomSpot]
+            const randomSquare2 = assumedPath[randomSpot + 1]
+    
+            const NodePositions = this.board.getNearestNode(randomSquare1, randomSquare2)
         if (!this.computerPlayer.fences.length) return this.computerMove()
 
         const opponentPos = this.humanPlayer.token.getPos()
@@ -415,32 +437,52 @@ export default class Game {
                 let fencePosStart = fencePosStartArray[i]
                 let validFences = this.board.validMoveFence(fencePosStart)
     
-                for (let j = 0; j < validFences.length; j++) {
-                    let validFence = validFences[i]
-                    if (this._compareArrays(validFence["startNode"], fencePosStart)) {
-                        return this.placeComputerFence(validFence)
-                    }
-                }
+            const validFences = this.board.validComputerFence(NodePositions)
+        
+            if (validFences.length) {
+                const randomFence = Math.floor(Math.random() * 2)
+                const fenceObj = validFences[randomFence]
+                return this.placeComputerFence(fenceObj)
+            } else {
+                return this.computerMove()
             }
         }
-        return this.computerMove()
-        
     }
 
-    computerJump() {}
-
     placeComputerFence(fenceObj) {
+        let scene = this.board.scene
+        let computerFence
+        let midNode
+        for (let i = 0; i < scene.children.length; i++) {
+            if (scene.children[i].name === "computerFence") computerFence = scene.children[i];
+            if (this._compareArrays(scene.children[i].name.split(","), fenceObj["midNode"])) midNode = scene.children[i];
+        }
+        let newFence = this.board.buildFence(this.computerPlayer)
+        scene.add(newFence)
+    
+        let midPos = fenceObj["midNode"]
+        newFence.position.set(-20 + (2.5 * midPos[0]), 0, -20 + (2.5 * midPos[1]))
+        if (fenceObj["midNode"][1] === fenceObj["startNode"][1]) {
+            newFence.rotation.y = Math.PI / 2
+        }
+        midNode.material.color.set(this.computerPlayer.color)
+
         fenceObj["fences"].forEach(fence => {
             let fenceSquare = this.board.getSquare(fence)
             fenceSquare.addToken(this.computerPlayer.color)
         })
-        this.board.getSquare(fenceObj["startNode"]).holds.push("Fence")
+        this.board.getSquare(fenceObj["startNode"]).holds.push("END")
         this.board.getSquare(fenceObj["midNode"]).holds.push("MID")
+        if (fenceObj["startNode"]) this.board.getSquare(fenceObj["startNode"]).holds.push("END")
+        if (fenceObj["endNode"]) this.board.getSquare(fenceObj["endNode"]).holds.push("END")
         this.computerPlayer.fences.pop()
         this.switchCurrentPlayer()
         
         return this.gameLoop()
     }
+
+    //Computer Player Jump Move 
+    computerJump() {}
 
 }
 
