@@ -7,10 +7,11 @@
     width: auto;
     height: auto;
     margin: 5%;
+    margin-left: 10%;
     border: 5px solid black;
     border-radius: 2%;
-    padding: 2% 10% 5% 10%;
-    background-color: rgba(128, 128, 128, 0.95);
+    padding: 5% 10% 5% 10%;
+    background-color: rgba(150, 150, 150, 0.98);
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-size: medium;
     font-weight: 600;
@@ -21,7 +22,8 @@
 
     >h1 {
         font-size: larger;
-        padding: 5%;
+        padding-top: 0;
+        padding-bottom: 5%;
     }
 
     >h2 {
@@ -80,7 +82,7 @@
     border: 5px solid black;
     border-radius: 2%;
     padding: 5% 10%;
-    background-color: rgba(128, 128, 128, 0.95);
+    background-color: rgba(150, 150, 150, 0.98);
     align-items: center;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     letter-spacing: .5px;

@@ -135,7 +135,7 @@ export default class Board {
         //ground plane
         const planeGeometryGround = new THREE.PlaneGeometry(500, 500);
         const planeMaterialGround = new THREE.MeshStandardMaterial({
-            color: 0x55C233 //grass green
+            color: 0x37AE0F //grass green
             // color: "grey", //DEV USE
             // side: THREE.DoubleSide
         });
