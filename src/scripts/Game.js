@@ -15,7 +15,6 @@ export default class Game {
     }
 
     reset() { 
-        console.log("running")
         this.humanPlayer = new HumanPlayer(this.humanPlayer.color)
         this.computerPlayer = new ComputerPlayer(this.computerPlayer.color)
         this.currentPlayer = this.humanPlayer
@@ -411,15 +410,14 @@ export default class Game {
             if (scene.children[i].name === "humanToken") {humanToken = scene.children[i]}
             if (scene.children[i].name === "computerToken") {computerToken = scene.children[i]}
             if (scene.children[i].name === "winLight") {winLight = scene.children[i]}
-            if (scene.children[i].name === "news") {news.push(scene.children[i])}
+            if (scene.children[i].name === "wins") {news.push(scene.children[i])}
             if (scene.children[i].name === "newGameClick") {newGameClick = scene.children[i]}
         }
 
         const gameOver = document.getElementById("newGame")
-        gameOver.style.display = "flex"
         winLight.visible = true;
         news.forEach(square => square.visible = true)
-        newGameClick.position.set(13, -10, -34)
+        newGameClick.position.set(14, -10, -34)
 
         if (player === this.humanPlayer){
             gameOver.style.color = this.humanPlayer.color
@@ -444,6 +442,13 @@ export default class Game {
             humanToken.rotation.x = Math.PI / 2
             ambientLight.visible = false
         }
+
+        function setGameOver() {
+            const gameOver = document.getElementById("newGame")
+            return gameOver.style.display = "flex"
+        }
+        
+        setTimeout(setGameOver, 5000)
     }
 
     //helper for Position Array Equality

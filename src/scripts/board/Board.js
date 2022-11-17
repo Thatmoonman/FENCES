@@ -557,37 +557,40 @@ export default class Board {
     }
 
     buildNewGame(newGame) {
-        let news = []
-        for (let i = 0; i < 26; i++) {
-            news.push(newGame.clone())
+        let wins = []
+        for (let i = 0; i < 19; i++) {
+            wins.push(newGame.clone())
         }
-        news[0].position.set(4, 3, -31) //n
-        news[1].position.set(4, 2, -31) //n
-        news[2].position.set(4, 1, -31) //n
-        news[3].position.set(5, 3, -31) //n
-        news[4].position.set(6, 3, -31) //n
-        news[5].position.set(6, 2, -31) //n
-        news[6].position.set(6, 1, -31) //n
-        news[7].position.set(7.5, 2.5, -31) //e
-        news[8].position.set(7.5, 1.5, -31) //e
-        news[9].position.set(8.5, 3.5, -31) //e
-        news[10].position.set(8.5, 2, -31) //e
-        news[11].position.set(8, .25, -31) //e
-        news[12].position.set(9.5, 2.75, -31) //e
-        news[13].position.set(8.5, .25, -31) //e
-        news[14].position.set(11, 3, -31) //w
-        news[15].position.set(11.5, 2, -31) //w
-        news[16].position.set(12, 1, -31) //w
-        news[17].position.set(13, 2, -31) //w
-        news[18].position.set(14, 1, -31) //w
-        news[19].position.set(14.5, 2, -31) //w
-        news[13].position.set(15, 3, -31) //w
+        wins[0].position.set(4, 3, -31) //w
+        wins[1].position.set(4.5, 2, -31) //w
+        wins[2].position.set(5, 1, -31) //w
+        wins[3].position.set(6, 2, -31) //w
+        wins[4].position.set(7, 1, -31) //w
+        wins[5].position.set(7.5, 2, -31) //w
+        wins[6].position.set(8, 3, -31) //w
+        wins[7].position.set(9.5, 1, -31) //i
+        wins[8].position.set(9.5, 2, -31) //i
+        wins[9].position.set(9.5, 4, -31) //i
+        wins[10].position.set(11, 1, -31) //n
+        wins[11].position.set(11, 2, -31) //n
+        wins[12].position.set(11, 3, -31) //n
+        wins[13].position.set(12, 3, -31) //n
+        wins[14].position.set(13, 2, -31) //n
+        wins[15].position.set(14, 1, -31) //n
+        wins[16].position.set(15, 1, -31) //n
+        wins[17].position.set(15, 2, -31) //n
+        wins[18].position.set(15, 3, -31) //n
 
-        news.forEach(square => {
+        wins.forEach(square => {
             this.scene.add(square)
             square.visible = false
-            square.name = "news"
+            square.name = "wins"
         });
+
+        let loses = []
+        for (let i = 0; i < 20; i++) {
+            loses.push(newGame.clone())
+        }
     }
 
 
