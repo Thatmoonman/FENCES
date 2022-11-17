@@ -2,6 +2,7 @@ import Board from "./board/Board"
 import MazeSolver from "./mazesolver/mazesolver"
 import ComputerPlayer from "./player/_computerPlayer"
 import HumanPlayer from "./player/_humanPlayer"
+import { InteractionManager } from 'three.interactive'
 
 export default class Game {
     constructor(playerColor="blue", computerColor="red") {
@@ -37,6 +38,9 @@ export default class Game {
     }
 
     gameLoop() { 
+        while(this.board.interactionManager.interactiveObjects.length) {
+            this.board.interactionManager.interactiveObjects.shift()
+        }
         let gameOver = this.isGameOver()
 
         if (gameOver) {
@@ -272,7 +276,7 @@ export default class Game {
             playerFence.material.color.set(this.humanPlayer.color)
             playerFence.addEventListener("click", function selectFence(event) {
                 event.stopPropagation();
-
+                
                 tokenSelector.position.set(-25, 4, 5)
                 tokenSelector.visible = true
                 playerFence.removeEventListener("click", selectFence)
@@ -283,6 +287,7 @@ export default class Game {
             }, {once: true})
         } else {
             playerFence.material.color.set("grey")
+            this.board.interactionManager.remove(playerFence)
         }
     }
 
@@ -319,7 +324,6 @@ export default class Game {
                 if (node.type === "Mesh" && this._compareArrays(node.name.split(","), nodePos)) {
                     sceneNodes.push(node)
                     this.board.interactionManager.add(node)
-                    this.board.interactionManager.update()
                     node.addEventListener("click", function startFence(event){
                         event.stopPropagation();
 
@@ -327,21 +331,21 @@ export default class Game {
                         
                         that._removeListeners(sceneNodes, startFence)
                         // return that.placeFenceEnd(playerFence, tokenSelector, node, sceneNodes)
-                        return that.stopGap2(playerFence, tokenSelector, node, sceneNodes)
+                        return that.stopGap2(tokenSelector, node, sceneNodes)
                     }, {once: true})
                 }
             }
         })
     }
 
-    stopGap2(playerFence, tokenSelector, node, sceneNodes) {
+    stopGap2(tokenSelector, node, sceneNodes) {
         if (!this.humanPlayer.onceperturn) return
         this.humanPlayer.onceperturn = false
-        return this.placeFenceEnd(playerFence, tokenSelector, node, sceneNodes)
+        return this.placeFenceEnd(tokenSelector, node, sceneNodes)
     }
 
     //*Select midpoint for Fence and place fence on board
-    placeFenceEnd(playerFence, tokenSelector, startNode, sceneNodes) {
+    placeFenceEnd(tokenSelector, startNode, sceneNodes) {
         this.humanPlayer.onceperturn = true
         const that = this
         const startPos = startNode.name.split(",").map(el => parseInt(el))
@@ -352,12 +356,13 @@ export default class Game {
             validFences.forEach(fenceObj => {
                 if (this._compareArrays(nodePos, fenceObj["midNode"])) {
                     node.addEventListener("click", function addFence(event) {
+                        console.log(event)
                         event.stopPropagation();
 
                         //Create new fence, add it to board and position it properly
                         let newFence = that.board.buildFence(that.humanPlayer)
-                        that.board.scene.add(newFence)
                         newFence.position.set(-20 + (2.5 * nodePos[0]), 0, -20 + (2.5 * nodePos[1]))
+                        // that.board.scene.add(newFence)
                         if (fenceObj["midNode"][1] === fenceObj["startNode"][1]) {
                             newFence.rotation.y = Math.PI / 2
                         }
@@ -368,15 +373,19 @@ export default class Game {
                         that.board.getSquare(fenceObj["midNode"]).holds.push("MID")
                         if (fenceObj["endNode"]) that.board.getSquare(fenceObj["endNode"]).holds.push("MID")
                         fenceObj["fences"].forEach(fence => that.board.getSquare(fence).holds.push("Fence"))
-                        that.humanPlayer.fences.pop()
-                        that.computerPlayer.watchPlayer["fences"]++
-                        that.humanPlayer.moves += 1
+                        
+                        while(that.humanPlayer.fences.length > (fenceObj["fenceCount"] - 1)) {
+                            that.humanPlayer.fences.pop()
+                            that.computerPlayer.watchPlayer["fences"]++
+                            that.humanPlayer.moves += 1
+                            
+                        }
                         
                         //cleanup event listening and canvas
                         tokenSelector.visible = false
-                        that._removeListeners(sceneNodes, addFence)
                         sceneNodes.forEach(node => that.board.interactionManager.remove(node))
-                        that.board.interactionManager.remove(playerFence)
+                        that._removeListeners(sceneNodes, addFence)
+                        that.board.interactionManager.remove(newFence)
                         that.humanPlayer.onceperturn = true
                         // return that.switchCurrentPlayer()
                         return that.endTurn();

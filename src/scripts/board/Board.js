@@ -530,7 +530,7 @@ export default class Board {
             tokenselector.rotation.y += 0.02
 
             interactionManager.update()
-
+    
             renderer.render(scene, camera)
         }
 
@@ -803,18 +803,19 @@ export default class Board {
             } else if (!this.solvable(startNode, fencePlacement)){
                    solvable = false
             }
-
+            
             if (inbounds && free && notCrossing && solvable) {
                 validFence = {
                     "fences": fencePlacement,
                     "startNode": startNode,
                     "midNode": midNode,
-                    "endNode": endNode
+                    "endNode": endNode,
+                    "fenceCount": this.players[0].fences.length
                 }
                 validFences.push(validFence)
             }
         }
-    
+       
         return validFences
     }
     validComputerFence(nodes) {
