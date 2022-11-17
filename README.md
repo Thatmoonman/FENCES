@@ -1,3 +1,4 @@
+<base target="_blank">
 # FENCES
 
 [FENCES](https://thatmoonman.github.io/FENCES/) is a board game 
