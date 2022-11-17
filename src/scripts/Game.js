@@ -7,8 +7,8 @@ export default class Game {
     constructor(playerColor="blue", computerColor="red") {
         this.humanPlayer = new HumanPlayer(playerColor)
         this.computerPlayer = new ComputerPlayer(computerColor)
-        this.currentPlayer = this.humanPlayer
         this.board = new Board(this.humanPlayer, this.computerPlayer) 
+        this.currentPlayer = this.humanPlayer
         this.onceperturn = true
         this.fenceStarted = false
         this.newGame() 
@@ -279,15 +279,24 @@ export default class Game {
                 playerFence.removeEventListener("click", selectFence)
                 that.board.interactionManager.remove(playerFence)
 
-                return that.placeFenceStart(playerFence, tokenSelector)
+                return that.stopGap(playerFence, tokenSelector)
+                // return that.placeFenceStart(playerFence, tokenSelector)
             }, {once: true})
         } else {
             playerFence.material.color.set("grey")
         }
     }
 
+
+    stopGap(playerFence, tokenSelector) {
+        if (!this.humanPlayer.onceperturn) return
+        this.humanPlayer.onceperturn = false
+        return this.placeFenceStart(playerFence, tokenSelector)
+    }
+
     //*Select starting edge for Fence
     placeFenceStart(playerFence, tokenSelector) {
+        this.humanPlayer.onceperturn = true
         const that = this
         const scene = this.board.scene
         const allNodes = []
@@ -318,15 +327,23 @@ export default class Game {
                         tokenSelector.position.set( -20 + (2.5 * nodePos[0]), 3, -20 + (2.5 * nodePos[1]))
                         
                         that._removeListeners(sceneNodes, startFence)
-                        return that.placeFenceEnd(playerFence, tokenSelector, node, sceneNodes)
+                        // return that.placeFenceEnd(playerFence, tokenSelector, node, sceneNodes)
+                        return that.stopGap2(playerFence, tokenSelector, node, sceneNodes)
                     }, {once: true})
                 }
             }
         })
     }
 
+    stopGap2(playerFence, tokenSelector, node, sceneNodes) {
+        if (!this.humanPlayer.onceperturn) return
+        this.humanPlayer.onceperturn = false
+        return this.placeFenceEnd(playerFence, tokenSelector, node, sceneNodes)
+    }
+
     //*Select midpoint for Fence and place fence on board
     placeFenceEnd(playerFence, tokenSelector, startNode, sceneNodes) {
+        this.humanPlayer.onceperturn = true
         const that = this
         const startPos = startNode.name.split(",").map(el => parseInt(el))
         const validFences = this.board.validPlayerFence(startPos)
@@ -359,6 +376,7 @@ export default class Game {
                         sceneNodes.forEach(node => that.board.interactionManager.remove(node))
                         that.board.interactionManager.remove(playerFence)
                         that.humanPlayer.moves += 1
+                        that.humanPlayer.onceperturn = true
                         // return that.switchCurrentPlayer()
                         return that.endTurn();
                     }, {once: true})

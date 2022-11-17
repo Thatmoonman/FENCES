@@ -10,6 +10,7 @@ export default class HumanPlayer extends Player {
             token, token
         )
         this.selectorIcon
+        this.onceperturn = true
     }
 
 }

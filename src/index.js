@@ -20,7 +20,9 @@ closeAboutMe.addEventListener("submit", (e) => {
 const newGame = document.getElementById("newGame")
 newGame.addEventListener("click", () => {
     newGame.style.display = "none"
-    game.reset()
+    const canvas = document.getElementsByTagName("canvas")[0]
+    canvas.remove()
+    return game.reset()
 })
 
 // const scene =  game.board.scene.children
