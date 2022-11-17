@@ -38,8 +38,8 @@ export default class Game {
     }
 
     gameLoop() { 
-        // const gameOver = this.isGameOver() //refactor into WIN Screen
         let gameOver = this.isGameOver()
+        
         if (gameOver) {
             return this.gameOver(gameOver)
         } else if (this.currentPlayer === this.humanPlayer) {

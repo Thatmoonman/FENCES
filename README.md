@@ -1,5 +1,26 @@
 # FENCES
 
+<a href="https://thatmoonman.github.io/FENCES/" target="_blank">FENCES</a> is a board game 
+
+=> about game and me
+
+=> wireframe
+
+<img src="./src/assets/images/wireframe.png" alt="">
+
+=> functionality and mvp
+
+=> technologies libraries apis
+
+=> timeline
+
+=> future
+
+=>licensing?
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 **JS Project Final Proposal:**
 **FENCES (a take on the game Quoridors)**
 
