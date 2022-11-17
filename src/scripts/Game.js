@@ -85,8 +85,8 @@ export default class Game {
     }
 
     endTurn() {
-        const endTurnPopup = document.getElementsByClassName("endTurn")[0]
-        const startNextTurn = document.getElementsByClassName("startNextTurn")[0]
+        const endTurnPopup = document.getElementById("endTurn")
+        // const startNextTurn = document.getElementsByClassName("startNextTurn")[0]
         if (this.onceperturn === false) {
         } else {
             this.onceperturn = false
@@ -383,19 +383,33 @@ export default class Game {
             if (scene.children[i].name === "winLight") {winLight = scene.children[i]}
         }
 
+        const gameOver = document.getElementById("newGame")
+        gameOver.style.display = "flex"
+
         winLight.visible = true;
         if (player === this.humanPlayer){
+            gameOver.style.color = this.humanPlayer.color
+            const p1 = document.createElement("p")
+            const p2 = document.createElement("p")
+            p1.innerText = "YOU WON!"
+            p2.innerText = "Play Again?"
+            gameOver.appendChild(p1)
+            gameOver.appendChild(p2)
             winLight.target = humanToken
             computerToken.rotation.x = Math.PI / 2
             ambientLight.visible = false
         } else {
+            gameOver.style.color = this.computerPlayer.color
+            const p1 = document.createElement("p")
+            const p2 = document.createElement("p")
+            p1.innerText = "NICE TRY!"
+            p2.innerText = "Play Again?"
+            gameOver.appendChild(p1)
+            gameOver.appendChild(p2)
             winLight.target = computerToken
             humanToken.rotation.x = Math.PI / 2
             ambientLight.visible = false
         }
-
-
-        
     }
 
     //helper for Position Array Equality

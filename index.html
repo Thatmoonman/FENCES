@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="./dist/main.css" />
     <script src="./dist/main.js" defer></script>
-    <title>Project Name</title>
+    <title>FENCES</title>
   </head>
 
   <body>
@@ -17,22 +17,48 @@
       </form>
       <h1>WELCOME TO FENCES</h1>
       <p>In FENCES, you are tasked with getting your piece (BLUE) from one end of the board to the other.</p>
-      <p>Simple, right? Well your opponent (RED) is trying to do the same! So how do you stop them?</p>
-      <p>WITH FENCES! You can place a fence to block their movement, but beware!</p>
-      <p>Where you block them, you also block yourself, so don't FENCE yourself in!</p>
+      <p>Simple, right? Well your opponent (RED) is trying to do the same!</p>
+      <p>So how do you stop them?</p>
+      <p>WITH FENCES OF COURSE!</p>
+      <p>You can place a fence to block their movement, but beware!</p>
+      <p>Where you block them, you also block yourself,</p>
+      <p>so don't FENCE yourself in!</p>
 
-      <ul>How To Play:</ul>
-      <li>Click your piece to select it, you can move to any adjacent square that doen't cross a fence or "jump" your opponent.</li>
-      <li>Valid moves will be highlighted in green, click a highlighted square to move there</li>
-      <li>To Place a fence: simply select the BLUE block off screen,</li>
-      <li>Select a fence posts where you would like the fence to start, and then a fence post next to it.</li>
+      <ul>How To Play:
+        <li>Click your piece to select it, you can move to any adjacent square or "jump" your opponent without crossing a fence .</li>
+        <li>Valid moves will be highlighted in green, click a highlighted square to move there.</li>
+        <li>To Place a fence: simply select the BLUE block off screen.</li>
+        <li>Select a fence posts where you would like the fence to start, and then a fence post next to it.</li>
+      </ul>
       
       <h2>GOOD LUCK!</h2>
     </div>
 
-    <div class="endTurn">
+    <div id="aboutMe">
+      <form action="" class="closeAboutMe">
+        <button type="submit">X</button>
+      </form>
+      <h1>About the Developer:</h1>
+      <p> My name is Justin Kilburn. I have lived in New York City for over a decade.</p>
+      <p>Most of that time I worked in hospitality, but decided to learn to code in 2022</p> 
+      <p>I promptly fell in love with the challenge of it.</p>
+      <p>This project was a testament to that love of a challenge.</p>
+      <p>FENCES is based on the minimalist-style boardgame Quoridors™️.</p>
+      <p>I love the idea of simple rules and complex strategy. </p>
+      <p>I chose to make FENCES as a simple representation of complex ideas.</p>
+      <p>I hope you enjoy playing it as much as I did making it!</p>
+      <div>
+        <a href="https://github.com/Thatmoonman" target="_blank"><img src="./src/assets/icons/GitHub-Mark-64px.png" alt=""></a>
+        <a href="https://www.linkedin.com/in/justin-kilburn-3aa38a54/" target="_blank"><img src="./src/assets/icons/linkedin.png" alt=""></a>
+      </div>
+      
+    </div>
+
+    <div id="endTurn" class="popup">
       <p>Confirm Turn?</p>
     </div>
+
+    <div id="newGame" class="popup"></div>
 
     <!-- <div class="threedeeContainer"></div> -->
     <!-- <div class="gameContainer">

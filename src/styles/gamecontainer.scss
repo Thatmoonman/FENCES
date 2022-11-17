@@ -1,4 +1,6 @@
-.gameContainer {
-    display: flex;
-    justify-content: space-around;
+.body > *{
+    cursor: grab;
+    letter-spacing: .75px;
+    word-spacing: 1.5px;
+    line-height: 1.5;
 }

@@ -214,6 +214,26 @@ export default class Board {
         rulesSpotlight.penumbra = .8;
         rulesSpotlight.angle = 0.1;
         rulesSpotlight.target = rulesClick
+        
+        //About Me hoverbox
+        const aboutMeGeometry = new THREE.BoxGeometry(20, 1, 4)
+        const aboutMeMaterial = new THREE.MeshBasicMaterial({
+            color: "white"
+        })
+        const aboutMe = new THREE.Mesh(aboutMeGeometry, aboutMeMaterial)
+        this.scene.add(aboutMe)
+        const aboutMeId = aboutMe.id
+        aboutMe.position.set(0, 1, -50)
+        aboutMe.material.visible = false
+
+        //New Game?
+        // const rulesSpotlight = new THREE.SpotLight(0xFBFAF5);
+        // this.scene.add(rulesSpotlight)
+        // rulesSpotlight.position.set(-30, 60, 0)
+        // rulesSpotlight.castShadow = true;
+        // rulesSpotlight.penumbra = .8;
+        // rulesSpotlight.angle = 0.1;
+        // rulesSpotlight.target = rulesClick
 
         //Render Links
 
@@ -405,11 +425,16 @@ export default class Board {
             rayCaster.setFromCamera(mousePosition, camera);
             const intersects = rayCaster.intersectObjects(scene.children);
             const displayRules = document.getElementById("rules")
+            const displayAboutMe = document.getElementById("aboutMe")
             
             for (let i = 0; i < intersects.length; i++) {
-                if (intersects[i].object.id === rulesClickId) {
+                if (intersects[i].object.id === rulesClickId && window.getComputedStyle(displayAboutMe, null).display === "none") {
                     displayRules.style.display = "flex"
                 }
+                if (intersects[i].object.id === aboutMeId  && window.getComputedStyle(displayRules, null).display === "none") {
+                    displayAboutMe.style.display = "flex"
+                }
+                
             }
 
             tokenselector.rotation.y += 0.02
@@ -502,7 +527,7 @@ export default class Board {
         rulesquares[18].position.set(-7.5, 2, -31) //e
         rulesquares[19].position.set(-7.75, .25, -31) //e
         rulesquares[20].position.set(-6.5, 2.75, -31) //e
-        rulesquares[21].position.set(-6.75, .25, -31) //e
+        rulesquares[21].position.set(-7, .25, -31) //e
         rulesquares[22].position.set(-5, 2.5, -31) //s
         rulesquares[23].position.set(-5, .5, -31) //s
         rulesquares[24].position.set(-4, 1.5, -31) //s

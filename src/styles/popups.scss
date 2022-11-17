@@ -1,29 +1,56 @@
 #rules {
-    display: none;
+    display: flex;
+    // display: none;
     flex-direction: column;
     position: absolute;
     z-index: 1;
     width: auto;
     height: auto;
-    margin: 5%;
+    margin: 8%;
     border: 5px solid black;
     border-radius: 2%;
-    padding: 10%;
-    background-color: rgba(128, 128, 128, 0.798);
+    padding: 5% 10%;
+    background-color: rgba(128, 128, 128, 0.95);
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-weight: 300;
-    
+    font-size: medium;
+    font-weight: 600;
+    letter-spacing: .5px;
+    word-spacing: 1.5px;
+    line-height: 1.5;
+    text-align: center;
+
+    >h1 {
+        font-size: larger;
+        padding: 5%;
+    }
+
+    >h2 {
+        font-size: large;
+    }
+
     > form{
         display: flex;
         justify-content: right;
+
+        > button {
+            font-size: xx-large;
+            border: none;
+            font-style: bold;
+            background-color: rgba(128, 128, 128, 0);
+        }
+    }
+    > ul {
+        padding: 5%;
+        list-style: square;
     }
 }
 
-.endTurn{
+.popup{
     display: none;
+    flex-direction: column;
     z-index: 1;
     position: absolute;
-    margin: 10% 30% 10% 30%;
+    margin: 10% 30% 10% 25%;
     padding: 10%;
     width: 30%;
     height: 25%;
@@ -37,7 +64,73 @@
         font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
         font-size: xx-large;
         font-weight: bold;
-        color: white
+        color: white;
+        text-align: center;
     }
 }
 
+
+#aboutMe {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    z-index: 1;
+    width: auto;
+    height: auto;
+    margin: 5% 20%;
+    border: 5px solid black;
+    border-radius: 2%;
+    padding: 5% 10%;
+    background-color: rgba(128, 128, 128, 0.95);
+    align-items: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    letter-spacing: .5px;
+    word-spacing: 1.5px;
+    line-height: 1.5;
+
+    > form{
+        display: flex;
+        justify-content: right;
+        width: 100%;
+
+        > button {
+            font-size: xx-large;
+            border: none;
+            font-style: bold;
+            background-color: rgba(128, 128, 128, 0);
+        }
+    }
+
+    > h1 {
+        font-size: xx-large;
+    }
+
+    > p {
+        padding: 1%;
+    }
+    
+    > div {
+        display: flex;
+        padding: 5%;
+        justify-content: space-evenly;
+        width: 100%;
+
+        > a{
+            display: block;
+            margin: 1px;
+            padding: 1px;
+            width: auto;
+            height: auto;
+            justify-content: center;
+    
+            >img {
+                max-width: 80px;
+                height: auto;
+            }   
+        }
+    }
+}
+
+.newGame {
+
+}
