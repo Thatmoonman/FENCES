@@ -283,6 +283,77 @@ export default class Board {
         // const dBoardShadowHelper = new THREE.CameraHelper(directionalLogoLight.shadow.camera);
         // this.scene.add(dBoardShadowHelper);
 
+        //EXTRA GAME PIECES
+        const xgeometry = new THREE.CylinderGeometry(.5, 1, 5)
+        const xmaterial = new THREE.MeshBasicMaterial({color: "purple"})
+        const xpiece = new THREE.Mesh(xgeometry, xmaterial)
+        this.scene.add(xpiece)
+        xpiece.position.set(-3, .5, 40)
+        const xpiece1 = xpiece.clone()
+        this.scene.add(xpiece1)
+        xpiece1.position.set(-35, .5, 5)
+        const xpiece2 = xpiece.clone()
+        this.scene.add(xpiece2)
+        xpiece2.position.set(35, .5, -8)
+        const xpiece3 = xpiece.clone()
+        this.scene.add(xpiece3)
+        xpiece3.position.set(35, .5, -6)
+        const xpiece4 = xpiece.clone()
+        this.scene.add(xpiece4)
+        xpiece4.position.set(5, .5, 35)
+        xpiece4.rotation.x = Math.PI / 2
+        
+        const xgeometry2 = new THREE.CylinderGeometry(.5, 1, 5)
+        const xmaterial2 = new THREE.MeshBasicMaterial({color: "yellow"})
+        const x2piece = new THREE.Mesh(xgeometry2, xmaterial2)
+        this.scene.add(x2piece)
+        x2piece.position.set(-3, .5, 40)
+        const x2piece2 = x2piece.clone()
+        this.scene.add(x2piece2)
+        x2piece2.position.set(-40, .5, -10)
+        const x2piece3 = x2piece.clone()
+        this.scene.add(x2piece3)
+        x2piece3.position.set(50, .5, -20)
+        x2piece3.rotation.z = Math.Pi / 2
+        const x2piece4 = x2piece.clone()
+        this.scene.add(x2piece4)
+        x2piece4.position.set(5, .5, 60)
+        const x2piece5 = x2piece.clone()
+        this.scene.add(x2piece5)
+        x2piece5.position.set(-50, .5, 0)
+        x2piece5.rotation.x = Math.PI / 2
+
+        const xgeometry3 = new THREE.CylinderGeometry(.5, 1, 5)
+        const xmaterial3 = new THREE.MeshBasicMaterial({color: "orange"})
+        const x3piece = new THREE.Mesh(xgeometry3, xmaterial3)
+        this.scene.add(x3piece)
+        x3piece.position.set(38, .5, 15)
+        const x3piece2 = x3piece.clone()
+        this.scene.add(x3piece2)
+        x3piece2.position.set(-36, .5, 12)
+        const x3piece3 = x3piece.clone()
+        this.scene.add(x3piece3)
+        x2piece3.position.set(-7, .5, 34)
+        x2piece3.rotation.z = Math.PI / 2
+
+        const xgeometry4 = new THREE.CylinderGeometry(.5, 1, 5)
+        const xmaterial4 = new THREE.MeshBasicMaterial({color: "green"})
+        const x4piece = new THREE.Mesh(xgeometry4, xmaterial4)
+        this.scene.add(x4piece)
+        x4piece.position.set(-35, .5, 35)
+        const x4piece2 = x4piece.clone()
+        this.scene.add(x4piece2)
+        x4piece2.position.set(50, .5, 25)
+        const x4piece3 = x4piece.clone()
+        this.scene.add(x4piece3)
+        x4piece3.position.set(20, .5, 40)
+        x4piece3.rotation.z = Math.PI / 2
+        const x4piece4 = x4piece.clone()
+        this.scene.add(x4piece4)
+        x4piece4.position.set(-30, .5, 25)
+        x4piece4.rotation.x = Math.PI / 2
+
+
         //Render Game Board
         const gameBoardGeometry = new THREE.BoxGeometry(44, 1, 44);
         const gameBoardMaterial = new THREE.MeshStandardMaterial({
