@@ -3,7 +3,7 @@
 [FENCES](https://thatmoonman.github.io/FENCES/) is a minimalist-style board game where you are tasked with moving your piece from one
 end of the board to the other before your opponent can do the same.
 
-[logo](./src/assets/images/logoscreenshot.png)
+![logo](./src/assets/images/logoscreenshot.png)
 
 
 You and your opponent can place fences to block each other from achieving
@@ -12,7 +12,7 @@ where you want to move or place a fence. You can also move your field of view ar
 
 ## Wireframe
 
-[wireframe](./src/assets/images/wireframe.png)
+![wireframe](./src/assets/images/wireframe.png)
 
 => functionality and mvp
 
