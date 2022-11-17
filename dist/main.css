@@ -55,11 +55,8 @@ table {
   border-spacing: 0;
 }
 
-.body > * {
+body {
   cursor: grab;
-  letter-spacing: 0.75px;
-  word-spacing: 1.5px;
-  line-height: 1.5;
 }
 
 #gameBoard > ul {
