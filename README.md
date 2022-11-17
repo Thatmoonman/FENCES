@@ -59,7 +59,7 @@ selectToken() {
     }
 ```
 
-![selected](./src/assets/images/selected.png)
+![selected](./src/assets/images/tokengif.gif)
 
 * Once the player goes, it's the computer player's turn to think. The computer player builds a move tree for itself and its opponent and uses a breadth first search to find the shortest paths for both. I then will randomly choose whether it wants to move or place a fence somewhere along the player's path. The computer player will keep track of the way the player is playing (moving vs fencing) and will change its strategy based on how the player is moving by weighting each action in response to the player's actions. The functionality for the computer determining where to move and where the player can move utilize the same valid moves function (featured below).
 
