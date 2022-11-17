@@ -95,8 +95,9 @@ export default class Board {
             .1,
             1000
         ); 
-        this.camera = camera
+        // this.camera = camera
         
+
         //orbital movement camera
         const orbit = renderCamera(camera, this.renderer.domElement);
         camera.position.set(0, 50, 50);
@@ -106,6 +107,8 @@ export default class Board {
             camera,
             this.renderer.domElement
           );
+          this.camera = orbit
+        
 
         //ambient dim light source (base line)
         const ambientLight = new THREE.AmbientLight(0x666666);

@@ -1,13 +1,18 @@
-<base target="_blank">
 # FENCES
 
-[FENCES](https://thatmoonman.github.io/FENCES/) is a board game 
+[FENCES](https://thatmoonman.github.io/FENCES/) is a minimalist-style board game where you are tasked with moving your piece from one
+end of the board to the other before your opponent can do the same.
 
-=> about game and me
+[logo](./src/assets/images/logoscreenshot.png)
 
-=> wireframe
 
-<img src="./src/assets/images/wireframe.png" alt="">
+You and your opponent can place fences to block each other from achieving
+this task. You can click on your piece or the fence off the board to select which action you would like to perform each turn and then select
+where you want to move or place a fence. You can also move your field of view around by grabbing and pulling the screen or swiping to zoom.
+
+## Wireframe
+
+[wireframe](./src/assets/images/wireframe.png)
 
 => functionality and mvp
 

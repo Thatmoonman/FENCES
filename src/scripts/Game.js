@@ -39,7 +39,7 @@ export default class Game {
 
     gameLoop() { 
         let gameOver = this.isGameOver()
-        
+
         if (gameOver) {
             return this.gameOver(gameOver)
         } else if (this.currentPlayer === this.humanPlayer) {
@@ -271,7 +271,7 @@ export default class Game {
         
         if (fences.length && this.onceperturn) {
             playerFence.material.color.set(this.humanPlayer.color)
-            playerFence.addEventListener("click", function selectFence() {
+            playerFence.addEventListener("click", function selectFence(event) {
                 event.stopPropagation();
 
                 tokenSelector.position.set(-25, 4, 5)
@@ -364,18 +364,20 @@ export default class Game {
                         }
                         node.material.color.set(that.humanPlayer.color)
 
+                        //update board.grid with new fence
                         that.board.getSquare(fenceObj["startNode"]).holds.push("Fence")
                         that.board.getSquare(fenceObj["midNode"]).holds.push("MID")
                         if (fenceObj["endNode"]) that.board.getSquare(fenceObj["endNode"]).holds.push("MID")
                         fenceObj["fences"].forEach(fence => that.board.getSquare(fence).holds.push("Fence"))
                         that.humanPlayer.fences.pop()
                         that.computerPlayer.watchPlayer["fences"]++
+                        that.humanPlayer.moves += 1
+                        
+                        //cleanup event listening and canvas
                         tokenSelector.visible = false
-
                         that._removeListeners(sceneNodes, addFence)
                         sceneNodes.forEach(node => that.board.interactionManager.remove(node))
                         that.board.interactionManager.remove(playerFence)
-                        that.humanPlayer.moves += 1
                         that.humanPlayer.onceperturn = true
                         // return that.switchCurrentPlayer()
                         return that.endTurn();
