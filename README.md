@@ -1,30 +1,44 @@
 # FENCES
 
-[FENCES](https://thatmoonman.github.io/FENCES/) is a minimalist-style board game where you are tasked with moving your piece from one
-end of the board to the other before your opponent can do the same.
+[FENCES](https://thatmoonman.github.io/FENCES/) is a minimalist-style board game I made using Javscript and the three.js library. In FENCES, you are tasked with moving your piece from one end of the board to the other before your opponent can do the same. I was inspired by the board game Quoridors™️ because of its simple design and easy to pickup play yet potential for deep strategy.
 
 ![logo](./src/assets/images/logoscreenshot.png)
 
+Your objective is to get your piece from one end of the board to any square on the opposite side. You and your opponent can place fences to block each other from achieving this task. To move, click on your piece, which will highlight the spaces you can click on to move to. If you want to place a fence, select the fence piece next to the board with the same color as your piece. Clicking on the fence post where you want to start the fence and the post in line will place the fence piece on the board. As you and your opponent play, you'll each get more fences to use based on the number of spaces you've moved around the board.
 
-You and your opponent can place fences to block each other from achieving
-this task. You can click on your piece or the fence off the board to select which action you would like to perform each turn and then select
-where you want to move or place a fence. You can also move your field of view around by grabbing and pulling the screen or swiping to zoom.
+Click and drag or swipe to move the "camera" around the board. If you want to reset the view hit the spacebar.
+
+![board](./src/assets/images/boardscreenshot.png)
 
 ## Wireframe
 
 ![wireframe](./src/assets/images/wireframe.png)
 
-=> functionality and mvp
+The three.js canvas takes up the entire window space and allows you to move your field of view around the "scene" of the game. The rules link and developer info link are Rendered in 3D so they appear when you hover over the "FENCES" or "rules" objects respectively.
 
-=> technologies libraries apis
+## functionality and mvp
 
-=> timeline
+## technologies libraries apis
 
-=> future
+* The [three.js library](https://threejs.org/) for rendering a 3D scene with 3D interactable objects.
+* [THREE.interactive](https://github.com/markuslerner/THREE.Interactive) for handling mouse events in three.js
+* Webpack to bundle and transpile the source JavaScript code.
+* npm to manage project dependencies.
 
-=>licensing?
+## timeline
 
+* Friday: Setup webpack and organize project files and folders. Integrate three.js library so there is a visual "space/landscape"
+* Saturday/Sunday: Create Board, Player, and Piece classes with Fence/Token subclasses of Piece. Board renders with threeJS. Game logic mostly complete.
+* Monday: Continue to tighten game logic. Render pieces to board. Board should be responsive.
+* Tueday: Fully responsive game and fix bugs.
+* Wednesday: Implement links and rules. Endgame functionality. Work on styling and bug squashing.
+* Thursday: Deploy to github pages.
 
+## future
+
+* Add a 3D counter so the player knows how many fences they have left
+* Allow the player to choose their color
+* Add Music and Sound Effects
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 **JS Project Final Proposal:**
