@@ -20,7 +20,6 @@ closeAboutMe.addEventListener("submit", (e) => {
 const newGame = document.getElementById("newGame")
 newGame.addEventListener("click", () => {
     newGame.style.display = "none"
-    game = new Game()
 })
 
 //DEV: COMMENT BACK IN IF "DEFER" BREAKS

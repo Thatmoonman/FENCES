@@ -227,6 +227,24 @@ export default class Board {
         aboutMe.material.visible = false
 
         //New Game?
+        const newGameGeometry = new THREE.BoxGeometry(1, 1, 1)
+        const newGameMatertial = new THREE.MeshStandardMaterial({
+            color: "white"
+        })
+        // const newGame = new THREE.Mesh(newGameGeometry, newGameMatertial)
+        // rules.castShadow = true;
+        // rules.receiveShadow = true;
+        // this.buildRules(rules)
+        // const rulesclickGeometry = new THREE.BoxGeometry(12, 1, 4)
+        // const rulesclickMatertial = new THREE.MeshBasicMaterial({
+        //     color: "white"
+        // })
+        // const rulesClick = new THREE.Mesh(rulesclickGeometry, rulesclickMatertial)
+        // this.scene.add(rulesClick)
+        // const rulesClickId = rulesClick.id
+        // rulesClick.position.set(-10, 0, -32)
+        // rulesClick.material.visible = false
+
         // const rulesSpotlight = new THREE.SpotLight(0xFBFAF5);
         // this.scene.add(rulesSpotlight)
         // rulesSpotlight.position.set(-30, 60, 0)
@@ -234,8 +252,6 @@ export default class Board {
         // rulesSpotlight.penumbra = .8;
         // rulesSpotlight.angle = 0.1;
         // rulesSpotlight.target = rulesClick
-
-        //Render Links
 
         //Win Light
         const winLight = new THREE.SpotLight(0xFFFFFF);

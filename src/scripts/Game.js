@@ -10,6 +10,7 @@ export default class Game {
         this.currentPlayer = this.humanPlayer
         this.board = new Board(this.humanPlayer, this.computerPlayer) 
         this.onceperturn = true
+        this.fenceStarted = false
         this.newGame() 
     }
 
@@ -258,6 +259,7 @@ export default class Game {
         const scene = this.board.scene
         const fences = this.humanPlayer.fences
 
+
         let playerFence
         let tokenSelector
         for (let i = 0; i < scene.children.length; i++) {
@@ -267,13 +269,16 @@ export default class Game {
         this.board.interactionManager.add(playerFence)
 
         
-        if (fences.length) {
+        if (fences.length && this.onceperturn) {
             playerFence.material.color.set(this.humanPlayer.color)
             playerFence.addEventListener("click", function selectFence() {
+                event.stopPropagation();
+
                 tokenSelector.position.set(-25, 4, 5)
                 tokenSelector.visible = true
                 playerFence.removeEventListener("click", selectFence)
                 that.board.interactionManager.remove(playerFence)
+
                 return that.placeFenceStart(playerFence, tokenSelector)
             }, {once: true})
         } else {
@@ -309,13 +314,13 @@ export default class Game {
                     this.board.interactionManager.update()
                     node.addEventListener("click", function startFence(event){
                         event.stopPropagation();
+
                         tokenSelector.position.set( -20 + (2.5 * nodePos[0]), 3, -20 + (2.5 * nodePos[1]))
                         
                         that._removeListeners(sceneNodes, startFence)
                         return that.placeFenceEnd(playerFence, tokenSelector, node, sceneNodes)
                     }, {once: true})
                 }
-
             }
         })
     }
@@ -331,8 +336,9 @@ export default class Game {
             validFences.forEach(fenceObj => {
                 if (this._compareArrays(nodePos, fenceObj["midNode"])) {
                     node.addEventListener("click", function addFence(event) {
+                        event.stopPropagation();
 
-                        //Create new fence, add it to baord and position it properly
+                        //Create new fence, add it to board and position it properly
                         let newFence = that.board.buildFence(that.humanPlayer)
                         that.board.scene.add(newFence)
                         newFence.position.set(-20 + (2.5 * nodePos[0]), 0, -20 + (2.5 * nodePos[1]))
@@ -343,6 +349,8 @@ export default class Game {
 
                         that.board.getSquare(fenceObj["startNode"]).holds.push("Fence")
                         that.board.getSquare(fenceObj["midNode"]).holds.push("MID")
+                        if (fenceObj["endNode"]) that.board.getSquare(fenceObj["endNode"]).holds.push("MID")
+                        fenceObj["fences"].forEach(fence => that.board.getSquare(fence).holds.push("Fence"))
                         that.humanPlayer.fences.pop()
                         that.computerPlayer.watchPlayer["fences"]++
                         tokenSelector.visible = false

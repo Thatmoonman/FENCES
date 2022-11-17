@@ -151,10 +151,10 @@ table {
   z-index: 1;
   width: auto;
   height: auto;
-  margin: 8%;
+  margin: 5%;
   border: 5px solid black;
   border-radius: 2%;
-  padding: 5% 10%;
+  padding: 2% 10% 5% 10%;
   background-color: rgba(128, 128, 128, 0.95);
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   font-size: medium;
@@ -183,7 +183,6 @@ table {
 }
 #rules > ul {
   padding: 5%;
-  list-style: square;
 }
 
 .popup {
