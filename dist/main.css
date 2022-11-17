@@ -149,11 +149,12 @@ body {
   width: auto;
   height: auto;
   margin: 5%;
+  margin-top: 2%;
   margin-left: 10%;
   border: 5px solid black;
   border-radius: 2%;
-  padding: 5% 10% 5% 10%;
-  background-color: rgba(150, 150, 150, 0.98);
+  padding: 3% 10% 5% 10%;
+  background-color: rgba(224, 255, 255, 0.96);
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   font-size: medium;
   font-weight: 600;
@@ -162,10 +163,16 @@ body {
   line-height: 1.5;
   text-align: center;
 }
+#rules > hr.solid {
+  border-top: 1px solid black;
+  width: 25%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
 #rules > h1 {
   font-size: larger;
   padding-top: 0;
-  padding-bottom: 5%;
+  padding-bottom: 2%;
 }
 #rules > h2 {
   font-size: large;
@@ -181,7 +188,7 @@ body {
   background-color: rgba(128, 128, 128, 0);
 }
 #rules > ul {
-  padding: 5%;
+  padding: 2%;
 }
 
 .popup {
@@ -191,8 +198,8 @@ body {
   position: absolute;
   margin: 10% 30% 10% 25%;
   padding: 10%;
-  width: 30%;
-  height: 25%;
+  width: 25%;
+  height: 20%;
   background-color: rgba(0, 0, 255, 0.788);
   border: 5px solid gray;
   border-radius: 5%;
@@ -205,6 +212,7 @@ body {
   font-weight: bold;
   color: white;
   text-align: center;
+  margin: 5%;
 }
 
 #aboutMe {
@@ -212,18 +220,22 @@ body {
   flex-direction: column;
   position: absolute;
   z-index: 1;
-  width: auto;
+  width: 40%;
   height: auto;
-  margin: 5% 20%;
+  margin: 5% 25%;
   border: 5px solid black;
   border-radius: 2%;
-  padding: 5% 10%;
-  background-color: rgba(150, 150, 150, 0.98);
+  padding: 3% 5%;
+  background-color: rgba(224, 255, 255, 0.96);
   align-items: center;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   letter-spacing: 0.5px;
-  word-spacing: 1.5px;
+  word-spacing: 1.25px;
   line-height: 1.5;
+}
+#aboutMe > hr.solid {
+  border-top: 1px solid black;
+  width: 25%;
 }
 #aboutMe > form {
   display: flex;

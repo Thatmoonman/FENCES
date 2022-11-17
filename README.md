@@ -128,4 +128,3 @@ validMoves(startPos) {
 * Add difficulty levels for Computer player logic
 * Add multiplayer functionality
 * Add music and sound effects
-
