@@ -1,6 +1,6 @@
 # FENCES
 
-<a href="https://thatmoonman.github.io/FENCES/" target="_blank">FENCES</a> is a board game 
+[FENCES](https://thatmoonman.github.io/FENCES/) is a board game 
 
 => about game and me
 
