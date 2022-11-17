@@ -14,12 +14,12 @@ export default class Game {
         this.newGame() 
     }
 
-    reset() {   //*RESETS GAME BOARD* => move this to INDEX.JS
-        console.log("runs?")
+    reset() { 
+        console.log("running")
         this.humanPlayer = new HumanPlayer(this.humanPlayer.color)
         this.computerPlayer = new ComputerPlayer(this.computerPlayer.color)
-        this.board = new Board(this.humanPlayer, this.computerPlayer)
         this.currentPlayer = this.humanPlayer
+        this.board = new Board(this.humanPlayer, this.computerPlayer)
         return this.newGame()
     }
 
@@ -383,18 +383,24 @@ export default class Game {
         let computerToken
         let winLight
         let ambientLight
+        let news = []
+        let newGameClick
 
         for (let i = 0; i < scene.children.length; i++) {
             if (scene.children[i].name === "ambientLight") {ambientLight = scene.children[i]}
             if (scene.children[i].name === "humanToken") {humanToken = scene.children[i]}
             if (scene.children[i].name === "computerToken") {computerToken = scene.children[i]}
             if (scene.children[i].name === "winLight") {winLight = scene.children[i]}
+            if (scene.children[i].name === "news") {news.push(scene.children[i])}
+            if (scene.children[i].name === "newGameClick") {newGameClick = scene.children[i]}
         }
 
         const gameOver = document.getElementById("newGame")
         gameOver.style.display = "flex"
-
         winLight.visible = true;
+        news.forEach(square => square.visible = true)
+        newGameClick.position.set(13, -10, -34)
+
         if (player === this.humanPlayer){
             gameOver.style.color = this.humanPlayer.color
             const p1 = document.createElement("p")

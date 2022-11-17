@@ -231,27 +231,28 @@ export default class Board {
         const newGameMatertial = new THREE.MeshStandardMaterial({
             color: "white"
         })
-        // const newGame = new THREE.Mesh(newGameGeometry, newGameMatertial)
-        // rules.castShadow = true;
-        // rules.receiveShadow = true;
-        // this.buildRules(rules)
-        // const rulesclickGeometry = new THREE.BoxGeometry(12, 1, 4)
-        // const rulesclickMatertial = new THREE.MeshBasicMaterial({
-        //     color: "white"
-        // })
-        // const rulesClick = new THREE.Mesh(rulesclickGeometry, rulesclickMatertial)
-        // this.scene.add(rulesClick)
-        // const rulesClickId = rulesClick.id
-        // rulesClick.position.set(-10, 0, -32)
-        // rulesClick.material.visible = false
+        const newGame = new THREE.Mesh(newGameGeometry, newGameMatertial)
+        newGame.castShadow = true;
+        newGame.receiveShadow = true;
+        this.buildNewGame(newGame)
 
-        // const rulesSpotlight = new THREE.SpotLight(0xFBFAF5);
-        // this.scene.add(rulesSpotlight)
-        // rulesSpotlight.position.set(-30, 60, 0)
-        // rulesSpotlight.castShadow = true;
-        // rulesSpotlight.penumbra = .8;
-        // rulesSpotlight.angle = 0.1;
-        // rulesSpotlight.target = rulesClick
+        const newgameclickGeometry = new THREE.BoxGeometry(12, 1, 4)
+        const newgameclickMatertial = new THREE.MeshBasicMaterial({
+            color: 0x55C233
+        })
+        const newgameclick = new THREE.Mesh(newgameclickGeometry, newgameclickMatertial)
+        this.scene.add(newgameclick)
+        newgameclick.name = "newGameClick"
+        newgameclick.position.set(-10, 100, -32)
+        this.interactionManager.add(newgameclick)
+
+        const newgameSpotlight = new THREE.SpotLight(0xFBFAF5);
+        this.scene.add(newgameSpotlight)
+        newgameSpotlight.position.set(-30, 60, 0)
+        newgameSpotlight.castShadow = true;
+        newgameSpotlight.penumbra = .8;
+        newgameSpotlight.angle = 0.1;
+        newgameSpotlight.target = newgameclick
 
         //Win Light
         const winLight = new THREE.SpotLight(0xFFFFFF);
@@ -450,7 +451,6 @@ export default class Board {
                 if (intersects[i].object.id === aboutMeId  && window.getComputedStyle(displayRules, null).display === "none") {
                     displayAboutMe.style.display = "flex"
                 }
-                
             }
 
             tokenselector.rotation.y += 0.02
@@ -519,7 +519,7 @@ export default class Board {
 
     buildRules(rules) {
         let rulesquares = []
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 27; i++) {
             rulesquares.push(rules.clone())
         }
         rulesquares[0].position.set(-16, 3, -31) //r
@@ -534,24 +534,60 @@ export default class Board {
         rulesquares[9].position.set(-11.5, 1, -31) //u
         rulesquares[10].position.set(-11.5, 2, -31) //u
         rulesquares[11].position.set(-11.5, 3, -31) //u
-        rulesquares[12].position.set(-10, 3, -31) //l
-        rulesquares[13].position.set(-10, 2, -31) //l
-        rulesquares[14].position.set(-10, 1, -31) //l
-        rulesquares[15].position.set(-8.5, 2.5, -31) //e
-        rulesquares[16].position.set(-8.5, 1.5, -31) //e
-        rulesquares[17].position.set(-7.5, 3.5, -31) //e
-        rulesquares[18].position.set(-7.5, 2, -31) //e
-        rulesquares[19].position.set(-7.75, .25, -31) //e
-        rulesquares[20].position.set(-6.5, 2.75, -31) //e
-        rulesquares[21].position.set(-7, .25, -31) //e
-        rulesquares[22].position.set(-5, 2.5, -31) //s
-        rulesquares[23].position.set(-5, .5, -31) //s
-        rulesquares[24].position.set(-4, 1.5, -31) //s
-        rulesquares[25].position.set(-4, 3.5, -31) //s
-        
+        rulesquares[12].position.set(-10, 4, -31) //l
+        rulesquares[13].position.set(-10, 3, -31) //l
+        rulesquares[14].position.set(-10, 2, -31) //l
+        rulesquares[15].position.set(-10, 1, -31) //l
+        rulesquares[16].position.set(-8.5, 2.5, -31) //e
+        rulesquares[17].position.set(-8.5, 1.5, -31) //e
+        rulesquares[18].position.set(-7.5, 3.5, -31) //e
+        rulesquares[19].position.set(-7.5, 2, -31) //e
+        rulesquares[20].position.set(-8, .25, -31) //e
+        rulesquares[21].position.set(-6.5, 2.75, -31) //e
+        rulesquares[22].position.set(-7.25, .25, -31) //e
+        rulesquares[23].position.set(-5, 2.5, -31) //s
+        rulesquares[24].position.set(-5, .5, -31) //s
+        rulesquares[25].position.set(-4, 1.5, -31) //s
+        rulesquares[26].position.set(-4, 3.5, -31) //s
 
         rulesquares.forEach(square => this.scene.add(square))
     }
+
+    buildNewGame(newGame) {
+        let news = []
+        for (let i = 0; i < 26; i++) {
+            news.push(newGame.clone())
+        }
+        news[0].position.set(4, 3, -31) //n
+        news[1].position.set(4, 2, -31) //n
+        news[2].position.set(4, 1, -31) //n
+        news[3].position.set(5, 3, -31) //n
+        news[4].position.set(6, 3, -31) //n
+        news[5].position.set(6, 2, -31) //n
+        news[6].position.set(6, 1, -31) //n
+        news[7].position.set(7.5, 2.5, -31) //e
+        news[8].position.set(7.5, 1.5, -31) //e
+        news[9].position.set(8.5, 3.5, -31) //e
+        news[10].position.set(8.5, 2, -31) //e
+        news[11].position.set(8, .25, -31) //e
+        news[12].position.set(9.5, 2.75, -31) //e
+        news[13].position.set(8.5, .25, -31) //e
+        news[14].position.set(11, 3, -31) //w
+        news[15].position.set(11.5, 2, -31) //w
+        news[16].position.set(12, 1, -31) //w
+        news[17].position.set(13, 2, -31) //w
+        news[18].position.set(14, 1, -31) //w
+        news[19].position.set(14.5, 2, -31) //w
+        news[13].position.set(15, 3, -31) //w
+
+        news.forEach(square => {
+            this.scene.add(square)
+            square.visible = false
+            square.name = "news"
+        });
+    }
+
+
 
     buildSpace(ele, classAttr, pos) {
         let newEle = document.createElement(`${ele}`)

@@ -20,7 +20,15 @@ closeAboutMe.addEventListener("submit", (e) => {
 const newGame = document.getElementById("newGame")
 newGame.addEventListener("click", () => {
     newGame.style.display = "none"
+    game.reset()
 })
+
+// const scene =  game.board.scene.children
+// let newGameClick
+// for (let i = 0; i < scene.length; i++) {
+//     if (scene[i].name === "newGameClick") {newGameClick = scene[i]}
+// }
+// newGameClick.addEventListener("click", startNewGame)
 
 //DEV: COMMENT BACK IN IF "DEFER" BREAKS
 // document.addEventListener("DOMContentLoaded", () => {
