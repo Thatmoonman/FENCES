@@ -356,7 +356,6 @@ export default class Game {
             validFences.forEach(fenceObj => {
                 if (this._compareArrays(nodePos, fenceObj["midNode"])) {
                     node.addEventListener("click", function addFence(event) {
-                        console.log(event)
                         event.stopPropagation();
 
                         //Create new fence, add it to board and position it properly
