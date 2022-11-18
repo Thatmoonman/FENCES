@@ -38,8 +38,6 @@ export default class Game {
     }
 
     gameLoop() { 
-        Window.interactionManager = this.board.interactionManager
-
         while(this.board.interactionManager.interactiveObjects.length) {
             this.board.interactionManager.interactiveObjects.shift()
         }
