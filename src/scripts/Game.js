@@ -38,6 +38,8 @@ export default class Game {
     }
 
     gameLoop() { 
+        Window.interactionManager = this.board.interactionManager
+
         while(this.board.interactionManager.interactiveObjects.length) {
             this.board.interactionManager.interactiveObjects.shift()
         }
@@ -236,7 +238,8 @@ export default class Game {
                 revertSquares()
                 removeUnselect()
                 squares.forEach(square => that.board.interactionManager.remove(square))
-                that._removeListeners(squares, moveToken)
+                // that._removeListeners(squares, moveToken)
+                squares.forEach(square => square._listeners.click.pop())
                 that.board.interactionManager.remove(playerTokenObj)
                 
                 return that.endTurn()
@@ -329,7 +332,8 @@ export default class Game {
 
                         tokenSelector.position.set( -20 + (2.5 * nodePos[0]), 3, -20 + (2.5 * nodePos[1]))
                         
-                        that._removeListeners(sceneNodes, startFence)
+                        // that._removeListeners(sceneNodes, startFence)
+                        sceneNodes.forEach(node => node._listeners.click.pop())
                         // return that.placeFenceEnd(playerFence, tokenSelector, node, sceneNodes)
                         return that.stopGap2(tokenSelector, node, sceneNodes)
                     }, {once: true})
@@ -379,12 +383,14 @@ export default class Game {
                             that.humanPlayer.moves += 1
                             
                         }
-                        
+                        // console.log(sceneNodes[0]._listeners.click)
+                        // console.log(sceneNodes[0]._listeners.click.pop())
+                        // console.log(sceneNodes[0]._listeners.click)
                         //cleanup event listening and canvas
                         tokenSelector.visible = false
-                        sceneNodes.forEach(node => that.board.interactionManager.remove(node))
-                        that._removeListeners(sceneNodes, addFence)
+                        // that._removeListeners(sceneNodes, addFence)
                         that.board.interactionManager.remove(newFence)
+                        sceneNodes.forEach(node => node._listeners.click.pop())
                         that.humanPlayer.onceperturn = true
                         // return that.switchCurrentPlayer()
                         return that.endTurn();
