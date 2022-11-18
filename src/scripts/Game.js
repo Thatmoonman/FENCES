@@ -191,6 +191,7 @@ export default class Game {
                 }
                 square.material.color.set(color)
                 that.board.interactionManager.remove(square)
+                that.board.interactionManager.add(playerFence)
             })
             // while(validSquares.length) {
             //     validSquares.pop()
@@ -381,9 +382,7 @@ export default class Game {
                             that.humanPlayer.moves += 1
                             
                         }
-                        // console.log(sceneNodes[0]._listeners.click)
-                        // console.log(sceneNodes[0]._listeners.click.pop())
-                        // console.log(sceneNodes[0]._listeners.click)
+
                         //cleanup event listening and canvas
                         tokenSelector.visible = false
                         // that._removeListeners(sceneNodes, addFence)
