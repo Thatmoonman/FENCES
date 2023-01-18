@@ -389,6 +389,42 @@ export default class Board {
         tokenselector.name = "tokenSelector"
         tokenselector.visible = false
 
+        //RULES SHOW DIAMOND
+        const rulesSelectorGeometery = new THREE.OctahedronGeometry(.75)
+        const rulesSelectorMaterial = new THREE.MeshStandardMaterial({color: "yellow"});
+        const rulesSelector = new THREE.Mesh(rulesSelectorGeometery, rulesSelectorMaterial);
+        this.scene.add(rulesSelector)
+        rulesSelector.material.color.set("yellow")
+        rulesSelector.visible = true
+        rulesSelector.position.set(-10, 6, -31)
+        rulesSelector.castShadow = true
+        rulesSelector.name = "rulesSelector"
+        
+        rulesSelector.addEventListener("click", () => {
+            const displayRules = document.getElementById("rules")
+            const displayAboutMe = document.getElementById("aboutMe")
+            if (window.getComputedStyle(displayAboutMe, null).display !== "none") return
+            displayRules.style.display = "flex"
+        })
+
+        //About SHOW DIAMOND
+        const aboutSelectorGeometery = new THREE.OctahedronGeometry(2)
+        const aboutSelectorMaterial = new THREE.MeshStandardMaterial({color: "yellow"});
+        const aboutSelector = new THREE.Mesh(aboutSelectorGeometery, aboutSelectorMaterial);
+        this.scene.add(aboutSelector)
+        aboutSelector.material.color.set("yellow")
+        aboutSelector.visible = true
+        aboutSelector.position.set(0, 10, -40)
+        aboutSelector.castShadow = true
+        aboutSelector.name = "aboutSelector"
+        
+        aboutSelector.addEventListener("click", () => {
+            const displayRules = document.getElementById("rules")
+            const displayAboutMe = document.getElementById("aboutMe")
+            if (window.getComputedStyle(displayRules, null).display !== "none") return
+            displayAboutMe.style.display = "flex"         
+        })
+
         //PLAYER FENCE
         const playerFenceGeometry = new THREE.BoxGeometry(1, 5, 9)
         const playerFenceMaterial = new THREE.MeshStandardMaterial({
@@ -515,19 +551,24 @@ export default class Board {
         function animate() {
             rayCaster.setFromCamera(mousePosition, camera);
             const intersects = rayCaster.intersectObjects(scene.children);
-            const displayRules = document.getElementById("rules")
-            const displayAboutMe = document.getElementById("aboutMe")
+            // const displayRules = document.getElementById("rules")
+            // const displayAboutMe = document.getElementById("aboutMe")
             
             for (let i = 0; i < intersects.length; i++) {
-                if (intersects[i].object.id === rulesClickId && window.getComputedStyle(displayAboutMe, null).display === "none") {
-                    displayRules.style.display = "flex"
-                }
-                if (intersects[i].object.id === aboutMeId  && window.getComputedStyle(displayRules, null).display === "none") {
-                    displayAboutMe.style.display = "flex"
-                }
+
+
+                // Show modals on hover
+                // if (intersects[i].object.id === rulesClickId && window.getComputedStyle(displayAboutMe, null).display === "none") {
+                //         displayRules.style.display = "flex"
+                // } 
+                // if (intersects[i].object.id === aboutMeId  && window.getComputedStyle(displayRules, null).display === "none") {
+                //         displayAboutMe.style.display = "flex"         
+                // } 
             }
 
             tokenselector.rotation.y += 0.02
+            rulesSelector.rotation.y += 0.01
+            aboutSelector.rotation.y -= 0.01
 
             interactionManager.update()
     
@@ -659,9 +700,38 @@ export default class Board {
         });
 
         let loses = []
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 23; i++) {
             loses.push(newGame.clone())
         }
+        loses[0].position.set(4, 1, -31) // l
+        loses[1].position.set(4, 2, -31) // l
+        loses[2].position.set(4, 3, -31) // l
+        loses[3].position.set(5, 1, -31) // l
+        loses[4].position.set(6.5, 1.5, -31) // o
+        loses[5].position.set(7.5, .5, -31) // o
+        loses[6].position.set(7.5, 2.5, -31) // o
+        loses[7].position.set(8.5, 1.5, -31) // o
+        loses[8].position.set(10, .5, -31) // s
+        loses[9].position.set(10, 2.5, -31) // s
+        loses[10].position.set(11, 1.5, -31) // s
+        loses[11].position.set(11, 3.5, -31) // s
+        loses[12].position.set(12.5, 2.5, -31) // e
+        loses[13].position.set(12.5, 1.5, -31) // e
+        loses[14].position.set(13.5, 3.5, -31) // e
+        loses[15].position.set(13.5, 2, -31) // e
+        loses[16].position.set(13, .25, -31) // e
+        loses[17].position.set(14.5, 2.75, -31) // e
+        loses[18].position.set(13.75, .25, -31) // e
+        loses[19].position.set(16, 2.5, -31) // s
+        loses[20].position.set(16, .5, -31) // s
+        loses[21].position.set(17, 1.5, -31) // s
+        loses[22].position.set(17, 3.5, -31) // s
+
+        loses.forEach(square => {
+            this.scene.add(square)
+            square.visible = false
+            square.name = "loses"
+        });
     }
 
 

@@ -20,6 +20,10 @@ export default class Game {
         this.computerPlayer = new ComputerPlayer(this.computerPlayer.color)
         this.currentPlayer = this.humanPlayer
         this.board = new Board(this.humanPlayer, this.computerPlayer)
+        const popup = document.getElementById("newGame")
+        while (popup.firstChild) {
+            popup.removeChild(popup.firstChild)
+        }
         return this.newGame()
     }
 
@@ -43,6 +47,8 @@ export default class Game {
         }
         let gameOver = this.isGameOver()
 
+        this.modalSelectors()
+
         if (gameOver) {
             return this.gameOver(gameOver)
         } else if (this.currentPlayer === this.humanPlayer) {
@@ -64,6 +70,20 @@ export default class Game {
         } else {
             // console.log("Breaking at game loop")
         }
+    }
+
+    modalSelectors() {
+        let rulesSelector
+        let aboutSelector
+        let scene = this.board.scene
+
+        for (let i = 0; i < scene.children.length; i++) {
+            if (scene.children[i].name === "rulesSelector") {rulesSelector = scene.children[i]}
+            if (scene.children[i].name === "aboutSelector") {aboutSelector = scene.children[i]}
+        }
+
+        this.board.interactionManager.add(rulesSelector)
+        this.board.interactionManager.add(aboutSelector)
     }
 
     switchCurrentPlayer() {
@@ -421,7 +441,8 @@ export default class Game {
             if (scene.children[i].name === "humanToken") {humanToken = scene.children[i]}
             if (scene.children[i].name === "computerToken") {computerToken = scene.children[i]}
             if (scene.children[i].name === "winLight") {winLight = scene.children[i]}
-            if (scene.children[i].name === "wins") {news.push(scene.children[i])}
+            if (player === this.humanPlayer && scene.children[i].name === "wins") {news.push(scene.children[i])}
+            if (player === this.computerPlayer && scene.children[i].name === "loses") {news.push(scene.children[i])} 
             if (scene.children[i].name === "newGameClick") {newGameClick = scene.children[i]}
         }
 
@@ -497,10 +518,12 @@ export default class Game {
     //REFACTOR ONTO COMPUTERPLAYER?
     computerMove() {
         const scene = this.board.scene
-        const movePos = this.computerPlayer.goal.shift()
-        // if (this._compareArrays(currentPos, movePos)) {
-        //     //Jump mechanic
-        // }
+        let movePos = this.computerPlayer.goal.shift()
+        
+        if (this._compareArrays(this.humanPlayer.token.getPos(), movePos)) {
+            movePos = this.computerJump(this.computerPlayer.token.getPos(), movePos)
+            if (!movePos) return this.computerFence()
+        }
         const moveSquare = this.board.getSquare(movePos)
         this.setToken(moveSquare)
 
@@ -518,6 +541,44 @@ export default class Game {
         }
 
         return this.switchCurrentPlayer()
+    }
+
+        //Computer Player Jump Move 
+    computerJump(currentPos, playerPos) {
+        const computerX = currentPos[0]
+        const computerY = currentPos[1]
+        const playerX = playerPos[0]
+        const playerY = playerPos[1]
+        let newMoveX
+        let newMoveY
+        const validMoves = this.board.validMoveToken(currentPos)
+
+        if (computerX === playerX) {
+            newMoveX = computerX
+            if (computerY < playerY) {
+                newMoveY = playerY + 2
+            } else {
+                newMoveY = playerY - 2
+            }
+        } else {
+             newMoveY = computerY
+            if (computerX < playerX) {
+                newMoveX = playerX + 2
+            } else {
+                newMoveX = playerX - 2        
+            }
+        }
+        
+        for (let i = 0; i < validMoves.length; i++) {
+            let move = validMoves[i]
+            if (this._compareArrays(move, [newMoveX, newMoveY])) return [newMoveX, newMoveY]
+        }
+
+        for (let i = 0; i < validMoves.length; i++) {
+            let move = validMoves[i]
+            if (!this._compareArrays(move, [newMoveX, newMoveY])) return move
+        }
+        return null
     }
 
     computerFence() {
@@ -586,9 +647,6 @@ export default class Game {
 
         return this.switchCurrentPlayer()
     }
-
-    //Computer Player Jump Move 
-    computerJump() {}
 
 }
 
