@@ -422,7 +422,7 @@ export default class Board {
             const displayRules = document.getElementById("rules")
             const displayAboutMe = document.getElementById("aboutMe")
             if (window.getComputedStyle(displayRules, null).display !== "none") return
-            displayAboutMe.style.display = "flex"         
+            displayAboutMe.style.display = "flex"   
         })
 
         //PLAYER FENCE
@@ -551,8 +551,12 @@ export default class Board {
         function animate() {
             rayCaster.setFromCamera(mousePosition, camera);
             const intersects = rayCaster.intersectObjects(scene.children);
-            // const displayRules = document.getElementById("rules")
-            // const displayAboutMe = document.getElementById("aboutMe")
+            const displayRules = document.getElementById("rules")
+            const displayAboutMe = document.getElementById("aboutMe")
+            window.addEventListener("keydown", () => {displayRules.style.display = "none"})
+            window.addEventListener("mousedown", () => {displayRules.style.display = "none"})
+            window.addEventListener("keydown", () => {displayAboutMe.style.display = "none"})
+            window.addEventListener("mousedown", () => {displayRules.style.display = "none"})
             
             for (let i = 0; i < intersects.length; i++) {
 

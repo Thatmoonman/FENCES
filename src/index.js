@@ -32,13 +32,13 @@ document.body.onkeyup = function(e) {
     ) {
       let cameraReset = game.board.camera.object
       let renderer = game.board.renderer
-      console.log(cameraReset)
+    //   console.log(cameraReset)
       game.board.camera.reset()
       cameraReset.position.set(0, 50, 50)
       game.board.camera.update()
       
     }
-  }
+  } 
 
 // const scene =  game.board.scene.children
 // let newGameClick
