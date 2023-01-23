@@ -10,7 +10,7 @@ const rules = document.getElementById("rules")
 if (isMobile) {
   const mobileView = document.getElementById("isMobile")
   mobileView.innerText = "THANKS FOR CHECKING OUT MY GAME. AT THE MOMENT, FENCES IS BEST PLAYED ON YOUR COMPUTER OR LAPTOP. IF YOU WANT TO HIRE ME, MAYBE I CAN AFFORD TO DEVELOP THE MOBILE VERSION ;)"
-  mobileView.style.color = "darkred"
+  mobileView.style.color = "#E20032"
 }
 const closeRules = document.getElementsByClassName("closeRules")[0]
 closeRules.addEventListener("submit", (e) => {
