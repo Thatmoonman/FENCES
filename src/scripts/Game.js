@@ -2,7 +2,6 @@ import Board from "./board/Board"
 import MazeSolver from "./mazesolver/mazesolver"
 import ComputerPlayer from "./player/_computerPlayer"
 import HumanPlayer from "./player/_humanPlayer"
-import { InteractionManager } from 'three.interactive'
 
 export default class Game {
     constructor(playerColor="blue", computerColor="red") {
