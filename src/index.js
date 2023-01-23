@@ -33,6 +33,11 @@ newGame.addEventListener("click", () => {
     return game.reset()
 })
 
+window.addEventListener("keydown", () => {rules.style.display = "none"})
+window.addEventListener("mousedown", () => {rules.style.display = "none"})
+window.addEventListener("keydown", () => {aboutMe.style.display = "none"})
+window.addEventListener("mousedown", () => {aboutMe.style.display = "none"})
+
 document.body.onkeyup = function(e) {
     if (e.key == " " ||
         e.code == "Space" ||      

@@ -546,14 +546,15 @@ export default class Board {
         const scene = this.scene
         const interactionManager = this.interactionManager
         function animate() {
-            rayCaster.setFromCamera(mousePosition, camera);
-            const intersects = rayCaster.intersectObjects(scene.children);
-            const displayRules = document.getElementById("rules")
-            const displayAboutMe = document.getElementById("aboutMe")
-            window.addEventListener("keydown", () => {displayRules.style.display = "none"})
-            window.addEventListener("mousedown", () => {displayRules.style.display = "none"})
-            window.addEventListener("keydown", () => {displayAboutMe.style.display = "none"})
-            window.addEventListener("mousedown", () => {displayRules.style.display = "none"})
+            // rayCaster.setFromCamera(mousePosition, camera);
+            // const intersects = rayCaster.intersectObjects(scene.children);
+            // const displayRules = document.getElementById("rules")
+            // const displayAboutMe = document.getElementById("aboutMe")
+            // console.log(displayAboutMe)
+            // window.addEventListener("keydown", () => {displayRules.style.display = "none"})
+            // window.addEventListener("mousedown", () => {displayRules.style.display = "none"})
+            // window.addEventListener("keydown", () => {displayAboutMe.style.display = "none"})
+            // window.addEventListener("mousedown", () => {displayRules.style.display = "none"})
             
             // for (let i = 0; i < intersects.length; i++) {
 
