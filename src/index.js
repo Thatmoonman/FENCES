@@ -1,5 +1,4 @@
 import Game from "./scripts/Game";
-import renderThree from "./scripts/threejs/threeJS";
 
 let game = new Game()
 

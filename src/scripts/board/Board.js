@@ -1,11 +1,8 @@
-import HumanPlayer from "../player/_humanPlayer";
+// import HumanPlayer from "../player/_humanPlayer";
 import Square from "./Square";
 import * as THREE from 'three';
-import { DirectionalLight, GridHelper, Raycaster, SpotLight, SpotLightHelper, TextureLoader } from 'three';
 import renderCamera from '../threejs/orbitalcam';
-import grass from '../../assets/images/grass2.png';
-import sky from '../../assets/images/sky.jpg';
-import wood from '../../assets/images/wood.jpg'
+
 import { InteractionManager } from 'three.interactive'
 
 
@@ -136,7 +133,7 @@ export default class Board {
         // this.scene.add(axesHelper);
 
         //ground plane
-        const planeGeometryGround = new THREE.PlaneGeometry(500, 500);
+        const planeGeometryGround = new THREE.PlaneGeometry(300, 300);
         const planeMaterialGround = new THREE.MeshStandardMaterial({
             color: 0x37AE0F //grass green
             // color: "grey", //DEV USE
@@ -195,7 +192,7 @@ export default class Board {
             color: "white"
         })
         const rules = new THREE.Mesh(rulesGeometry, rulesMatertial)
-        rules.castShadow = true;
+        // rules.castShadow = true;
         rules.receiveShadow = true;
         this.buildRules(rules)
 
@@ -235,7 +232,7 @@ export default class Board {
             color: "white"
         })
         const newGame = new THREE.Mesh(newGameGeometry, newGameMatertial)
-        newGame.castShadow = true;
+        // newGame.castShadow = true;
         newGame.receiveShadow = true;
         this.buildNewGame(newGame)
 
@@ -365,7 +362,7 @@ export default class Board {
         // gameBoard.rotation.x = -0.5 * Math.PI;
         gameBoard.position.set(0, 0, 0)
         gameBoard.receiveShadow = true;
-        gameBoard.castShadow = true;
+        // gameBoard.castShadow = true;
 
         //PLAYER TOKEN PIECE
         const playerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
@@ -397,7 +394,7 @@ export default class Board {
         rulesSelector.material.color.set("yellow")
         rulesSelector.visible = true
         rulesSelector.position.set(-10, 6, -31)
-        rulesSelector.castShadow = true
+        // rulesSelector.castShadow = true
         rulesSelector.name = "rulesSelector"
         
         rulesSelector.addEventListener("click", () => {
@@ -483,7 +480,7 @@ export default class Board {
                     this.scene.add(tokenSquare);
                     tokenSquare.position.set(-20 + (2.5 * i), 0, -20);
                     tokenSquare.receiveShadow = true;
-                    tokenSquare.castShadow = true;
+                    // tokenSquare.castShadow = true;
                     tokenSquare.name = `${[i, j]}`
                 } else if (square.type === "token" && j === 16) {
                     let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
@@ -495,7 +492,7 @@ export default class Board {
                     this.scene.add(tokenSquare);
                     tokenSquare.position.set(-20 + (2.5 * i), 0, 20);
                     tokenSquare.receiveShadow = true;
-                    tokenSquare.castShadow = true;
+                    // tokenSquare.castShadow = true;
                     tokenSquare.name = `${[i, j]}`
                 } else if (square.type === "token") {
                     let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
@@ -507,7 +504,7 @@ export default class Board {
                     this.scene.add(tokenSquare);
                     tokenSquare.position.set(-20 + (2.5 * i), 0, -20 + (2.5 * j));
                     tokenSquare.receiveShadow = true;
-                    tokenSquare.castShadow = true;
+                    // tokenSquare.castShadow = true;
                     tokenSquare.name = `${[i, j]}`
                 } else if (square.type === "fence") {
                     //DO NOTHING?
@@ -521,7 +518,7 @@ export default class Board {
                     this.scene.add(node);
                     node.position.set(-20 + (2.5 * i), 0, -20 + (2.5 * j));
                     node.receiveShadow = true;
-                    node.castShadow = true;
+                    // node.castShadow = true;
                     node.name = `${[i, j]}`
                 }
             })
@@ -558,7 +555,7 @@ export default class Board {
             window.addEventListener("keydown", () => {displayAboutMe.style.display = "none"})
             window.addEventListener("mousedown", () => {displayRules.style.display = "none"})
             
-            for (let i = 0; i < intersects.length; i++) {
+            // for (let i = 0; i < intersects.length; i++) {
 
 
                 // Show modals on hover
@@ -568,7 +565,7 @@ export default class Board {
                 // if (intersects[i].object.id === aboutMeId  && window.getComputedStyle(displayRules, null).display === "none") {
                 //         displayAboutMe.style.display = "flex"         
                 // } 
-            }
+            // }
 
             tokenselector.rotation.y += 0.02
             rulesSelector.rotation.y += 0.01
@@ -670,6 +667,7 @@ export default class Board {
         rulesquares[26].position.set(-4, 3.5, -31) //s
 
         rulesquares.forEach(square => this.scene.add(square))
+            
     }
 
     buildNewGame(newGame) {
