@@ -135,7 +135,7 @@ export default class Board {
 
         //ground plane
         const planeGeometryGround = new THREE.PlaneGeometry(300, 300);
-        const planeMaterialGround = new THREE.MeshStandardMaterial({
+        const planeMaterialGround = new THREE.MeshBasicMaterial({
             color: 0x37AE0F //grass green
             // color: "grey", //DEV USE
             // side: THREE.DoubleSide
@@ -168,7 +168,7 @@ export default class Board {
 
         //Render Logo
         const squareGeometry = new THREE.BoxGeometry(1, 1, 1)
-        const squareMaterial = new THREE.MeshStandardMaterial({
+        const squareMaterial = new THREE.MeshBasicMaterial({
             // map: textureLoader.load(wood)
             color: "white"
         })
@@ -176,7 +176,7 @@ export default class Board {
         square.castShadow = true;
         square.receiveShadow = true;
         const rectGeometry = new THREE.BoxGeometry(1, 3, 1)
-        const rectMaterial = new THREE.MeshStandardMaterial({
+        const rectMaterial = new THREE.MeshBasicMaterial({
             // map: textureLoader.load(wood)
             color: "white"
         })
@@ -189,7 +189,7 @@ export default class Board {
 
         //Render Rules
         const rulesGeometry = new THREE.BoxGeometry(1, 1, 1)
-        const rulesMatertial = new THREE.MeshStandardMaterial({
+        const rulesMatertial = new THREE.MeshBasicMaterial({
             color: "white"
         })
         const rules = new THREE.Mesh(rulesGeometry, rulesMatertial)
@@ -208,13 +208,13 @@ export default class Board {
         rulesClick.position.set(-10, 0, -32)
         rulesClick.material.visible = false
 
-        const rulesSpotlight = new THREE.SpotLight(0xFBFAF5);
-        this.scene.add(rulesSpotlight)
-        rulesSpotlight.position.set(-30, 60, 0)
-        rulesSpotlight.castShadow = true;
-        rulesSpotlight.penumbra = .8;
-        rulesSpotlight.angle = 0.1;
-        rulesSpotlight.target = rulesClick
+        // const rulesSpotlight = new THREE.SpotLight(0xFBFAF5);
+        // this.scene.add(rulesSpotlight)
+        // rulesSpotlight.position.set(-30, 60, 0)
+        // rulesSpotlight.castShadow = true;
+        // rulesSpotlight.penumbra = .8;
+        // rulesSpotlight.angle = 0.1;
+        // rulesSpotlight.target = rulesClick
         
         //About Me hoverbox
         const aboutMeGeometry = new THREE.BoxGeometry(20, 1, 4)
@@ -229,7 +229,7 @@ export default class Board {
 
         //New Game?
         const newGameGeometry = new THREE.BoxGeometry(1, 1, 1)
-        const newGameMatertial = new THREE.MeshStandardMaterial({
+        const newGameMatertial = new THREE.MeshBasicMaterial({
             color: "white"
         })
         const newGame = new THREE.Mesh(newGameGeometry, newGameMatertial)
@@ -275,6 +275,7 @@ export default class Board {
         directionalLogoLight.shadow.camera.top = 5
         directionalLogoLight.shadow.camera.left = -10
         directionalLogoLight.shadow.camera.right = 20
+
         //logo light and shadow helpers
         // const dBoardLightHelper = new THREE.DirectionalLightHelper(directionalLogoLight, 5);
         // this.scene.add(dBoardLightHelper);
@@ -354,7 +355,7 @@ export default class Board {
 
         //Render Game Board
         const gameBoardGeometry = new THREE.BoxGeometry(44, 1, 44);
-        const gameBoardMaterial = new THREE.MeshStandardMaterial({
+        const gameBoardMaterial = new THREE.MeshLambertMaterial({
             color: 0x4B382A,
             wireframe: false
         })
@@ -367,7 +368,7 @@ export default class Board {
 
         //PLAYER TOKEN PIECE
         const playerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
-        const playerPieceMaterial = new THREE.MeshStandardMaterial({
+        const playerPieceMaterial = new THREE.MeshLambertMaterial({
             color: this.players[0].color
             // map: textureLoader.load(wood)
         });
@@ -379,7 +380,7 @@ export default class Board {
         
         //PLAYER SELECTED DIAMOND
         const tokenselectorGeometery = new THREE.OctahedronGeometry(.75)
-        const tokenselectorMaterial = new THREE.MeshStandardMaterial({color: "yellow"});
+        const tokenselectorMaterial = new THREE.MeshLambertMaterial({color: "yellow"});
         const tokenselector = new THREE.Mesh(tokenselectorGeometery, tokenselectorMaterial);
         this.players[0].selectorIcon = tokenselector
         this.scene.add(tokenselector)
@@ -389,7 +390,7 @@ export default class Board {
 
         //RULES SHOW DIAMOND
         const rulesSelectorGeometery = new THREE.OctahedronGeometry(.75)
-        const rulesSelectorMaterial = new THREE.MeshStandardMaterial({color: "yellow"});
+        const rulesSelectorMaterial = new THREE.MeshLambertMaterial({color: "yellow"});
         const rulesSelector = new THREE.Mesh(rulesSelectorGeometery, rulesSelectorMaterial);
         this.scene.add(rulesSelector)
         rulesSelector.material.color.set("yellow")
@@ -407,7 +408,7 @@ export default class Board {
 
         //About SHOW DIAMOND
         const aboutSelectorGeometery = new THREE.OctahedronGeometry(2)
-        const aboutSelectorMaterial = new THREE.MeshStandardMaterial({color: "yellow"});
+        const aboutSelectorMaterial = new THREE.MeshLambertMaterial({color: "yellow"});
         const aboutSelector = new THREE.Mesh(aboutSelectorGeometery, aboutSelectorMaterial);
         this.scene.add(aboutSelector)
         aboutSelector.material.color.set("yellow")
@@ -425,7 +426,7 @@ export default class Board {
 
         //PLAYER FENCE
         const playerFenceGeometry = new THREE.BoxGeometry(1, 5, 9)
-        const playerFenceMaterial = new THREE.MeshStandardMaterial({
+        const playerFenceMaterial = new THREE.MeshLambertMaterial({
             color: this.players[0].color
             // map: textureLoader.load(wood)
         })
@@ -439,7 +440,7 @@ export default class Board {
 
         //COMPUTER TOKEN PIECE
         const computerPieceGeometry = new THREE.CylinderGeometry(.5, 1, 5);
-        const computerPieceMaterial = new THREE.MeshStandardMaterial({
+        const computerPieceMaterial = new THREE.MeshLambertMaterial({
             color: this.players[1].color
             // map: textureLoader.load(wood)
         });
@@ -450,7 +451,7 @@ export default class Board {
 
         //COMPUTER FENCE
         const computerFenceGeometry = new THREE.BoxGeometry(1, 5, 9)
-        const computerFenceMaterial = new THREE.MeshStandardMaterial({
+        const computerFenceMaterial = new THREE.MeshLambertMaterial({
             color: this.players[1].color
             // map: textureLoader.load(wood)
         })
@@ -470,10 +471,10 @@ export default class Board {
             row.forEach( (square, i) => {
                 let humanColor = this.players[0].color
                 let computerColor = this.players[1].color
-                
+                let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
                 if (square.type === "token" && j === 0) {
-                    let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
-                    let tokenSquareMaterial = new THREE.MeshStandardMaterial({
+                    // let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
+                    let tokenSquareMaterial = new THREE.MeshLambertMaterial({
                         color: `${humanColor}`
                         // map: textureLoader.load(wood)
                     });
@@ -484,8 +485,8 @@ export default class Board {
                     // tokenSquare.castShadow = true;
                     tokenSquare.name = `${[i, j]}`
                 } else if (square.type === "token" && j === 16) {
-                    let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
-                    let tokenSquareMaterial = new THREE.MeshStandardMaterial({
+                    // let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
+                    let tokenSquareMaterial = new THREE.MeshLambertMaterial({
                         color: `${computerColor}`
                         // map: textureLoader.load(wood)
                     });
@@ -496,8 +497,8 @@ export default class Board {
                     // tokenSquare.castShadow = true;
                     tokenSquare.name = `${[i, j]}`
                 } else if (square.type === "token") {
-                    let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
-                    let tokenSquareMaterial = new THREE.MeshStandardMaterial({
+                    // let tokenSquareGeometry = new THREE.BoxGeometry(3.5, 2, 3.5);
+                    let tokenSquareMaterial = new THREE.MeshLambertMaterial({
                         color: 0xA47449
                         // map: textureLoader.load(wood)
                     });
@@ -511,7 +512,7 @@ export default class Board {
                     //DO NOTHING?
                 } else if (square.type === "node") {
                     let nodeGeometry = new THREE.BoxGeometry(1, 5, 1);
-                    let nodeMaterial = new THREE.MeshStandardMaterial({
+                    let nodeMaterial = new THREE.MeshLambertMaterial({
                         color: 0xFFFFFF
                         // map: textureLoader.load(wood)
                     });
