@@ -13,7 +13,7 @@ export default class Game {
         this.fenceStarted = false
         this.newGame() 
     }
-
+    
     reset() { 
         this.humanPlayer = new HumanPlayer(this.humanPlayer.color)
         this.computerPlayer = new ComputerPlayer(this.computerPlayer.color)
@@ -25,7 +25,7 @@ export default class Game {
         }
         return this.newGame()
     }
-
+    
     //*STARTS A NEW GAME*
     newGame() { 
         // adds starting positions to board
@@ -41,6 +41,7 @@ export default class Game {
     }
 
     gameLoop() { 
+        console.log(this.board.renderer.info.render)
         while(this.board.interactionManager.interactiveObjects.length) {
             this.board.interactionManager.interactiveObjects.shift()
         }
