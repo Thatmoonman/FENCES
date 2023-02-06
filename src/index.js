@@ -4,8 +4,9 @@ let game = new Game()
 
 const windowHeight = window.visualViewport.height
 const windowWidth = window.visualViewport.width
-const isMobile = navigator.userAgentData.mobile;
-console.log(navigator.userAgentData)
+const isMobile = /Android|iPhone/i.test(navigator.userAgent)
+
+// console.log(navigator.userAgentData)
 
 const rules = document.getElementById("rules")
 // if (isMobile) {
