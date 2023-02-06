@@ -41,7 +41,7 @@ export default class Game {
     }
 
     gameLoop() { 
-        console.log(this.board.renderer.info.render)
+        // console.log(this.board.renderer.info.render)
         while(this.board.interactionManager.interactiveObjects.length) {
             this.board.interactionManager.interactiveObjects.shift()
         }
