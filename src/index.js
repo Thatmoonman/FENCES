@@ -19,29 +19,12 @@ if (isMobile) {
 //     rules.style.display = "none"
 // })
 
-rules.addEventListener("keyup", (e) => {
-    e.preventDefault();
-    rules.style.display = "none"
-})
-rules.addEventListener("mouseup", (e) => {
-    e.preventDefault();
-    rules.style.display = "none"
-})
-
 const aboutMe = document.getElementById("aboutMe")
 // const closeAboutMe = document.getElementsByClassName("closeAboutMe")[0]
 // closeAboutMe.addEventListener("submit", (e) => {
 //     e.preventDefault();
 //     aboutMe.style.display = "none"
 // })
-aboutMe.addEventListener("keyup", (e) => {
-    e.preventDefault();
-    aboutMe.style.display = "none"
-})
-aboutMe.addEventListener("mouseup", (e) => {
-    e.preventDefault();
-    aboutMe.style.display = "none"
-})
 
 const newGame = document.getElementById("newGame")
 newGame.addEventListener("click", () => {
@@ -53,8 +36,10 @@ newGame.addEventListener("click", () => {
 
 window.addEventListener("keydown", () => {rules.style.display = "none"})
 window.addEventListener("mousedown", () => {rules.style.display = "none"})
+window.addEventListener("touchstart", () => {rules.style.display = "none"})
 window.addEventListener("keydown", () => {aboutMe.style.display = "none"})
 window.addEventListener("mousedown", () => {aboutMe.style.display = "none"})
+window.addEventListener("touchstart", () => {aboutMe.style.display = "none"})
 
 document.body.onkeyup = function(e) {
     if (e.key == " " ||
