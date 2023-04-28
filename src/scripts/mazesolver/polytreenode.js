@@ -15,12 +15,21 @@ export default class PolyTreeNode {
 
     dfs(targetValue) {
         if (this._compareArrays(this.value, targetValue)) return this
+        const stack = [this]
 
-        for (let i = 0; i < this.children.length; i++) {
-            let child = this.children[i]
-            let currentChild = this.dfs.call(child, targetValue)
-            if (currentChild) return currentChild
+        while (stack.length) {
+            let current = stack.pop()
+            if (this._compareArrays(current.value, targetValue)) return this
+            for (let child of current.children) {
+                stack.push(child)
+            }
         }
+
+        // for (let i = 0; i < this.children.length; i++) {
+        //     let child = this.children[i]
+        //     let currentChild = this.dfs.call(child, targetValue)
+        //     if (currentChild) return currentChild
+        // }
 
         return undefined
     }
