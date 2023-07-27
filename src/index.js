@@ -56,7 +56,9 @@ document.body.onkeyup = function(e) {
       game.board.camera.update()
       
     }
-  } 
+} 
+
+
 
 // const scene =  game.board.scene.children
 // let newGameClick

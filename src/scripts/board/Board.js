@@ -558,13 +558,20 @@ export default class Board {
             // window.addEventListener("keydown", () => {displayAboutMe.style.display = "none"})
             // window.addEventListener("mousedown", () => {displayRules.style.display = "none"})
             
-            for (let i = 0; i < intersects.length; i++) {
-                console.log(intersects[i].object.name)
-                if (["humanToken", "playerFence", "aboutSelector", "rulesSelector"].includes(intersects[i].object.name)) {
-                    $('html,body').css('cursor', 'pointer');
-                } else {
-                    $('html,body').css('cursor', 'default');
-                }
+            
+            
+            if (["humanToken", "playerFence", "aboutSelector", "rulesSelector"].includes(intersects[0].object.name)) {
+                document.body.style.cursor = 'pointer'
+            } else {
+                document.body.style.cursor = 'grab'
+            }
+            // for (let i = 0; i < intersects.length; i++) {
+                // console.log(intersects[i].object.name)
+                // if (["humanToken", "playerFence", "aboutSelector", "rulesSelector"].includes(intersects[i].object.name)) {
+                    // document.body.style.cursor = 'pointer'
+                // } else {
+                    // documen/t.body.style.cursor = 'default'
+                // }
                 // Show modals on hover
                 // if (intersects[i].object.id === rulesClickId && window.getComputedStyle(displayAboutMe, null).display === "none") {
                 //         displayRules.style.display = "flex"
@@ -572,7 +579,7 @@ export default class Board {
                 // if (intersects[i].object.id === aboutMeId  && window.getComputedStyle(displayRules, null).display === "none") {
                 //         displayAboutMe.style.display = "flex"         
                 // } 
-            }
+            // }
 
             tokenselector.rotation.y += 0.02
             rulesSelector.rotation.y += 0.01
