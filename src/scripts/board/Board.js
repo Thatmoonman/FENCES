@@ -560,7 +560,7 @@ export default class Board {
             
             for (let i = 0; i < intersects.length; i++) {
 
-                if (["humanToken", "playerFence", "aboutSelector", "rulesSelector"].includes(intersects[i].object.id)) {
+                if (["humanToken", "playerFence", "aboutSelector", "rulesSelector"].includes(intersects[i].object.name)) {
                     $('html,body').css('cursor', 'pointer');
                 } else {
                     $('html,body').css('cursor', 'default');
