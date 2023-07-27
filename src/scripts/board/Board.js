@@ -135,7 +135,7 @@ export default class Board {
 
         //ground plane
         const planeGeometryGround = new THREE.PlaneGeometry(300, 300);
-        const planeMaterialGround = new THREE.MeshBasicMaterial({
+        const planeMaterialGround = new THREE.MeshLambertMaterial({
             color: 0x37AE0F //grass green
             // color: "grey", //DEV USE
             // side: THREE.DoubleSide
@@ -168,7 +168,7 @@ export default class Board {
 
         //Render Logo
         const squareGeometry = new THREE.BoxGeometry(1, 1, 1)
-        const squareMaterial = new THREE.MeshBasicMaterial({
+        const squareMaterial = new THREE.MeshLambertMaterial({
             // map: textureLoader.load(wood)
             color: "white"
         })
@@ -176,7 +176,7 @@ export default class Board {
         square.castShadow = true;
         square.receiveShadow = true;
         const rectGeometry = new THREE.BoxGeometry(1, 3, 1)
-        const rectMaterial = new THREE.MeshBasicMaterial({
+        const rectMaterial = new THREE.MeshLambertMaterial({
             // map: textureLoader.load(wood)
             color: "white"
         })
@@ -199,7 +199,7 @@ export default class Board {
 
         //rulesclickbox
         const rulesclickGeometry = new THREE.BoxGeometry(12, 1, 4)
-        const rulesclickMatertial = new THREE.MeshBasicMaterial({
+        const rulesclickMatertial = new THREE.MeshLambertMaterial({
             color: "white"
         })
         const rulesClick = new THREE.Mesh(rulesclickGeometry, rulesclickMatertial)
@@ -229,7 +229,7 @@ export default class Board {
 
         //New Game?
         const newGameGeometry = new THREE.BoxGeometry(1, 1, 1)
-        const newGameMatertial = new THREE.MeshBasicMaterial({
+        const newGameMatertial = new THREE.MeshLambertMaterial({
             color: "white"
         })
         const newGame = new THREE.Mesh(newGameGeometry, newGameMatertial)
