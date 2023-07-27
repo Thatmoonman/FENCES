@@ -560,7 +560,7 @@ export default class Board {
             
             
             
-            if (["humanToken", "playerFence", "aboutSelector", "rulesSelector"].includes(intersects[0].object.name)) {
+            if (intersects[0]?.object && ["humanToken", "playerFence", "aboutSelector", "rulesSelector"].includes(intersects[0].object.name)) {
                 document.body.style.cursor = 'pointer'
             } else {
                 document.body.style.cursor = 'grab'
