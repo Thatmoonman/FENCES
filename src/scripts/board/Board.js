@@ -189,7 +189,7 @@ export default class Board {
 
         //Render Rules
         const rulesGeometry = new THREE.BoxGeometry(1, 1, 1)
-        const rulesMatertial = new THREE.MeshBasicMaterial({
+        const rulesMatertial = new THREE.MeshLambertMaterial({
             color: "white"
         })
         const rules = new THREE.Mesh(rulesGeometry, rulesMatertial)
@@ -218,7 +218,7 @@ export default class Board {
         
         //About Me hoverbox
         const aboutMeGeometry = new THREE.BoxGeometry(20, 1, 4)
-        const aboutMeMaterial = new THREE.MeshBasicMaterial({
+        const aboutMeMaterial = new THREE.MeshLambertMaterial({
             color: "white"
         })
         const aboutMe = new THREE.Mesh(aboutMeGeometry, aboutMeMaterial)
@@ -238,7 +238,7 @@ export default class Board {
         this.buildNewGame(newGame)
 
         const newgameclickGeometry = new THREE.BoxGeometry(12, 1, 4)
-        const newgameclickMatertial = new THREE.MeshBasicMaterial({
+        const newgameclickMatertial = new THREE.MeshLambertMaterial({
             color: 0x55C233
         })
         const newgameclick = new THREE.Mesh(newgameclickGeometry, newgameclickMatertial)
@@ -559,7 +559,7 @@ export default class Board {
             // window.addEventListener("mousedown", () => {displayRules.style.display = "none"})
             
             for (let i = 0; i < intersects.length; i++) {
-
+                console.log(intersects[i].object.name)
                 if (["humanToken", "playerFence", "aboutSelector", "rulesSelector"].includes(intersects[i].object.name)) {
                     $('html,body').css('cursor', 'pointer');
                 } else {
@@ -986,7 +986,7 @@ export default class Board {
 
     buildFence(player) {
         const fenceGeometry = new THREE.BoxGeometry(1, 5, 9)
-        const fenceMaterial = new THREE.MeshStandardMaterial({
+        const fenceMaterial = new THREE.MeshLambertMaterial({
             color: player.color
             // map: textureLoader.load(wood)
         })
