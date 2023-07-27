@@ -164,7 +164,7 @@ export default class Board {
         this.scene.background = new THREE.Color( 0x87CEEB )
 
         //wood texture
-        const textureLoader = new THREE.TextureLoader();
+        // const textureLoader = new THREE.TextureLoader();
 
         //Render Logo
         const squareGeometry = new THREE.BoxGeometry(1, 1, 1)
@@ -208,13 +208,13 @@ export default class Board {
         rulesClick.position.set(-10, 0, -32)
         rulesClick.material.visible = false
 
-        // const rulesSpotlight = new THREE.SpotLight(0xFBFAF5);
-        // this.scene.add(rulesSpotlight)
-        // rulesSpotlight.position.set(-30, 60, 0)
-        // rulesSpotlight.castShadow = true;
-        // rulesSpotlight.penumbra = .8;
-        // rulesSpotlight.angle = 0.1;
-        // rulesSpotlight.target = rulesClick
+        const rulesSpotlight = new THREE.SpotLight(0xFBFAF5);
+        this.scene.add(rulesSpotlight)
+        rulesSpotlight.position.set(-30, 60, 0)
+        rulesSpotlight.castShadow = true;
+        rulesSpotlight.penumbra = .8;
+        rulesSpotlight.angle = 0.1;
+        rulesSpotlight.target = rulesClick
         
         //About Me hoverbox
         const aboutMeGeometry = new THREE.BoxGeometry(20, 1, 4)
@@ -548,8 +548,8 @@ export default class Board {
         const scene = this.scene
         const interactionManager = this.interactionManager
         function animate() {
-            // rayCaster.setFromCamera(mousePosition, camera);
-            // const intersects = rayCaster.intersectObjects(scene.children);
+            rayCaster.setFromCamera(mousePosition, camera);
+            const intersects = rayCaster.intersectObjects(scene.children);
             // const displayRules = document.getElementById("rules")
             // const displayAboutMe = document.getElementById("aboutMe")
             // console.log(displayAboutMe)
@@ -558,9 +558,13 @@ export default class Board {
             // window.addEventListener("keydown", () => {displayAboutMe.style.display = "none"})
             // window.addEventListener("mousedown", () => {displayRules.style.display = "none"})
             
-            // for (let i = 0; i < intersects.length; i++) {
+            for (let i = 0; i < intersects.length; i++) {
 
-
+                if (["humanToken", "playerFence", "aboutSelector", "rulesSelector"].includes(intersects[i].object.id)) {
+                    $('html,body').css('cursor', 'pointer');
+                } else {
+                    $('html,body').css('cursor', 'default');
+                }
                 // Show modals on hover
                 // if (intersects[i].object.id === rulesClickId && window.getComputedStyle(displayAboutMe, null).display === "none") {
                 //         displayRules.style.display = "flex"
@@ -568,7 +572,7 @@ export default class Board {
                 // if (intersects[i].object.id === aboutMeId  && window.getComputedStyle(displayRules, null).display === "none") {
                 //         displayAboutMe.style.display = "flex"         
                 // } 
-            // }
+            }
 
             tokenselector.rotation.y += 0.02
             rulesSelector.rotation.y += 0.01
